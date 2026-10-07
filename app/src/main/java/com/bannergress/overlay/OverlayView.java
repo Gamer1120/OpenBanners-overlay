@@ -57,6 +57,8 @@ class OverlayView extends FrameLayout {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.RGB_888);
         params.gravity = Gravity.START | Gravity.TOP;
+        // Start just below the route strip so it doesn't cover the map.
+        params.y = RouteStripView.heightPx(context);
         setupListeners();
         applyState(StateManager.getState());
         loadData(data, context);

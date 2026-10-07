@@ -1,5 +1,9 @@
 package com.bannergress.overlay;
 
+import android.os.Build;
+
+import android.location.LocationRequest;
+
 import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
@@ -15,6 +19,9 @@ import java.util.function.BiConsumer;
 
 public class OverlayService extends Service {
     private OverlayView overlayView;
+    private RouteStripView routeStripView;
+    // SharedPreferences only keeps a weak reference to change listeners.
+    private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = (sharedPreferences, key) -> applyPreferences(sharedPreferences);
 
     private BiConsumer<State, State> stateNotificationListener;
 
@@ -39,16 +46,24 @@ public class OverlayService extends Service {
     private void initPreferences() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         applyPreferences(preferences);
-        preferences.registerOnSharedPreferenceChangeListener((sharedPreferences, key) -> applyPreferences(sharedPreferences));
+        preferences.registerOnSharedPreferenceChangeListener(preferenceListener);
     }
 
     private void applyPreferences(SharedPreferences preferences) {
         StateManager.updateState(State::locationEnabled);
+        boolean showRouteStrip = preferences.getBoolean(getString(R.string.route_strip_enable), true);
+        if (showRouteStrip && routeStripView == null) {
+            routeStripView = RouteStripView.create(this);
+        } else if (!showRouteStrip && routeStripView != null) {
+            routeStripView.remove();
+            routeStripView = null;
+        }
     }
 
     @Override
     public void onDestroy() {
         super.onDestroy();
+        PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(preferenceListener);
         StateManager.removeListener(stateLocationListener);
         StateManager.removeListener(stateNotificationListener);
         removeOverlay();
@@ -60,6 +75,10 @@ public class OverlayService extends Service {
     }
 
     private void removeOverlay() {
+        if (routeStripView != null) {
+            routeStripView.remove();
+            routeStripView = null;
+        }
         if (overlayView != null) {
             overlayView.remove();
             overlayView = null;
@@ -85,7 +104,15 @@ public class OverlayService extends Service {
         if (locationListener == null && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             LocationManager locationManager = getSystemService(LocationManager.class);
             locationListener = location -> StateManager.updateState(state -> state.location(location));
-            locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 100, 0, locationListener);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                // Walking pace with a 40 m step radius needs GPS; the default (balanced) request may stay on Wi-Fi/cell.
+                LocationRequest request = new LocationRequest.Builder(1_000)
+                        .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
+                        .build();
+                locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, request, getMainExecutor(), locationListener);
+            } else {
+                locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 100, 0, locationListener);
+            }
         }
     }
 

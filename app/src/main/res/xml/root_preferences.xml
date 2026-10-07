@@ -17,6 +17,15 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_route_strip">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:key="@string/route_strip_enable"
+            app:title="@string/preferences_route_strip_enable" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_notifications">
 
         <SwitchPreferenceCompat

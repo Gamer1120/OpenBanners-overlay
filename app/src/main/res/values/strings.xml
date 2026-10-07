@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Banner Overlay</string>
+    <string name="app_name">Banner Route Overlay</string>
     <string name="overlayClose">Close</string>
     <string name="overlayNext">Next</string>
     <string name="overlayStart">Start</string>
@@ -33,4 +33,6 @@
     <string name="preferences_notification_step_in_range">Next step in range</string>
     <string name="preferences_clipboard">Clipboard</string>
     <string name="preferences_clipboard_enable">Copy mission number as passphrase</string>
+    <string name="preferences_route_strip">Route map</string>
+    <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
 </resources>
