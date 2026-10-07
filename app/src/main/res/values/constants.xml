@@ -5,4 +5,6 @@
     <string name="notification_step_in_range" translatable="false">notification_step_in_range</string>
     <string name="clipboard_enable" translatable="false">clipboard_enable</string>
     <string name="route_strip_enable" translatable="false">route_strip_enable</string>
+    <string name="privacy_policy_url" translatable="false">https://openbanners.org/overlay/privacy</string>
+    <string name="source_code_url" translatable="false">https://github.com/Gamer1120/OpenBanners-overlay</string>
 </resources>

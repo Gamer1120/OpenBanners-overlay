@@ -32,5 +32,6 @@ public class LicensesActivity extends AppCompatActivity {
         ScrollView scroll = new ScrollView(this);
         scroll.addView(text);
         setContentView(scroll);
+        EdgeToEdgeInsets.apply(this);
     }
 }

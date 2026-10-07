@@ -67,6 +67,25 @@
                 android:targetPackage="org.openbanners.overlay" />
         </Preference>
 
+        <Preference
+            app:key="privacy"
+            app:persistent="false"
+            app:title="@string/preferences_privacy">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/privacy_policy_url" />
+        </Preference>
+
+        <Preference
+            app:key="source"
+            app:persistent="false"
+            app:summary="@string/source_code_url"
+            app:title="@string/preferences_source">
+            <intent
+                android:action="android.intent.action.VIEW"
+                android:data="@string/source_code_url" />
+        </Preference>
+
     </PreferenceCategory>
 
 </PreferenceScreen>

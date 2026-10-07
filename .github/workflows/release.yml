@@ -1,6 +1,6 @@
 name: Release
 
-# Push a tag like v12 to build a signed APK and publish it as a GitHub release.
+# Push a tag like v14 to build a signed APK (sideloading) and AAB (Google Play upload) and publish them as a GitHub release.
 on:
   push:
     tags: ['v*']
@@ -13,9 +13,9 @@ jobs:
   release:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
 
-      - uses: actions/setup-java@v4
+      - uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: '17'
@@ -36,8 +36,9 @@ jobs:
           SIGNING_KEY_PASSWORD: ${{ secrets.SIGNING_KEY_PASSWORD }}
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon assembleRelease
+          ./gradlew --no-daemon assembleRelease bundleRelease
           cp app/build/outputs/apk/release/app-release.apk "OpenBanners-Overlay-${GITHUB_REF_NAME}.apk"
+          cp app/build/outputs/bundle/release/app-release.aab "OpenBanners-Overlay-${GITHUB_REF_NAME}.aab"
 
       - name: Publish release
         if: startsWith(github.ref, 'refs/tags/')
@@ -45,4 +46,6 @@ jobs:
         with:
           name: OpenBanners Overlay ${{ github.ref_name }}
           generate_release_notes: true
-          files: OpenBanners-Overlay-${{ github.ref_name }}.apk
+          files: |
+            OpenBanners-Overlay-${{ github.ref_name }}.apk
+            OpenBanners-Overlay-${{ github.ref_name }}.aab
