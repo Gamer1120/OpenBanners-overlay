@@ -1,0 +1,2 @@
+• The next mission's first portal no longer hides the last step of the current mission (shown as 1f/2a).
+• The route map now uses its full height, so it zooms in closer.

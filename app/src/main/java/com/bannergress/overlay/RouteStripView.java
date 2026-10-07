@@ -44,6 +44,8 @@ class RouteStripView extends View {
     private static final double MAX_VISIBLE_METERS = 2_000;
     private static final double EASING = 0.18;
     private static final float HEIGHT_FRACTION = 0.25f;
+    /** Steps closer than this are treated as the same portal. */
+    private static final double SAME_PORTAL_METERS = 5;
     /**
      * Android 12+ drops touches that pass through another app's overlay unless it is at most
      * this opaque (InputManager's default maximum obscuring opacity).
@@ -194,8 +196,15 @@ class RouteStripView extends View {
                     for (int i = 0; i < next.steps.size(); i++) {
                         MissionStep step = next.steps.get(i);
                         if (hasPosition(step)) {
-                            newLegs.add(!newPoints.isEmpty());
-                            newPoints.add(new Point(step.poi.latitude, step.poi.longitude, label(active + 1, i), false));
+                            String nextLabel = label(active + 1, i);
+                            Point last = newPoints.isEmpty() ? null : newPoints.get(newPoints.size() - 1);
+                            if (last != null && DistanceCalculation.distanceMeters(last.lat, last.lng, step.poi.latitude, step.poi.longitude) < SAME_PORTAL_METERS) {
+                                // Missions often start where the previous one ends: label that portal "1f/2a" instead of hiding 1f.
+                                newPoints.set(newPoints.size() - 1, new Point(last.lat, last.lng, last.label + "/" + nextLabel, last.done));
+                            } else {
+                                newLegs.add(!newPoints.isEmpty());
+                                newPoints.add(new Point(step.poi.latitude, step.poi.longitude, nextLabel, false));
+                            }
                             break;
                         }
                     }
@@ -243,7 +252,11 @@ class RouteStripView extends View {
         double h = Math.max(getHeight(), 1);
         double margin = 14 * dp;
         double roomX = Math.max(w / 2 - margin, 1);
-        double roomUp = Math.max(h / 2 - statusBarHeightPx - margin, 1);
+        // The system usually places overlay windows below the status bar already; only reserve what still overlaps it.
+        int[] onScreen = new int[2];
+        getLocationOnScreen(onScreen);
+        double hiddenTop = Math.max(statusBarHeightPx - onScreen[1], 0);
+        double roomUp = Math.max(h / 2 - hiddenTop - margin, 1);
         double roomDown = Math.max(h / 2 - margin, 1);
         double mpp = VISIBLE_METERS / w;
         for (int i = 0; i < Math.min(NEAREST_OPEN_IN_VIEW, offsets.size()); i++) {
@@ -309,9 +322,12 @@ class RouteStripView extends View {
         for (Point p : points) {
             if (p.done) continue;
             float[] xy = project(p.lat, p.lng);
-            canvas.drawCircle(xy[0], xy[1], radius + 1.6f * dp, haloFill);
-            canvas.drawCircle(xy[0], xy[1], radius, openFill);
             labelPaint.setTextSize((p.label.length() >= 3 ? 7.5f : 9.5f) * dp);
+            // Round dot for short labels; a pill wide enough for longer ones such as "1f/2a".
+            float halfWidth = Math.max(radius, labelPaint.measureText(p.label) / 2f + 2.5f * dp);
+            float halo = 1.6f * dp;
+            canvas.drawRoundRect(xy[0] - halfWidth - halo, xy[1] - radius - halo, xy[0] + halfWidth + halo, xy[1] + radius + halo, radius + halo, radius + halo, haloFill);
+            canvas.drawRoundRect(xy[0] - halfWidth, xy[1] - radius, xy[0] + halfWidth, xy[1] + radius, radius, radius, openFill);
             canvas.drawText(p.label, xy[0], xy[1] - (labelPaint.descent() + labelPaint.ascent()) / 2f, labelPaint);
         }
 
