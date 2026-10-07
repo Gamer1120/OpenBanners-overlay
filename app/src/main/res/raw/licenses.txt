@@ -1,7 +1,7 @@
-OpenBanners
+OpenBanners Overlay
 Not affiliated with, or endorsed by, Bannergress or Niantic.
 
-OpenBanners is based on Banner Overlay by The Bannergress Team
+OpenBanners Overlay is based on Banner Overlay by The Bannergress Team
 (https://github.com/bannergress/banner-overlay), modified to add a route map.
 Banner data is loaded from the Bannergress API (https://bannergress.com).
 
