@@ -1,10 +1,10 @@
 <resources>
-    <string name="app_name">Banner Route Overlay</string>
+    <string name="app_name">OpenBanners</string>
     <string name="overlayClose">Close</string>
     <string name="overlayNext">Next</string>
     <string name="overlayStart">Start</string>
     <string name="overlayLoading">Loading…</string>
-    <string name="notificationTitle">Showing banner overlay</string>
+    <string name="notificationTitle">Showing OpenBanners overlay</string>
     <string name="notificationChannelDefaultTitle">Overlay</string>
     <string name="notificationChannelStepInRangeTitle">Step(s) in range</string>
     <string name="notificationAction">Stop</string>
@@ -24,7 +24,7 @@
     <string name="clipDataLabel">Mission number</string>
 
     <string name="preferences_title">Settings</string>
-    <string name="preferences_introduction">This companion app to Ingress Prime lets you keep an eye on the banner you are currently passing through.\n\nTo start progress tracking, just share a Bannergress banner link with the app.</string>
+    <string name="preferences_introduction">This companion app to Ingress Prime lets you keep an eye on the banner you are currently passing through.\n\nTo start progress tracking, just share a Bannergress banner link with the app.\n\nOpenBanners is based on Banner Overlay by The Bannergress Team and is not affiliated with Bannergress or Niantic.</string>
     <string name="preferences_location">Location</string>
     <string name="preferences_location_enable">Use location</string>
     <string name="preferences_notifications">Notifications</string>
@@ -35,4 +35,7 @@
     <string name="preferences_clipboard_enable">Copy mission number as passphrase</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
+    <string name="preferences_about">About</string>
+    <string name="preferences_licenses">Licences</string>
+    <string name="preferences_licenses_summary">Copyright notices and open-source licences</string>
 </resources>

@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- OpenBanners launcher icon: a 3x2 banner of mission tiles above a route. -->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <path android:fillColor="#FFEA00" android:pathData="M32,27h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2zM49,27h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2zM66,27h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2zM32,44h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2zM49,44h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2zM66,44h10a2,2 0,0 1,2,2v10a2,2 0,0 1,-2,2h-10a2,2 0,0 1,-2,-2v-10a2,2 0,0 1,2,-2z" />
+    <path android:strokeColor="#00E5FF" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round"
+        android:pathData="M32,80L46,70L62,78L76,68" />
+    <path android:fillColor="#FFFFFF" android:pathData="M32,80m-3.5,0a3.5,3.5 0,1 0,7 0a3.5,3.5 0,1 0,-7 0M46,70m-3.5,0a3.5,3.5 0,1 0,7 0a3.5,3.5 0,1 0,-7 0M62,78m-3.5,0a3.5,3.5 0,1 0,7 0a3.5,3.5 0,1 0,-7 0M76,68m-3.5,0a3.5,3.5 0,1 0,7 0a3.5,3.5 0,1 0,-7 0" />
+</vector>

@@ -2,21 +2,40 @@ plugins {
     id 'com.android.application'
 }
 
+// Release signing key lives outside the repo (keystore.properties: storeFile, storePassword, keyAlias, keyPassword).
+def signingPropsFile = new File(System.getProperty("user.home"), ".config/openbanners-signing/keystore.properties")
+def signingProps = new Properties()
+if (signingPropsFile.exists()) {
+    signingPropsFile.withInputStream { signingProps.load(it) }
+}
+
 android {
     compileSdk 34
 
     defaultConfig {
-        applicationId "com.bannergress.overlay.route"
+        applicationId "org.openbanners.overlay"
         minSdk 26
         targetSdk 34
-        versionCode 9
+        versionCode 10
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
+    signingConfigs {
+        release {
+            if (signingPropsFile.exists()) {
+                storeFile file(signingProps['storeFile'])
+                storePassword signingProps['storePassword']
+                keyAlias signingProps['keyAlias']
+                keyPassword signingProps['keyPassword']
+            }
+        }
+    }
+
     buildTypes {
         release {
+            signingConfig signingPropsFile.exists() ? signingConfigs.release : null
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

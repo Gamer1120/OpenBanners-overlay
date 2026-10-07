@@ -46,7 +46,7 @@ final class ServiceNotification {
                 PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
         );
         NotificationCompat.Action action = new NotificationCompat.Action.Builder(
-                R.drawable.ic_launcher_foreground,
+                R.drawable.ic_notification,
                 context.getString(R.string.notificationAction),
                 pendingIntentCancel
         ).build();
@@ -66,7 +66,7 @@ final class ServiceNotification {
                     .setProgress((int) totalDistance, Math.max((int) (totalDistance - remainingDistance), 0), false);
         }
         Notification notification = builder
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_notification)
                 .addAction(action)
                 .setOnlyAlertOnce(true)
                 .setAllowSystemGeneratedContextualActions(false)
@@ -86,7 +86,7 @@ final class ServiceNotification {
                 NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), STEP_IN_RANGE_CHANNEL_ID)
                         .setContentTitle(context.getString(getObjectiveName(step.objective)))
                         .setContentText(step.poi.title)
-                        .setSmallIcon(R.drawable.ic_launcher_foreground)
+                        .setSmallIcon(R.drawable.ic_notification)
                         .setAllowSystemGeneratedContextualActions(false)
                         .setTimeoutAfter(8_000);
                 Ingress.createLaunchIngressIntent(context).ifPresent(builder::setContentIntent);
