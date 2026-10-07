@@ -17,7 +17,8 @@ You can drag and drop the app to any place on your screen.
 ## Banner Route Overlay (fork)
 
 Fork of [bannergress/banner-overlay](https://github.com/bannergress/banner-overlay) (MIT) with a
-Machina Path-style route strip added: a touch-through map at the top of the screen (60% wide)
+Machina Path-style route strip added: a touch-through map at the top of the screen (from the
+control card's right edge to the right edge of the screen)
 showing the current mission's steps as labelled dots (`5c` = mission 5, step 3), legs in step
 order, done steps in grey, your position in cyan, and the next mission's first step. It keeps the
 nearest 3 open steps in view. Toggle under Settings → Route map. Installs next to the original

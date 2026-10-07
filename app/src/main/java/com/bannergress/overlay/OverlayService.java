@@ -53,7 +53,7 @@ public class OverlayService extends Service {
         StateManager.updateState(State::locationEnabled);
         boolean showRouteStrip = preferences.getBoolean(getString(R.string.route_strip_enable), true);
         if (showRouteStrip && routeStripView == null) {
-            routeStripView = RouteStripView.create(this);
+            routeStripView = RouteStripView.create(this, overlayView == null ? 0 : overlayView.getCardWidth());
         } else if (!showRouteStrip && routeStripView != null) {
             routeStripView.remove();
             routeStripView = null;

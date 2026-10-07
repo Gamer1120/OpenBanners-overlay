@@ -27,7 +27,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 
 /**
- * Touch-through route strip at the top of the screen (ported from Machina Path's overlay).
+ * Touch-through route strip at the top of the screen, right of the control card (ported from Machina Path's overlay).
  * <p>
  * Draws the current mission's steps as labelled dots ("5c" = mission 5, step 3) with legs
  * in step order, plus the next mission's first step so you can see where to go afterwards.
@@ -43,7 +43,6 @@ class RouteStripView extends View {
     private static final int NEAREST_OPEN_IN_VIEW = 3;
     private static final double MAX_VISIBLE_METERS = 2_000;
     private static final double EASING = 0.18;
-    private static final float WIDTH_FRACTION = 0.6f;
     private static final float HEIGHT_FRACTION = 0.25f;
     /**
      * Android 12+ drops touches that pass through another app's overlay unless it is at most
@@ -96,7 +95,7 @@ class RouteStripView extends View {
     private double viewLng = Double.NaN;
     private double viewMpp = Double.NaN;
 
-    private RouteStripView(Context context) {
+    private RouteStripView(Context context, int leftPx) {
         super(context);
         dp = context.getResources().getDisplayMetrics().density;
         haloLegPaint = stroke(COLOR_HALO, 6.5f);
@@ -112,24 +111,25 @@ class RouteStripView extends View {
 
         DisplayMetrics metrics = res.getDisplayMetrics();
         params = new WindowManager.LayoutParams(
-                (int) (metrics.widthPixels * WIDTH_FRACTION),
+                Math.max(metrics.widthPixels - leftPx, 1),
                 heightPx(context),
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
                         | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE
                         | WindowManager.LayoutParams.FLAG_LAYOUT_IN_SCREEN,
                 PixelFormat.TRANSLUCENT);
-        params.gravity = Gravity.TOP | Gravity.CENTER_HORIZONTAL;
+        params.gravity = Gravity.TOP | Gravity.START;
+        params.x = leftPx;
         params.alpha = MAX_TOUCH_THROUGH_ALPHA;
     }
 
-    /** Height of the strip window; the control card starts just below it. */
-    static int heightPx(Context context) {
+    private static int heightPx(Context context) {
         return (int) (context.getResources().getDisplayMetrics().heightPixels * HEIGHT_FRACTION);
     }
 
-    static RouteStripView create(Context context) {
-        RouteStripView view = new RouteStripView(context);
+    /** Creates the strip spanning from {@code leftPx} (right edge of the control card) to the right edge of the screen. */
+    static RouteStripView create(Context context, int leftPx) {
+        RouteStripView view = new RouteStripView(context, leftPx);
         context.getSystemService(WindowManager.class).addView(view, view.params);
         view.stateListener = StateManager.addListener((newState, oldState) -> view.applyState(newState));
         return view;
