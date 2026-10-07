@@ -2,12 +2,19 @@ plugins {
     id 'com.android.application'
 }
 
-// Release signing key lives outside the repo (keystore.properties: storeFile, storePassword, keyAlias, keyPassword).
+// Release signing key lives outside the repo: either ~/.config/openbanners-signing/keystore.properties
+// (storeFile, storePassword, keyAlias, keyPassword) or, on CI, the SIGNING_* environment variables.
 def signingPropsFile = new File(System.getProperty("user.home"), ".config/openbanners-signing/keystore.properties")
 def signingProps = new Properties()
 if (signingPropsFile.exists()) {
     signingPropsFile.withInputStream { signingProps.load(it) }
+} else if (System.getenv("SIGNING_STORE_FILE")) {
+    signingProps['storeFile'] = System.getenv("SIGNING_STORE_FILE")
+    signingProps['storePassword'] = System.getenv("SIGNING_STORE_PASSWORD")
+    signingProps['keyAlias'] = System.getenv("SIGNING_KEY_ALIAS")
+    signingProps['keyPassword'] = System.getenv("SIGNING_KEY_PASSWORD")
 }
+def hasSigningKey = signingProps['storeFile'] != null
 
 android {
     compileSdk 34
@@ -24,7 +31,7 @@ android {
 
     signingConfigs {
         release {
-            if (signingPropsFile.exists()) {
+            if (hasSigningKey) {
                 storeFile file(signingProps['storeFile'])
                 storePassword signingProps['storePassword']
                 keyAlias signingProps['keyAlias']
@@ -35,7 +42,7 @@ android {
 
     buildTypes {
         release {
-            signingConfig signingPropsFile.exists() ? signingConfigs.release : null
+            signingConfig hasSigningKey ? signingConfigs.release : null
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
