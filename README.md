@@ -17,7 +17,7 @@ You can drag and drop the app to any place on your screen.
 ## OpenBanners Overlay (fork)
 
 OpenBanners Overlay is a fork of [bannergress/banner-overlay](https://github.com/bannergress/banner-overlay)
-(MIT, Copyright (c) 2022 The Bannergress Team; see LICENSE) with a route map added: a touch-through
+(MIT, Copyright (c) 2022 The Bannergress Team; changes Copyright (c) 2026 Gamer1120; see LICENSE) with a route map added: a touch-through
 map at the top of the screen, from the control card's right edge to the right edge of the screen,
 showing the current mission's steps as labelled dots (`5c` = mission 5, step 3), legs in step order,
 done steps in grey, your position in cyan, and the next mission's first step. It keeps the nearest

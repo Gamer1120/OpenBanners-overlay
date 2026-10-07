@@ -16,7 +16,7 @@ android {
         applicationId "org.openbanners.overlay"
         minSdk 26
         targetSdk 34
-        versionCode 11
+        versionCode 12
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
