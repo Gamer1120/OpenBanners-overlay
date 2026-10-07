@@ -21,7 +21,8 @@ OpenBanners Overlay is a fork of [bannergress/banner-overlay](https://github.com
 map at the top of the screen, from the control card's right edge to the right edge of the screen,
 showing the current mission's steps as labelled dots (`5c` = mission 5, step 3), legs in step order,
 done steps in grey, your position in cyan, and the next mission's first step. It keeps the nearest
-3 open steps in view. Toggle under Settings → Route map. Location is requested at high accuracy.
+3 open steps in view. Toggle under Settings → Route map. Besides bannergress.com and Ingress mission links,
+it also accepts shared openbanners.org banner links (same banner ids). Location is requested at high accuracy.
 
 Not affiliated with Bannergress or Niantic. Application id `org.openbanners.overlay`; own icon.
 Licence notices shipped in the app: `app/src/main/res/raw/licenses.txt` (Settings → Licences).

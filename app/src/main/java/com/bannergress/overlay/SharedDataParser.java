@@ -1,11 +1,17 @@
 package com.bannergress.overlay;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
+import java.util.stream.Collectors;
+
+import com.google.common.collect.ImmutableSet;
 
 import okhttp3.HttpUrl;
 
 class SharedDataParser {
+    private static final ImmutableSet<String> OPENBANNERS_BANNER_PATHS = ImmutableSet.of("banner", "bannerguider", "bannerguiderwithoutlocation");
+
     static ParsedData parse(String data) {
         Matcher matcher = android.util.Patterns.WEB_URL.matcher(data);
         while (matcher.find()) {
@@ -14,6 +20,10 @@ class SharedDataParser {
                 continue;
             }
             Optional<ParsedData> optionalParsedData = parseBannergressBanner(url);
+            if (optionalParsedData.isPresent()) {
+                return optionalParsedData.get();
+            }
+            optionalParsedData = parseOpenBannersBanner(url);
             if (optionalParsedData.isPresent()) {
                 return optionalParsedData.get();
             }
@@ -28,6 +38,18 @@ class SharedDataParser {
     private static Optional<ParsedData> parseBannergressBanner(HttpUrl url) {
         if (url.isHttps() && url.host().equals("bannergress.com") && url.pathSegments().size() == 2 && url.pathSegments().get(0).equals("banner")) {
             return Optional.of(new ParsedData(ParsedDataType.banner, url.pathSegments().get(1)));
+        }
+        return Optional.empty();
+    }
+
+    /** OpenBanners uses Bannergress banner ids: openbanners.org/banner/{id}, /bannerguider/{id}[/debug], /bannerguiderwithoutlocation/{id}. */
+    private static Optional<ParsedData> parseOpenBannersBanner(HttpUrl url) {
+        if (!url.host().equals("openbanners.org") && !url.host().equals("www.openbanners.org")) {
+            return Optional.empty();
+        }
+        List<String> segments = url.pathSegments().stream().filter(segment -> !segment.isEmpty()).collect(Collectors.toList());
+        if (segments.size() >= 2 && OPENBANNERS_BANNER_PATHS.contains(segments.get(0))) {
+            return Optional.of(new ParsedData(ParsedDataType.banner, segments.get(1)));
         }
         return Optional.empty();
     }
