@@ -23,7 +23,7 @@ Closed test with at least 12 opted-in testers for 14 consecutive days before app
 ## Store listing
 
 Graphics and text are also in `fastlane/metadata/android/en-US/` (icon 512×512, feature graphic
-1024×500, 4 phone screenshots 1080×1920, title/short/full description). The location declaration demo
+1024×500, 4 phone screenshots 1080×1920, 4 seven-inch tablet screenshots 1200×1920 and 4 ten-inch tablet screenshots 1600×2560, title/short/full description). The location declaration demo
 video is not in the repo; upload it unlisted to YouTube and paste that link.
 
 - **App name:** OpenBanners Overlay
