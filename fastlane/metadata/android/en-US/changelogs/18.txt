@@ -1,0 +1,1 @@
+Back to the org.openbanners.overlay package name; installs over v16 and earlier. (v17 used com.openbanners.overlay and is a separate app; uninstall it.)
