@@ -1,0 +1,1 @@
+The route map colour settings now show a colour swatch and the hex value of each colour.

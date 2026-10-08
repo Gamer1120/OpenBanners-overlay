@@ -3,15 +3,21 @@ package org.openbanners.overlay;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.SpannableString;
+import android.text.Spanned;
+import android.text.style.ImageSpan;
 import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
 import androidx.preference.SwitchPreferenceCompat;
@@ -80,6 +86,58 @@ public class SettingsActivity extends AppCompatActivity {
             Preference notificationStepInRangePreference = findPreference(getString(R.string.notification_step_in_range));
             assert notificationStepInRangePreference != null;
             addChannelPreference(notificationStepInRangePreference, ServiceNotification.STEP_IN_RANGE_CHANNEL_ID);
+
+            for (int key : new int[]{R.string.route_color_open, R.string.route_color_done, R.string.route_color_me}) {
+                ListPreference colorPreference = findPreference(getString(key));
+                assert colorPreference != null;
+                addColorPreference(colorPreference);
+            }
+        }
+
+        /** Shows each colour as a coloured dot plus its hex value, and the selected colour as the preference icon. */
+        private void addColorPreference(ListPreference preference) {
+            CharSequence[] names = preference.getEntries();
+            CharSequence[] values = preference.getEntryValues();
+            CharSequence[] entries = new CharSequence[names.length];
+            for (int i = 0; i < names.length; i++) {
+                SpannableString entry = new SpannableString("\u25CF  " + names[i] + "  " + values[i]);
+                GradientDrawable dot = swatch(values[i].toString(), 16);
+                if (dot != null) {
+                    dot.setBounds(0, 0, dot.getIntrinsicWidth(), dot.getIntrinsicHeight());
+                    entry.setSpan(new ImageSpan(dot, ImageSpan.ALIGN_CENTER), 0, 1, Spanned.SPAN_EXCLUSIVE_EXCLUSIVE);
+                }
+                entries[i] = entry;
+            }
+            preference.setEntries(entries);
+            setColorIcon(preference, preference.getValue());
+            preference.setOnPreferenceChangeListener((p, newValue) -> {
+                setColorIcon(preference, (String) newValue);
+                return true;
+            });
+        }
+
+        private void setColorIcon(Preference preference, String value) {
+            GradientDrawable icon = swatch(value, 24);
+            if (icon != null) preference.setIcon(icon);
+        }
+
+        /** A round colour swatch of {@code sizeDp}, or null if {@code value} isn't a colour. */
+        private GradientDrawable swatch(String value, int sizeDp) {
+            int color;
+            try {
+                color = Color.parseColor(value);
+            } catch (IllegalArgumentException | NullPointerException e) {
+                return null;
+            }
+            float density = getResources().getDisplayMetrics().density;
+            GradientDrawable swatch = new GradientDrawable();
+            swatch.setShape(GradientDrawable.OVAL);
+            swatch.setColor(color);
+            // Outline so white and grey stay visible on light and dark themes.
+            swatch.setStroke(Math.round(1.5f * density), Color.argb(140, 128, 128, 128));
+            int size = Math.round(sizeDp * density);
+            swatch.setSize(size, size);
+            return swatch;
         }
 
         private void addChannelPreference(Preference preference, String channelId) {
