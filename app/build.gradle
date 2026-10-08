@@ -20,10 +20,10 @@ android {
     compileSdk 36
 
     defaultConfig {
-        applicationId "org.openbanners.overlay"
+        applicationId "com.openbanners.overlay"
         minSdk 26
         targetSdk 36
-        versionCode 16
+        versionCode 17
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -51,7 +51,7 @@ android {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
-    namespace 'org.openbanners.overlay'
+    namespace 'com.openbanners.overlay'
 }
 
 dependencies {

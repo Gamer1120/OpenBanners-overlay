@@ -1,0 +1,1 @@
+The app's package name is now com.openbanners.overlay, as registered on Google Play. Installs of earlier versions (org.openbanners.overlay) must be uninstalled first; this one installs as a separate app.

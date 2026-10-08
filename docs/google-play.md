@@ -1,6 +1,6 @@
 # Publishing OpenBanners Overlay on Google Play
 
-Checklist and ready-to-paste answers for the Play Console. Application id: `org.openbanners.overlay`.
+Checklist and ready-to-paste answers for the Play Console. Application id: `com.openbanners.overlay`.
 
 ## Build
 
