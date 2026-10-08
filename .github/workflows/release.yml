@@ -1,6 +1,9 @@
 name: Release
 
 # Push a tag like v14 to build a signed APK (sideloading) and AAB (Google Play upload) and publish them as a GitHub release.
+# If the PLAY_SERVICE_ACCOUNT_JSON secret is set, the AAB is also uploaded to Google Play: track from the PLAY_TRACK
+# repository variable (default "alpha" = closed testing), release status from PLAY_RELEASE_STATUS (default "completed";
+# "draft" leaves it for approval in Play Console). Release notes come from fastlane/.../changelogs/<versionCode>.txt.
 on:
   push:
     tags: ['v*']
@@ -49,3 +52,35 @@ jobs:
           files: |
             OpenBanners-Overlay-${{ github.ref_name }}.apk
             OpenBanners-Overlay-${{ github.ref_name }}.aab
+
+      - name: Prepare Google Play release notes
+        id: play
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+        run: |
+          if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
+            echo "PLAY_SERVICE_ACCOUNT_JSON not set: skipping the Google Play upload."
+            echo "upload=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          echo "upload=true" >> "$GITHUB_OUTPUT"
+          version_code=$(grep -oE 'versionCode [0-9]+' app/build.gradle | grep -oE '[0-9]+')
+          mkdir -p "$RUNNER_TEMP/whatsnew"
+          notes="fastlane/metadata/android/en-US/changelogs/${version_code}.txt"
+          if [ -f "$notes" ]; then
+            head -c 500 "$notes" > "$RUNNER_TEMP/whatsnew/whatsnew-en-US"
+          else
+            echo "Version ${version_code}" > "$RUNNER_TEMP/whatsnew/whatsnew-en-US"
+          fi
+          echo "whatsnew=$RUNNER_TEMP/whatsnew" >> "$GITHUB_OUTPUT"
+
+      - name: Upload to Google Play
+        if: steps.play.outputs.upload == 'true' && startsWith(github.ref, 'refs/tags/')
+        uses: r0adkll/upload-google-play@v1
+        with:
+          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          packageName: org.openbanners.overlay
+          releaseFiles: OpenBanners-Overlay-${{ github.ref_name }}.aab
+          track: ${{ vars.PLAY_TRACK || 'alpha' }}
+          status: ${{ vars.PLAY_RELEASE_STATUS || 'completed' }}
+          whatsNewDirectory: ${{ steps.play.outputs.whatsnew }}

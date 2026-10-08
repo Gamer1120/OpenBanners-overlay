@@ -8,6 +8,14 @@ Checklist and ready-to-paste answers for the Play Console. Application id: `org.
   `OpenBanners-Overlay-vN.aab` (upload this to Play) and `OpenBanners-Overlay-vN.apk` (sideloading).
 - Target SDK 36 (Android 16), as required for new apps and updates since 31 August 2026.
 
+## Automatic uploads
+
+The release workflow uploads the AAB of every `vN` tag to Google Play once the repository secret
+`PLAY_SERVICE_ACCOUNT_JSON` (a service account JSON key with release access to this app in Play Console) exists.
+Track: repository variable `PLAY_TRACK` (default `alpha`, the closed testing track). Status: `PLAY_RELEASE_STATUS`
+(default `completed`; `draft` to approve each release in Play Console). Release notes: `changelogs/<versionCode>.txt`.
+The very first AAB has to be uploaded by hand in Play Console; the API can only add later versions.
+
 ## App signing
 
 Use **Play App Signing with the existing OpenBanners key** ("Use existing app signing key from Java
