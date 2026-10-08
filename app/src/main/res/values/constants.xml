@@ -17,6 +17,8 @@
     <string name="card_items" translatable="false">card_items</string>
     <string name="card_layout" translatable="false">card_layout</string>
     <string name="card_size" translatable="false">card_size</string>
+    <string name="layout_export" translatable="false">layout_export</string>
+    <string name="layout_import" translatable="false">layout_import</string>
     <string name="privacy_policy_url" translatable="false">https://openbanners.org/overlay/privacy</string>
     <string name="source_code_url" translatable="false">https://github.com/Gamer1120/OpenBanners-overlay</string>
 </resources>

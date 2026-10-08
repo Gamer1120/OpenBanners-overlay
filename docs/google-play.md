@@ -46,6 +46,7 @@ video is not in the repo; upload it unlisted to YouTube and paste that link.
   • Choose your own colours for the current mission, upcoming missions, completed steps and your position.
   • Keep the map north up, or let it turn with your compass.
   • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
+  • Share your layout with friends, or import theirs.
 
   The overlay lets touches pass through to Ingress, so you can keep playing as usual.
 

@@ -35,6 +35,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        String text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
+        if (LayoutCodec.looksLikeLayout(text)) {
+            // A shared layout, not a banner: offer to import it.
+            Intent settings = new Intent(this, SettingsActivity.class);
+            settings.putExtra(SettingsActivity.EXTRA_IMPORT_LAYOUT, text);
+            startActivity(settings);
+            finish();
+            return;
+        }
         startService(true);
     }
 }

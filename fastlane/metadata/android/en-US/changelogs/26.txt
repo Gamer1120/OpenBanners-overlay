@@ -1,0 +1,1 @@
+Share layouts: Settings → Share layouts → Export layout shares your mission card and route map settings as text (and copies it). Import layout pastes one in, or share a layout text straight to OpenBanners Overlay to import it.

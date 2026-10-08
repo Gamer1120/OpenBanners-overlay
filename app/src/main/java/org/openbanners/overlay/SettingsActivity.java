@@ -1,6 +1,8 @@
 package org.openbanners.overlay;
 
 import android.Manifest;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -13,6 +15,8 @@ import android.view.Gravity;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
@@ -62,6 +66,9 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.settings, new SettingsFragment()).commit();
         }
     }
+
+    /** Layout text shared to the app (see MainActivity): ask before importing it. */
+    static final String EXTRA_IMPORT_LAYOUT = "org.openbanners.overlay.IMPORT_LAYOUT";
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
@@ -113,6 +120,23 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
+            Preference exportPreference = findPreference(getString(R.string.layout_export));
+            Preference importPreference = findPreference(getString(R.string.layout_import));
+            assert exportPreference != null && importPreference != null;
+            exportPreference.setOnPreferenceClickListener(p -> {
+                exportLayout();
+                return true;
+            });
+            importPreference.setOnPreferenceClickListener(p -> {
+                showImportDialog(null);
+                return true;
+            });
+            String shared = requireActivity().getIntent().getStringExtra(SettingsActivity.EXTRA_IMPORT_LAYOUT);
+            if (shared != null) {
+                requireActivity().getIntent().removeExtra(SettingsActivity.EXTRA_IMPORT_LAYOUT);
+                showImportDialog(shared);
+            }
+
             // "Compass points to" only shows when the compass is always visible; the update interval only when
             // the compass is actually read (map follows the compass, or the needle shows your heading).
             ListPreference orientationPreference = findPreference(getString(R.string.route_orientation));
@@ -134,6 +158,53 @@ public class SettingsActivity extends AppCompatActivity {
             orientationPreference.setOnPreferenceChangeListener(recheck);
             alwaysPreference.setOnPreferenceChangeListener(recheck);
             needlePreference.setOnPreferenceChangeListener(recheck);
+        }
+
+        private void exportLayout() {
+            String layout = LayoutCodec.export(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()));
+            ClipboardManager clipboard = requireContext().getSystemService(ClipboardManager.class);
+            clipboard.setPrimaryClip(ClipData.newPlainText(getString(R.string.preferences_layout_export), layout));
+            Toast.makeText(getContext(), R.string.layout_copied, Toast.LENGTH_SHORT).show();
+            Intent send = new Intent(Intent.ACTION_SEND);
+            send.setType("text/plain");
+            send.putExtra(Intent.EXTRA_TEXT, layout);
+            startActivity(Intent.createChooser(send, getString(R.string.layout_export_chooser)));
+        }
+
+        /** Asks for (or confirms) a layout and imports it. {@code text} pre-fills the field, else the clipboard does. */
+        private void showImportDialog(String text) {
+            EditText input = new EditText(requireContext());
+            input.setHint(R.string.layout_import_hint);
+            input.setMinLines(3);
+            input.setMaxLines(8);
+            if (text == null) {
+                ClipboardManager clipboard = requireContext().getSystemService(ClipboardManager.class);
+                ClipData clip = clipboard.getPrimaryClip();
+                if (clip != null && clip.getItemCount() > 0) {
+                    CharSequence clipText = clip.getItemAt(0).coerceToText(requireContext());
+                    if (clipText != null && LayoutCodec.looksLikeLayout(clipText.toString())) text = clipText.toString();
+                }
+            }
+            if (text != null) input.setText(text);
+            FrameLayout container = new FrameLayout(requireContext());
+            int padding = Math.round(20 * getResources().getDisplayMetrics().density);
+            container.setPadding(padding, padding / 2, padding, 0);
+            container.addView(input);
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.preferences_layout_import)
+                    .setMessage(R.string.layout_import_confirm)
+                    .setView(container)
+                    .setPositiveButton(R.string.layout_import_action, (d, w) -> {
+                        try {
+                            LayoutCodec.importLayout(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()), input.getText().toString());
+                            Toast.makeText(getContext(), R.string.layout_imported, Toast.LENGTH_SHORT).show();
+                            requireActivity().recreate(); // show the imported values
+                        } catch (IllegalArgumentException e) {
+                            Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
         }
 
         private String cardItemName(String item) {

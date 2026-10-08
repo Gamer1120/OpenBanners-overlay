@@ -43,6 +43,17 @@
     <string name="card_item_next">Start / Next</string>
     <string name="card_items_keep_one">Keep at least one item on the card.</string>
     <string name="card_items_reset">Reset</string>
+    <string name="preferences_layouts">Share layouts</string>
+    <string name="preferences_layout_export">Export layout</string>
+    <string name="preferences_layout_export_summary">Share or copy your mission card and route map settings as text</string>
+    <string name="preferences_layout_import">Import layout</string>
+    <string name="preferences_layout_import_summary">Paste a layout someone shared with you</string>
+    <string name="layout_export_chooser">Share layout</string>
+    <string name="layout_copied">Layout copied to the clipboard</string>
+    <string name="layout_import_hint">Paste the layout text here</string>
+    <string name="layout_import_confirm">Replace your mission card and route map settings with this layout?</string>
+    <string name="layout_imported">Layout imported</string>
+    <string name="layout_import_action">Import</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
     <string name="preferences_route_color_open">Colour of the current mission</string>

@@ -127,6 +127,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_layouts">
+
+        <Preference
+            app:key="@string/layout_export"
+            app:persistent="false"
+            app:summary="@string/preferences_layout_export_summary"
+            app:title="@string/preferences_layout_export" />
+
+        <Preference
+            app:key="@string/layout_import"
+            app:persistent="false"
+            app:summary="@string/preferences_layout_import_summary"
+            app:title="@string/preferences_layout_import" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_notifications">
 
         <SwitchPreferenceCompat
