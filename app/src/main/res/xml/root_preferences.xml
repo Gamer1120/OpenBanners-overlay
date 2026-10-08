@@ -25,6 +25,33 @@
             app:key="@string/route_strip_enable"
             app:title="@string/preferences_route_strip_enable" />
 
+        <ListPreference
+            app:defaultValue="#FFEA00"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_color_names"
+            app:entryValues="@array/route_color_values"
+            app:key="@string/route_color_open"
+            app:title="@string/preferences_route_color_open"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="#969696"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_color_names"
+            app:entryValues="@array/route_color_values"
+            app:key="@string/route_color_done"
+            app:title="@string/preferences_route_color_done"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="#00E5FF"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_color_names"
+            app:entryValues="@array/route_color_values"
+            app:key="@string/route_color_me"
+            app:title="@string/preferences_route_color_me"
+            app:useSimpleSummaryProvider="true" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/preferences_notifications">

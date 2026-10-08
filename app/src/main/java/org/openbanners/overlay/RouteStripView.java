@@ -2,6 +2,7 @@ package org.openbanners.overlay;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -13,6 +14,9 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.View;
 import android.view.WindowManager;
+
+import androidx.preference.PreferenceManager;
+
 
 import org.openbanners.overlay.api.Banner;
 import org.openbanners.overlay.api.Mission;
@@ -53,9 +57,11 @@ class RouteStripView extends View {
     private static final float MAX_TOUCH_THROUGH_ALPHA = 0.8f;
 
     private static final int COLOR_HALO = Color.argb(200, 0, 0, 0);
-    private static final int COLOR_OPEN = Color.rgb(255, 234, 0);
-    private static final int COLOR_ME = Color.rgb(0, 229, 255);
-    private static final int COLOR_DONE = Color.argb(170, 150, 150, 150);
+    private static final String DEFAULT_COLOR_OPEN = "#FFEA00";
+    private static final String DEFAULT_COLOR_DONE = "#969696";
+    private static final String DEFAULT_COLOR_ME = "#00E5FF";
+    /** Completed steps are drawn semi-transparent so the open route stands out. */
+    private static final int DONE_ALPHA = 170;
 
     /** One drawable step: position, label, and whether it still has to be done. */
     private static final class Point {
@@ -80,9 +86,9 @@ class RouteStripView extends View {
     private final Paint doneLegPaint;
     private final Paint haloFill = fill(COLOR_HALO);
     private final Paint whiteFill = fill(Color.WHITE);
-    private final Paint openFill = fill(COLOR_OPEN);
-    private final Paint doneFill = fill(COLOR_DONE);
-    private final Paint meFill = fill(COLOR_ME);
+    private final Paint openFill = fill(Color.TRANSPARENT);
+    private final Paint doneFill = fill(Color.TRANSPARENT);
+    private final Paint meFill = fill(Color.TRANSPARENT);
     private final Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private BiConsumer<State, State> stateListener;
 
@@ -101,9 +107,8 @@ class RouteStripView extends View {
         super(context);
         dp = context.getResources().getDisplayMetrics().density;
         haloLegPaint = stroke(COLOR_HALO, 6.5f);
-        openLegPaint = stroke(COLOR_OPEN, 3.5f);
-        doneLegPaint = stroke(COLOR_DONE, 3f);
-        labelPaint.setColor(Color.BLACK);
+        openLegPaint = stroke(Color.TRANSPARENT, 3.5f);
+        doneLegPaint = stroke(Color.TRANSPARENT, 3f);
         labelPaint.setFakeBoldText(true);
         labelPaint.setTextAlign(Paint.Align.CENTER);
         Resources res = context.getResources();
@@ -132,9 +137,35 @@ class RouteStripView extends View {
     /** Creates the strip spanning from {@code leftPx} (right edge of the control card) to the right edge of the screen. */
     static RouteStripView create(Context context, int leftPx) {
         RouteStripView view = new RouteStripView(context, leftPx);
+        view.applyColors(PreferenceManager.getDefaultSharedPreferences(context));
         context.getSystemService(WindowManager.class).addView(view, view.params);
         view.stateListener = StateManager.addListener((newState, oldState) -> view.applyState(newState));
         return view;
+    }
+
+    /** Reads the colours chosen in the settings (stored as "#RRGGBB") and redraws. */
+    void applyColors(SharedPreferences preferences) {
+        Context context = getContext();
+        int open = parseColor(preferences.getString(context.getString(R.string.route_color_open), DEFAULT_COLOR_OPEN), DEFAULT_COLOR_OPEN);
+        int done = parseColor(preferences.getString(context.getString(R.string.route_color_done), DEFAULT_COLOR_DONE), DEFAULT_COLOR_DONE);
+        int me = parseColor(preferences.getString(context.getString(R.string.route_color_me), DEFAULT_COLOR_ME), DEFAULT_COLOR_ME);
+        int doneTranslucent = Color.argb(DONE_ALPHA, Color.red(done), Color.green(done), Color.blue(done));
+        openFill.setColor(open);
+        openLegPaint.setColor(open);
+        doneFill.setColor(doneTranslucent);
+        doneLegPaint.setColor(doneTranslucent);
+        meFill.setColor(me);
+        // Labels sit on the open-step colour: dark text on light colours, white text on dark ones.
+        labelPaint.setColor(Color.luminance(open) > 0.4f ? Color.BLACK : Color.WHITE);
+        invalidate();
+    }
+
+    private static int parseColor(String value, String fallback) {
+        try {
+            return Color.parseColor(value);
+        } catch (IllegalArgumentException | NullPointerException e) {
+            return Color.parseColor(fallback);
+        }
     }
 
     void remove() {

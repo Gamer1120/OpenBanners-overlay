@@ -1,0 +1,1 @@
+Choose your own colours for the route map: open steps and route, completed steps, and your position (Settings → Route map).

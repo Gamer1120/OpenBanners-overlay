@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Yellow</item>
+        <item>Orange</item>
+        <item>Red</item>
+        <item>Pink</item>
+        <item>Purple</item>
+        <item>Blue</item>
+        <item>Cyan</item>
+        <item>Green</item>
+        <item>Lime</item>
+        <item>White</item>
+        <item>Grey</item>
+    </string-array>
+    <string-array name="route_color_values" translatable="false">
+        <item>#FFEA00</item>
+        <item>#FF9100</item>
+        <item>#FF1744</item>
+        <item>#FF4FB0</item>
+        <item>#D500F9</item>
+        <item>#2979FF</item>
+        <item>#00E5FF</item>
+        <item>#00E676</item>
+        <item>#C6FF00</item>
+        <item>#FFFFFF</item>
+        <item>#969696</item>
+    </string-array>
+</resources>

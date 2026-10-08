@@ -42,6 +42,7 @@ video is not in the repo; upload it unlisted to YouTube and paste that link.
   • Mission controls: see which mission you are on and open the next mission in Ingress with one tap.
   • Steps are ticked off automatically when you get within range, with an optional notification.
   • Optionally copy the mission number to the clipboard for passphrase missions.
+  • Choose your own colours for the route, the steps and your position.
 
   The overlay lets touches pass through to Ingress, so you can keep playing as usual.
 

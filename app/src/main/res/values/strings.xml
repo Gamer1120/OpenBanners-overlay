@@ -35,6 +35,9 @@
     <string name="preferences_clipboard_enable">Copy mission number as passphrase</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
+    <string name="preferences_route_color_open">Colour of open steps and route</string>
+    <string name="preferences_route_color_done">Colour of completed steps</string>
+    <string name="preferences_route_color_me">Colour of your position</string>
     <string name="preferences_about">About</string>
     <string name="preferences_licenses">Licences</string>
     <string name="preferences_licenses_summary">Copyright notices and open-source licences</string>

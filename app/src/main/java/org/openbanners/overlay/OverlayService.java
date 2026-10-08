@@ -58,6 +58,9 @@ public class OverlayService extends Service {
             routeStripView.remove();
             routeStripView = null;
         }
+        if (routeStripView != null) {
+            routeStripView.applyColors(preferences);
+        }
     }
 
     @Override
