@@ -1,0 +1,1 @@
+New setting "Always show the compass": shows the compass on the route map also when the map is north up. When it's on, "Compass points to" chooses whether the needle points north or in the direction you're facing.

@@ -41,6 +41,21 @@
             app:title="@string/preferences_route_orientation"
             app:useSimpleSummaryProvider="true" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:dependency="@string/route_strip_enable"
+            app:key="@string/route_compass_always"
+            app:summary="@string/preferences_route_compass_always_summary"
+            app:title="@string/preferences_route_compass_always" />
+
+        <ListPreference
+            app:defaultValue="north"
+            app:entries="@array/route_compass_needle_names"
+            app:entryValues="@array/route_compass_needle_values"
+            app:key="@string/route_compass_needle"
+            app:title="@string/preferences_route_compass_needle"
+            app:useSimpleSummaryProvider="true" />
+
         <ListPreference
             app:defaultValue="1000"
             app:entries="@array/route_compass_interval_names"

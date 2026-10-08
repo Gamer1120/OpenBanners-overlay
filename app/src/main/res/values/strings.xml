@@ -43,6 +43,9 @@
     <string name="preferences_route_color_me">Colour of your position</string>
     <string name="preferences_route_orientation">Map orientation</string>
     <string name="preferences_route_compass_interval">Compass update interval</string>
+    <string name="preferences_route_compass_always">Always show the compass</string>
+    <string name="preferences_route_compass_always_summary">Show the compass on the route map, also when the map is north up</string>
+    <string name="preferences_route_compass_needle">Compass points to</string>
     <string name="preferences_about">About</string>
     <string name="preferences_licenses">Licences</string>
     <string name="preferences_licenses_summary">Copyright notices and open-source licences</string>

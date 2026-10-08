@@ -93,15 +93,27 @@ public class SettingsActivity extends AppCompatActivity {
                 addColorPreference(colorPreference);
             }
 
-            // The compass interval only matters when the map follows the compass.
+            // "Compass points to" only shows when the compass is always visible; the update interval only when
+            // the compass is actually read (map follows the compass, or the needle shows your heading).
             ListPreference orientationPreference = findPreference(getString(R.string.route_orientation));
+            SwitchPreferenceCompat alwaysPreference = findPreference(getString(R.string.route_compass_always));
+            ListPreference needlePreference = findPreference(getString(R.string.route_compass_needle));
             Preference intervalPreference = findPreference(getString(R.string.route_compass_interval));
-            assert orientationPreference != null && intervalPreference != null;
-            intervalPreference.setVisible("compass".equals(orientationPreference.getValue()));
-            orientationPreference.setOnPreferenceChangeListener((p, newValue) -> {
-                intervalPreference.setVisible("compass".equals(newValue));
+            assert orientationPreference != null && alwaysPreference != null && needlePreference != null && intervalPreference != null;
+            Runnable updateCompassVisibility = () -> {
+                needlePreference.setVisible(alwaysPreference.isChecked());
+                intervalPreference.setVisible("compass".equals(orientationPreference.getValue())
+                        || (alwaysPreference.isChecked() && "heading".equals(needlePreference.getValue())));
+            };
+            updateCompassVisibility.run();
+            // Change listeners run before the new value is stored, so re-check afterwards.
+            Preference.OnPreferenceChangeListener recheck = (p, newValue) -> {
+                getListView().post(updateCompassVisibility);
                 return true;
-            });
+            };
+            orientationPreference.setOnPreferenceChangeListener(recheck);
+            alwaysPreference.setOnPreferenceChangeListener(recheck);
+            needlePreference.setOnPreferenceChangeListener(recheck);
         }
 
         /** Shows each colour as a coloured dot plus its hex value, and the selected colour as the preference icon. */

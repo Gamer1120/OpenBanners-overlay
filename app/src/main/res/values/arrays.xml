@@ -34,6 +34,14 @@
         <item>north</item>
         <item>compass</item>
     </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>North</item>
+        <item>The direction you are facing</item>
+    </string-array>
+    <string-array name="route_compass_needle_values" translatable="false">
+        <item>north</item>
+        <item>heading</item>
+    </string-array>
     <string-array name="route_compass_interval_names">
         <item>Continuously</item>
         <item>Every 0.5 seconds</item>

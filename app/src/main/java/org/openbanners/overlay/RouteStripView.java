@@ -71,6 +71,7 @@ class RouteStripView extends View {
     /** Completed steps are drawn semi-transparent so the open route stands out. */
     private static final int DONE_ALPHA = 170;
     private static final String ORIENTATION_COMPASS = "compass";
+    private static final String COMPASS_NEEDLE_HEADING = "heading";
     private static final long DEFAULT_COMPASS_INTERVAL_MS = 1000;
     /** Fraction of the remaining turn applied per frame when the compass heading changes. */
     private static final double HEADING_EASING = 0.2;
@@ -133,6 +134,12 @@ class RouteStripView extends View {
 
     /** Follow-compass mode: the map is turned so the direction you face is up. */
     private boolean followCompass;
+    /** Show the compass needle even when the map is north up. */
+    private boolean compassAlwaysVisible;
+    /** When the needle is always visible: point it where you're facing instead of north. */
+    private boolean needleShowsHeading;
+    /** Direction you're facing, eased towards {@link #targetHeading}, for the heading needle. */
+    private double facingHeading = Double.NaN;
     private long compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
     private long lastHeadingUpdate;
     /** Latest sampled heading in degrees clockwise from north, NaN until the first sample. */
@@ -212,7 +219,10 @@ class RouteStripView extends View {
         } catch (NumberFormatException e) {
             compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
         }
-        setCompassListening(followCompass);
+        compassAlwaysVisible = preferences.getBoolean(context.getString(R.string.route_compass_always), false);
+        needleShowsHeading = compassAlwaysVisible
+                && COMPASS_NEEDLE_HEADING.equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));
+        setCompassListening(followCompass || needleShowsHeading);
         boolean newShowWholeBanner = preferences.getBoolean(context.getString(R.string.route_show_whole_banner), true);
         if (newShowWholeBanner != showWholeBanner) {
             showWholeBanner = newShowWholeBanner;
@@ -231,6 +241,7 @@ class RouteStripView extends View {
             sensorManager.unregisterListener(compassListener);
             compassRegistered = false;
             targetHeading = Double.NaN;
+            facingHeading = Double.NaN;
         }
     }
 
@@ -514,7 +525,26 @@ class RouteStripView extends View {
         return true;
     }
 
-    /** Small compass needle in the top-right corner, pointing north, shown while the map follows the compass. */
+    /** Eases the heading needle towards the latest compass reading; true while still turning. */
+    private boolean easeFacing() {
+        if (Double.isNaN(targetHeading)) return false;
+        if (Double.isNaN(facingHeading)) {
+            facingHeading = targetHeading;
+            return false;
+        }
+        double delta = ((targetHeading - facingHeading) % 360 + 540) % 360 - 180;
+        if (Math.abs(delta) < 0.3) {
+            facingHeading = targetHeading;
+            return false;
+        }
+        facingHeading = ((facingHeading + delta * HEADING_EASING) % 360 + 360) % 360;
+        return true;
+    }
+
+    /**
+     * Small compass needle in the top-right corner. It points north (white) while the map follows the compass or
+     * when chosen in the settings, or in the direction you're facing (in your position's colour).
+     */
     private void drawNorthArrow(Canvas canvas) {
         int[] onScreen = new int[2];
         getLocationOnScreen(onScreen);
@@ -524,14 +554,15 @@ class RouteStripView extends View {
         float cy = hiddenTop + r + 6 * dp;
         canvas.drawCircle(cx, cy, r, haloFill);
         canvas.save();
-        canvas.rotate((float) -viewHeading, cx, cy);
+        boolean heading = needleShowsHeading && !Double.isNaN(facingHeading);
+        canvas.rotate((float) ((heading ? facingHeading : 0) - viewHeading), cx, cy);
         Path needle = new Path();
         needle.moveTo(cx, cy - r * 0.75f);
         needle.lineTo(cx + r * 0.38f, cy + r * 0.45f);
         needle.lineTo(cx, cy + r * 0.2f);
         needle.lineTo(cx - r * 0.38f, cy + r * 0.45f);
         needle.close();
-        canvas.drawPath(needle, whiteFill);
+        canvas.drawPath(needle, heading ? meFill : whiteFill);
         canvas.restore();
     }
 
@@ -539,7 +570,7 @@ class RouteStripView extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (points.isEmpty()) return;
-        boolean turning = easeHeading();
+        boolean turning = easeHeading() | easeFacing();
         boolean stillMoving = easeFraming(desiredFraming()) | turning;
 
         // Legs: upcoming missions first, then done ones (banners often loop back over earlier missions, and the path
@@ -591,7 +622,7 @@ class RouteStripView extends View {
             canvas.drawCircle(me[0], me[1], 7.5f * dp, whiteFill);
             canvas.drawCircle(me[0], me[1], 5.5f * dp, meFill);
         }
-        if (followCompass) drawNorthArrow(canvas);
+        if (followCompass || compassAlwaysVisible) drawNorthArrow(canvas);
         if (stillMoving) postInvalidateOnAnimation();
     }
 }
