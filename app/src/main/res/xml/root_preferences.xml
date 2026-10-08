@@ -63,7 +63,7 @@
             app:summary="@string/preferences_licenses_summary"
             app:title="@string/preferences_licenses">
             <intent
-                android:targetClass="com.bannergress.overlay.LicensesActivity"
+                android:targetClass="org.openbanners.overlay.LicensesActivity"
                 android:targetPackage="org.openbanners.overlay" />
         </Preference>
 
