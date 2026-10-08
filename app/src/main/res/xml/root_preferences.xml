@@ -18,6 +18,31 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_card">
+
+        <Preference
+            app:key="@string/card_items"
+            app:persistent="false"
+            app:title="@string/preferences_card_items" />
+
+        <ListPreference
+            app:defaultValue="two_rows"
+            app:entries="@array/card_layout_names"
+            app:entryValues="@array/card_layout_values"
+            app:key="@string/card_layout"
+            app:title="@string/preferences_card_layout"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="1.0"
+            app:entries="@array/card_size_names"
+            app:entryValues="@array/card_size_values"
+            app:key="@string/card_size"
+            app:title="@string/preferences_card_size"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_route_strip">
 
         <SwitchPreferenceCompat

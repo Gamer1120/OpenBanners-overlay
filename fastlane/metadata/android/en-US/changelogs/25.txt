@@ -1,0 +1,1 @@
+Customisable mission card (Settings → Mission card): choose which buttons are shown and in what order, pick a layout (two rows, one wide row, or one tall column) and a size (small to extra large). The route map adjusts to the card's new width.

@@ -4,24 +4,31 @@ import android.annotation.SuppressLint;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.core.os.HandlerCompat;
+import androidx.preference.PreferenceManager;
 
 import org.openbanners.overlay.api.Banner;
 import org.openbanners.overlay.api.BannerApi;
 import org.openbanners.overlay.api.Mission;
 import com.google.common.collect.Iterables;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
@@ -40,6 +47,12 @@ class OverlayView extends FrameLayout {
     private final Button buttonMinus;
     private final Button buttonNext;
     private final Button buttonPlus;
+    private final LinearLayout cardContent;
+    private final float baseButtonTextPx;
+    private final float baseCounterTextPx;
+    private final int baseButtonMinHeight;
+    /** Card settings currently applied, to skip rebuilding when unrelated settings change. */
+    private String appliedCardConfig;
     private BiConsumer<State, State> stateListener;
 
     public OverlayView(Context context, String data) {
@@ -50,6 +63,10 @@ class OverlayView extends FrameLayout {
         buttonMinus = findViewById(R.id.buttonMinus);
         buttonNext = findViewById(R.id.buttonNext);
         buttonPlus = findViewById(R.id.buttonPlus);
+        cardContent = findViewById(R.id.cardContent);
+        baseButtonTextPx = buttonNext.getTextSize();
+        baseCounterTextPx = textMission.getTextSize();
+        baseButtonMinHeight = buttonNext.getMinHeight();
         params = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -57,6 +74,7 @@ class OverlayView extends FrameLayout {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.RGB_888);
         params.gravity = Gravity.START | Gravity.TOP;
+        applyCardPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         setupListeners();
         applyState(StateManager.getState());
         loadData(data, context);
@@ -72,6 +90,105 @@ class OverlayView extends FrameLayout {
     public int getCardWidth() {
         measure(MeasureSpec.UNSPECIFIED, MeasureSpec.UNSPECIFIED);
         return getMeasuredWidth();
+    }
+
+    /**
+     * Arranges the card from the settings: which items are shown and in which order ({@link CardItems}),
+     * the layout (two rows, one wide row, or one tall column) and the size.
+     */
+    void applyCardPreferences(SharedPreferences preferences) {
+        Context context = getContext();
+        String layout = preferences.getString(context.getString(R.string.card_layout), CardItems.LAYOUT_TWO_ROWS);
+        String sizeValue = preferences.getString(context.getString(R.string.card_size), "1.0");
+        String items = preferences.getString(context.getString(R.string.card_items), CardItems.DEFAULT);
+        String config = layout + "|" + sizeValue + "|" + items;
+        if (config.equals(appliedCardConfig)) return;
+        appliedCardConfig = config;
+        float scale;
+        try {
+            scale = Float.parseFloat(sizeValue);
+        } catch (NumberFormatException e) {
+            scale = 1f;
+        }
+        float dp = getResources().getDisplayMetrics().density;
+
+        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext}) {
+            ViewGroup parent = (ViewGroup) view.getParent();
+            if (parent != null) parent.removeView(view);
+        }
+        cardContent.removeAllViews();
+        for (Button button : new Button[]{buttonMinus, buttonPlus, buttonNext}) {
+            button.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseButtonTextPx * scale);
+            button.setMinHeight(Math.round(baseButtonMinHeight * scale));
+            button.setMinimumHeight(Math.round(baseButtonMinHeight * scale));
+        }
+        textMission.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseCounterTextPx * scale);
+        textMission.setGravity(Gravity.CENTER);
+
+        List<View> views = new ArrayList<>();
+        for (String item : CardItems.parse(items)) {
+            views.add(viewFor(item));
+        }
+        int fullWidth = Math.round(100 * dp * scale);
+        switch (layout) {
+            case CardItems.LAYOUT_WIDE: {
+                LinearLayout row = row();
+                for (View view : views) {
+                    row.addView(view, new LinearLayout.LayoutParams(view == buttonNext ? Math.round(90 * dp * scale) : naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+                cardContent.addView(row);
+                break;
+            }
+            case CardItems.LAYOUT_TALL: {
+                for (View view : views) {
+                    cardContent.addView(view, new LinearLayout.LayoutParams(fullWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+                break;
+            }
+            default: {
+                // Two rows: all items but the last side by side, the last one full width below (the original card).
+                if (views.size() == 1) {
+                    cardContent.addView(views.get(0), new LinearLayout.LayoutParams(fullWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    break;
+                }
+                LinearLayout row = row();
+                for (View view : views.subList(0, views.size() - 1)) {
+                    row.addView(view, new LinearLayout.LayoutParams(naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+                cardContent.addView(row);
+                cardContent.addView(views.get(views.size() - 1), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                break;
+            }
+        }
+        if (isAttachedToWindow()) {
+            getContext().getSystemService(WindowManager.class).updateViewLayout(this, params);
+        }
+    }
+
+    private LinearLayout row() {
+        LinearLayout row = new LinearLayout(getContext());
+        row.setOrientation(LinearLayout.HORIZONTAL);
+        row.setGravity(Gravity.CENTER_VERTICAL);
+        return row;
+    }
+
+    /** Width of an item when it sits in a row: the original card's widths, scaled. */
+    private int naturalWidth(View view, float dp, float scale) {
+        int widthDp = view == textMission ? 60 : view == buttonNext ? 90 : 40;
+        return Math.round(widthDp * dp * scale);
+    }
+
+    private View viewFor(String item) {
+        switch (item) {
+            case CardItems.MINUS:
+                return buttonMinus;
+            case CardItems.COUNTER:
+                return textMission;
+            case CardItems.PLUS:
+                return buttonPlus;
+            default:
+                return buttonNext;
+        }
     }
 
     public WindowManager.LayoutParams getWindowParams() {

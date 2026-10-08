@@ -33,6 +33,16 @@
     <string name="preferences_notification_step_in_range">Next step in range</string>
     <string name="preferences_clipboard">Clipboard</string>
     <string name="preferences_clipboard_enable">Copy mission number as passphrase</string>
+    <string name="preferences_card">Mission card</string>
+    <string name="preferences_card_items">Buttons and order</string>
+    <string name="preferences_card_layout">Layout</string>
+    <string name="preferences_card_size">Size</string>
+    <string name="card_item_minus">− (previous mission)</string>
+    <string name="card_item_counter">Mission counter</string>
+    <string name="card_item_plus">+ (next mission)</string>
+    <string name="card_item_next">Start / Next</string>
+    <string name="card_items_keep_one">Keep at least one item on the card.</string>
+    <string name="card_items_reset">Reset</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
     <string name="preferences_route_color_open">Colour of the current mission</string>

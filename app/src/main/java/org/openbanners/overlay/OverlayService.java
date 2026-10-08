@@ -20,6 +20,8 @@ import java.util.function.BiConsumer;
 public class OverlayService extends Service {
     private OverlayView overlayView;
     private RouteStripView routeStripView;
+    /** Left edge the route strip was created with (the card's width). */
+    private int routeStripLeft;
     // SharedPreferences only keeps a weak reference to change listeners.
     private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = (sharedPreferences, key) -> applyPreferences(sharedPreferences);
 
@@ -51,9 +53,19 @@ public class OverlayService extends Service {
 
     private void applyPreferences(SharedPreferences preferences) {
         StateManager.updateState(State::locationEnabled);
+        if (overlayView != null) {
+            overlayView.applyCardPreferences(preferences);
+        }
+        int cardWidth = overlayView == null ? 0 : overlayView.getCardWidth();
         boolean showRouteStrip = preferences.getBoolean(getString(R.string.route_strip_enable), true);
+        if (routeStripView != null && cardWidth != routeStripLeft) {
+            // The card changed size: the strip starts at its right edge.
+            routeStripView.remove();
+            routeStripView = null;
+        }
         if (showRouteStrip && routeStripView == null) {
-            routeStripView = RouteStripView.create(this, overlayView == null ? 0 : overlayView.getCardWidth());
+            routeStripView = RouteStripView.create(this, cardWidth);
+            routeStripLeft = cardWidth;
         } else if (!showRouteStrip && routeStripView != null) {
             routeStripView.remove();
             routeStripView = null;

@@ -9,6 +9,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.text.SpannableString;
+import android.view.Gravity;
+import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.widget.Toast;
@@ -16,12 +21,19 @@ import android.widget.Toast;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.StringRes;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 import java.util.function.Function;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -93,6 +105,14 @@ public class SettingsActivity extends AppCompatActivity {
                 addColorPreference(colorPreference);
             }
 
+            Preference cardItemsPreference = findPreference(getString(R.string.card_items));
+            assert cardItemsPreference != null;
+            updateCardItemsSummary(cardItemsPreference);
+            cardItemsPreference.setOnPreferenceClickListener(p -> {
+                showCardItemsDialog(p);
+                return true;
+            });
+
             // "Compass points to" only shows when the compass is always visible; the update interval only when
             // the compass is actually read (map follows the compass, or the needle shows your heading).
             ListPreference orientationPreference = findPreference(getString(R.string.route_orientation));
@@ -114,6 +134,108 @@ public class SettingsActivity extends AppCompatActivity {
             orientationPreference.setOnPreferenceChangeListener(recheck);
             alwaysPreference.setOnPreferenceChangeListener(recheck);
             needlePreference.setOnPreferenceChangeListener(recheck);
+        }
+
+        private String cardItemName(String item) {
+            switch (item) {
+                case CardItems.MINUS:
+                    return getString(R.string.card_item_minus);
+                case CardItems.COUNTER:
+                    return getString(R.string.card_item_counter);
+                case CardItems.PLUS:
+                    return getString(R.string.card_item_plus);
+                default:
+                    return getString(R.string.card_item_next);
+            }
+        }
+
+        private String storedCardItems() {
+            return PreferenceManager.getDefaultSharedPreferences(requireContext()).getString(getString(R.string.card_items), CardItems.DEFAULT);
+        }
+
+        private void updateCardItemsSummary(Preference preference) {
+            List<String> names = new ArrayList<>();
+            for (String item : CardItems.parse(storedCardItems())) names.add(cardItemName(item));
+            preference.setSummary(String.join(", ", names));
+        }
+
+        /** Dialog with a checkbox per card item (shown or not) and arrows to move it up or down. */
+        private void showCardItemsDialog(Preference preference) {
+            List<String> order = new ArrayList<>(CardItems.parse(storedCardItems()));
+            Set<String> shown = new HashSet<>(order);
+            for (String item : CardItems.ALL) {
+                if (!order.contains(item)) order.add(item);
+            }
+            LinearLayout list = new LinearLayout(requireContext());
+            list.setOrientation(LinearLayout.VERTICAL);
+            int padding = Math.round(16 * getResources().getDisplayMetrics().density);
+            list.setPadding(padding, padding / 2, padding / 2, 0);
+            Runnable[] render = new Runnable[1];
+            render[0] = () -> {
+                list.removeAllViews();
+                for (int i = 0; i < order.size(); i++) {
+                    String item = order.get(i);
+                    int index = i;
+                    LinearLayout row = new LinearLayout(requireContext());
+                    row.setOrientation(LinearLayout.HORIZONTAL);
+                    row.setGravity(Gravity.CENTER_VERTICAL);
+                    CheckBox checkBox = new CheckBox(requireContext());
+                    checkBox.setText(cardItemName(item));
+                    checkBox.setChecked(shown.contains(item));
+                    checkBox.setOnCheckedChangeListener((b, checked) -> {
+                        if (checked) {
+                            shown.add(item);
+                        } else if (shown.size() > 1) {
+                            shown.remove(item);
+                        } else {
+                            b.setChecked(true);
+                            Toast.makeText(getContext(), R.string.card_items_keep_one, Toast.LENGTH_SHORT).show();
+                        }
+                    });
+                    row.addView(checkBox, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+                    row.addView(arrowButton("\u25B2", index > 0, () -> {
+                        Collections.swap(order, index, index - 1);
+                        render[0].run();
+                    }));
+                    row.addView(arrowButton("\u25BC", index < order.size() - 1, () -> {
+                        Collections.swap(order, index, index + 1);
+                        render[0].run();
+                    }));
+                    list.addView(row);
+                }
+            };
+            render[0].run();
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.preferences_card_items)
+                    .setView(list)
+                    .setPositiveButton(android.R.string.ok, (d, w) -> {
+                        List<String> result = new ArrayList<>();
+                        for (String item : order) {
+                            if (shown.contains(item)) result.add(item);
+                        }
+                        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
+                                .putString(getString(R.string.card_items), String.join(",", result)).apply();
+                        updateCardItemsSummary(preference);
+                    })
+                    .setNeutralButton(R.string.card_items_reset, (d, w) -> {
+                        PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
+                                .putString(getString(R.string.card_items), CardItems.DEFAULT).apply();
+                        updateCardItemsSummary(preference);
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+        }
+
+        private Button arrowButton(String text, boolean enabled, Runnable action) {
+            Button button = new Button(requireContext(), null, android.R.attr.borderlessButtonStyle);
+            button.setText(text);
+            button.setEnabled(enabled);
+            button.setMinWidth(0);
+            button.setMinimumWidth(0);
+            int size = Math.round(44 * getResources().getDisplayMetrics().density);
+            button.setLayoutParams(new LinearLayout.LayoutParams(size, size));
+            button.setOnClickListener(v -> action.run());
+            return button;
         }
 
         /** Shows each colour as a coloured dot plus its hex value, and the selected colour as the preference icon. */

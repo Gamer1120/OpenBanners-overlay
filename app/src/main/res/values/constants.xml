@@ -14,6 +14,9 @@
     <string name="route_compass_interval" translatable="false">route_compass_interval</string>
     <string name="route_compass_always" translatable="false">route_compass_always</string>
     <string name="route_compass_needle" translatable="false">route_compass_needle</string>
+    <string name="card_items" translatable="false">card_items</string>
+    <string name="card_layout" translatable="false">card_layout</string>
+    <string name="card_size" translatable="false">card_size</string>
     <string name="privacy_policy_url" translatable="false">https://openbanners.org/overlay/privacy</string>
     <string name="source_code_url" translatable="false">https://github.com/Gamer1120/OpenBanners-overlay</string>
 </resources>
