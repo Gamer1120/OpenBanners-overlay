@@ -1,0 +1,1 @@
+Settings: long titles now wrap onto a second line on narrow screens instead of being cut off with "…".

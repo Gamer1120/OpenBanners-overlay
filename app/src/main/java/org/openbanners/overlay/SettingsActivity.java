@@ -30,6 +30,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.ListPreference;
 import androidx.preference.Preference;
 import androidx.preference.PreferenceFragmentCompat;
+import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
@@ -75,6 +76,7 @@ public class SettingsActivity extends AppCompatActivity {
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             ServiceNotification.createNotificationChannels(requireContext());
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
+            wrapTitles(getPreferenceScreen());
 
             updatePreferences();
         }
@@ -205,6 +207,15 @@ public class SettingsActivity extends AppCompatActivity {
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
+        }
+
+        /** Long titles wrap onto a new line instead of being cut off with "…" on narrow screens. */
+        private static void wrapTitles(PreferenceGroup group) {
+            for (int i = 0; i < group.getPreferenceCount(); i++) {
+                Preference preference = group.getPreference(i);
+                preference.setSingleLineTitle(false);
+                if (preference instanceof PreferenceGroup) wrapTitles((PreferenceGroup) preference);
+            }
         }
 
         private String cardItemName(String item) {
