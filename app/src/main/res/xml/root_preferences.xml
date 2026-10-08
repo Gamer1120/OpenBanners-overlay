@@ -26,6 +26,23 @@
             app:title="@string/preferences_route_strip_enable" />
 
         <ListPreference
+            app:defaultValue="north"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_orientation_names"
+            app:entryValues="@array/route_orientation_values"
+            app:key="@string/route_orientation"
+            app:title="@string/preferences_route_orientation"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="1000"
+            app:entries="@array/route_compass_interval_names"
+            app:entryValues="@array/route_compass_interval_values"
+            app:key="@string/route_compass_interval"
+            app:title="@string/preferences_route_compass_interval"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
             app:defaultValue="#FFEA00"
             app:dependency="@string/route_strip_enable"
             app:entries="@array/route_color_names"

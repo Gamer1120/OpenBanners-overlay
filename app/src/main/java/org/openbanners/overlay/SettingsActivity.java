@@ -92,6 +92,16 @@ public class SettingsActivity extends AppCompatActivity {
                 assert colorPreference != null;
                 addColorPreference(colorPreference);
             }
+
+            // The compass interval only matters when the map follows the compass.
+            ListPreference orientationPreference = findPreference(getString(R.string.route_orientation));
+            Preference intervalPreference = findPreference(getString(R.string.route_compass_interval));
+            assert orientationPreference != null && intervalPreference != null;
+            intervalPreference.setVisible("compass".equals(orientationPreference.getValue()));
+            orientationPreference.setOnPreferenceChangeListener((p, newValue) -> {
+                intervalPreference.setVisible("compass".equals(newValue));
+                return true;
+            });
         }
 
         /** Shows each colour as a coloured dot plus its hex value, and the selected colour as the preference icon. */

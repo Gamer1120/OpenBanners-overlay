@@ -9,9 +9,16 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
+import android.hardware.Sensor;
+import android.hardware.SensorEvent;
+import android.hardware.SensorEventListener;
+import android.hardware.SensorManager;
 import android.location.Location;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
+import android.view.Display;
 import android.view.Gravity;
+import android.view.Surface;
 import android.view.View;
 import android.view.WindowManager;
 
@@ -62,6 +69,10 @@ class RouteStripView extends View {
     private static final String DEFAULT_COLOR_ME = "#00E5FF";
     /** Completed steps are drawn semi-transparent so the open route stands out. */
     private static final int DONE_ALPHA = 170;
+    private static final String ORIENTATION_COMPASS = "compass";
+    private static final long DEFAULT_COMPASS_INTERVAL_MS = 1000;
+    /** Fraction of the remaining turn applied per frame when the compass heading changes. */
+    private static final double HEADING_EASING = 0.2;
 
     /** One drawable step: position, label, and whether it still has to be done. */
     private static final class Point {
@@ -103,6 +114,33 @@ class RouteStripView extends View {
     private double viewLng = Double.NaN;
     private double viewMpp = Double.NaN;
 
+    /** Follow-compass mode: the map is turned so the direction you face is up. */
+    private boolean followCompass;
+    private long compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
+    private long lastHeadingUpdate;
+    /** Latest sampled heading in degrees clockwise from north, NaN until the first sample. */
+    private double targetHeading = Double.NaN;
+    /** Heading the map is currently drawn with (eases towards {@link #targetHeading}); 0 = north up. */
+    private double viewHeading;
+    private final float[] rotationMatrix = new float[9];
+    private final float[] remappedMatrix = new float[9];
+    private final float[] orientation = new float[3];
+    private final SensorEventListener compassListener = new SensorEventListener() {
+        @Override
+        public void onSensorChanged(SensorEvent event) {
+            long now = SystemClock.elapsedRealtime();
+            if (!Double.isNaN(targetHeading) && now - lastHeadingUpdate < compassIntervalMs) return;
+            lastHeadingUpdate = now;
+            targetHeading = headingFrom(event.values);
+            postInvalidateOnAnimation();
+        }
+
+        @Override
+        public void onAccuracyChanged(Sensor sensor, int accuracy) {
+        }
+    };
+    private boolean compassRegistered;
+
     private RouteStripView(Context context, int leftPx) {
         super(context);
         dp = context.getResources().getDisplayMetrics().density;
@@ -137,14 +175,78 @@ class RouteStripView extends View {
     /** Creates the strip spanning from {@code leftPx} (right edge of the control card) to the right edge of the screen. */
     static RouteStripView create(Context context, int leftPx) {
         RouteStripView view = new RouteStripView(context, leftPx);
-        view.applyColors(PreferenceManager.getDefaultSharedPreferences(context));
+        view.applyPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         context.getSystemService(WindowManager.class).addView(view, view.params);
         view.stateListener = StateManager.addListener((newState, oldState) -> view.applyState(newState));
         return view;
     }
 
+    /** Applies the route map settings: colours and orientation. */
+    void applyPreferences(SharedPreferences preferences) {
+        applyColors(preferences);
+        Context context = getContext();
+        followCompass = ORIENTATION_COMPASS.equals(preferences.getString(context.getString(R.string.route_orientation), "north"));
+        try {
+            compassIntervalMs = Long.parseLong(preferences.getString(context.getString(R.string.route_compass_interval), String.valueOf(DEFAULT_COMPASS_INTERVAL_MS)));
+        } catch (NumberFormatException e) {
+            compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
+        }
+        setCompassListening(followCompass);
+        invalidate();
+    }
+
+    private void setCompassListening(boolean listen) {
+        SensorManager sensorManager = getContext().getSystemService(SensorManager.class);
+        Sensor sensor = sensorManager == null ? null : sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        if (listen && !compassRegistered && sensor != null) {
+            targetHeading = Double.NaN;
+            compassRegistered = sensorManager.registerListener(compassListener, sensor, SensorManager.SENSOR_DELAY_UI);
+        } else if (!listen && compassRegistered) {
+            sensorManager.unregisterListener(compassListener);
+            compassRegistered = false;
+            targetHeading = Double.NaN;
+        }
+    }
+
+    /** Heading of the top of the screen in degrees clockwise from north, from a rotation vector. */
+    private double headingFrom(float[] rotationVector) {
+        SensorManager.getRotationMatrixFromVector(rotationMatrix, rotationVector);
+        Display display = getDisplay();
+        int rotation = display == null ? Surface.ROTATION_0 : display.getRotation();
+        switch (rotation) {
+            case Surface.ROTATION_90:
+                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_Y, SensorManager.AXIS_MINUS_X, remappedMatrix);
+                break;
+            case Surface.ROTATION_180:
+                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_X, SensorManager.AXIS_MINUS_Y, remappedMatrix);
+                break;
+            case Surface.ROTATION_270:
+                SensorManager.remapCoordinateSystem(rotationMatrix, SensorManager.AXIS_MINUS_Y, SensorManager.AXIS_X, remappedMatrix);
+                break;
+            default:
+                System.arraycopy(rotationMatrix, 0, remappedMatrix, 0, 9);
+        }
+        SensorManager.getOrientation(remappedMatrix, orientation);
+        double degrees = Math.toDegrees(orientation[0]);
+        return (degrees % 360 + 360) % 360;
+    }
+
+    /** Heading the map should be drawn with right now: 0 when north up. */
+    private double desiredHeading() {
+        return followCompass && !Double.isNaN(targetHeading) ? targetHeading : 0;
+    }
+
+    /** Rotates an (east, north) offset in metres into the map's (right, up) frame. */
+    private double[] rotate(double east, double north) {
+        if (viewHeading == 0) return new double[]{east, north};
+        double t = Math.toRadians(viewHeading);
+        double cos = Math.cos(t);
+        double sin = Math.sin(t);
+        return new double[]{east * cos - north * sin, east * sin + north * cos};
+    }
+
     /** Reads the colours chosen in the settings (stored as "#RRGGBB") and redraws. */
-    void applyColors(SharedPreferences preferences) {
+    private void applyColors(SharedPreferences preferences) {
         Context context = getContext();
         int open = parseColor(preferences.getString(context.getString(R.string.route_color_open), DEFAULT_COLOR_OPEN), DEFAULT_COLOR_OPEN);
         int done = parseColor(preferences.getString(context.getString(R.string.route_color_done), DEFAULT_COLOR_DONE), DEFAULT_COLOR_DONE);
@@ -169,6 +271,7 @@ class RouteStripView extends View {
     }
 
     void remove() {
+        setCompassListening(false);
         StateManager.removeListener(stateListener);
         getContext().getSystemService(WindowManager.class).removeView(this);
     }
@@ -274,9 +377,9 @@ class RouteStripView extends View {
         List<double[]> offsets = new ArrayList<>();
         for (Point p : points) {
             if (p.done) continue;
-            offsets.add(new double[]{
+            offsets.add(rotate(
                     Math.toRadians(p.lng - cLng) * EARTH_RADIUS_METERS * cosLat,
-                    Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS});
+                    Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS));
         }
         offsets.sort((a, b) -> Double.compare(a[0] * a[0] + a[1] * a[1], b[0] * b[0] + b[1] * b[1]));
         double w = Math.max(getWidth(), 1);
@@ -318,14 +421,48 @@ class RouteStripView extends View {
     private float[] project(double lat, double lng) {
         double dx = Math.toRadians(lng - viewLng) * EARTH_RADIUS_METERS * Math.cos(Math.toRadians(viewLat));
         double dy = Math.toRadians(lat - viewLat) * EARTH_RADIUS_METERS;
-        return new float[]{getWidth() / 2f + (float) (dx / viewMpp), getHeight() / 2f - (float) (dy / viewMpp)};
+        double[] r = rotate(dx, dy);
+        return new float[]{getWidth() / 2f + (float) (r[0] / viewMpp), getHeight() / 2f - (float) (r[1] / viewMpp)};
+    }
+
+    /** Turns the map towards the desired heading along the shortest way; true while still turning. */
+    private boolean easeHeading() {
+        double delta = ((desiredHeading() - viewHeading) % 360 + 540) % 360 - 180;
+        if (Math.abs(delta) < 0.3) {
+            viewHeading = desiredHeading();
+            return false;
+        }
+        viewHeading = ((viewHeading + delta * HEADING_EASING) % 360 + 360) % 360;
+        return true;
+    }
+
+    /** Small compass needle in the top-right corner, pointing north, shown while the map follows the compass. */
+    private void drawNorthArrow(Canvas canvas) {
+        int[] onScreen = new int[2];
+        getLocationOnScreen(onScreen);
+        float hiddenTop = Math.max(statusBarHeightPx - onScreen[1], 0);
+        float r = 11 * dp;
+        float cx = getWidth() - r - 6 * dp;
+        float cy = hiddenTop + r + 6 * dp;
+        canvas.drawCircle(cx, cy, r, haloFill);
+        canvas.save();
+        canvas.rotate((float) -viewHeading, cx, cy);
+        Path needle = new Path();
+        needle.moveTo(cx, cy - r * 0.75f);
+        needle.lineTo(cx + r * 0.38f, cy + r * 0.45f);
+        needle.lineTo(cx, cy + r * 0.2f);
+        needle.lineTo(cx - r * 0.38f, cy + r * 0.45f);
+        needle.close();
+        canvas.drawPath(needle, whiteFill);
+        canvas.restore();
     }
 
     @Override
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
         if (points.isEmpty()) return;
-        boolean stillMoving = easeFraming(desiredFraming());
+        boolean turning = easeHeading();
+        boolean stillMoving = easeFraming(desiredFraming()) | turning;
 
         // Legs: done ones first, open ones on top.
         for (int pass = 0; pass < 2; pass++) {
@@ -368,6 +505,7 @@ class RouteStripView extends View {
             canvas.drawCircle(me[0], me[1], 7.5f * dp, whiteFill);
             canvas.drawCircle(me[0], me[1], 5.5f * dp, meFill);
         }
+        if (followCompass) drawNorthArrow(canvas);
         if (stillMoving) postInvalidateOnAnimation();
     }
 }

@@ -1,0 +1,1 @@
+Route map orientation: north up, or follow the compass so the direction you face is up (with a small north arrow). For follow compass you can choose how often it updates: continuously, or every 0.5, 1, 2 or 5 seconds.

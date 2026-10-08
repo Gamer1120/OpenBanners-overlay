@@ -59,7 +59,7 @@ public class OverlayService extends Service {
             routeStripView = null;
         }
         if (routeStripView != null) {
-            routeStripView.applyColors(preferences);
+            routeStripView.applyPreferences(preferences);
         }
     }
 
