@@ -8,6 +8,8 @@
     <string name="route_color_open" translatable="false">route_color_open</string>
     <string name="route_color_done" translatable="false">route_color_done</string>
     <string name="route_color_me" translatable="false">route_color_me</string>
+    <string name="route_color_other" translatable="false">route_color_other</string>
+    <string name="route_show_whole_banner" translatable="false">route_show_whole_banner</string>
     <string name="route_orientation" translatable="false">route_orientation</string>
     <string name="route_compass_interval" translatable="false">route_compass_interval</string>
     <string name="privacy_policy_url" translatable="false">https://openbanners.org/overlay/privacy</string>

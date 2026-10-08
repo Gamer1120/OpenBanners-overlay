@@ -67,6 +67,7 @@ class RouteStripView extends View {
     private static final String DEFAULT_COLOR_OPEN = "#FFEA00";
     private static final String DEFAULT_COLOR_DONE = "#969696";
     private static final String DEFAULT_COLOR_ME = "#00E5FF";
+    private static final String DEFAULT_COLOR_OTHER = "#FFFFFF";
     /** Completed steps are drawn semi-transparent so the open route stands out. */
     private static final int DONE_ALPHA = 170;
     private static final String ORIENTATION_COMPASS = "compass";
@@ -74,18 +75,32 @@ class RouteStripView extends View {
     /** Fraction of the remaining turn applied per frame when the compass heading changes. */
     private static final double HEADING_EASING = 0.2;
 
-    /** One drawable step: position, label, and whether it still has to be done. */
+    /**
+     * One drawable step: position, label, and its state. Open steps (the current mission and the start of the
+     * next one) are labelled and framed; done steps and steps of later missions are small unlabelled dots.
+     */
     private static final class Point {
         final double lat;
         final double lng;
         final String label;
         final boolean done;
+        /** A step of a later mission (only drawn when the whole banner is shown). */
+        final boolean other;
 
         Point(double lat, double lng, String label, boolean done) {
+            this(lat, lng, label, done, false);
+        }
+
+        Point(double lat, double lng, String label, boolean done, boolean other) {
             this.lat = lat;
             this.lng = lng;
             this.label = label;
             this.done = done;
+            this.other = other;
+        }
+
+        boolean open() {
+            return !done && !other;
         }
     }
 
@@ -100,6 +115,8 @@ class RouteStripView extends View {
     private final Paint openFill = fill(Color.TRANSPARENT);
     private final Paint doneFill = fill(Color.TRANSPARENT);
     private final Paint meFill = fill(Color.TRANSPARENT);
+    private final Paint otherFill = fill(Color.TRANSPARENT);
+    private final Paint otherLegPaint;
     private final Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
     private BiConsumer<State, State> stateListener;
 
@@ -140,6 +157,9 @@ class RouteStripView extends View {
         }
     };
     private boolean compassRegistered;
+    /** Draw every mission of the banner, not just the current one and the start of the next. */
+    private boolean showWholeBanner = true;
+    private State lastState;
 
     private RouteStripView(Context context, int leftPx) {
         super(context);
@@ -147,6 +167,7 @@ class RouteStripView extends View {
         haloLegPaint = stroke(COLOR_HALO, 6.5f);
         openLegPaint = stroke(Color.TRANSPARENT, 3.5f);
         doneLegPaint = stroke(Color.TRANSPARENT, 3f);
+        otherLegPaint = stroke(Color.TRANSPARENT, 2.5f);
         labelPaint.setFakeBoldText(true);
         labelPaint.setTextAlign(Paint.Align.CENTER);
         Resources res = context.getResources();
@@ -192,6 +213,11 @@ class RouteStripView extends View {
             compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
         }
         setCompassListening(followCompass);
+        boolean newShowWholeBanner = preferences.getBoolean(context.getString(R.string.route_show_whole_banner), true);
+        if (newShowWholeBanner != showWholeBanner) {
+            showWholeBanner = newShowWholeBanner;
+            if (lastState != null) applyState(lastState);
+        }
         invalidate();
     }
 
@@ -251,6 +277,9 @@ class RouteStripView extends View {
         int open = parseColor(preferences.getString(context.getString(R.string.route_color_open), DEFAULT_COLOR_OPEN), DEFAULT_COLOR_OPEN);
         int done = parseColor(preferences.getString(context.getString(R.string.route_color_done), DEFAULT_COLOR_DONE), DEFAULT_COLOR_DONE);
         int me = parseColor(preferences.getString(context.getString(R.string.route_color_me), DEFAULT_COLOR_ME), DEFAULT_COLOR_ME);
+        int other = parseColor(preferences.getString(context.getString(R.string.route_color_other), DEFAULT_COLOR_OTHER), DEFAULT_COLOR_OTHER);
+        otherFill.setColor(other);
+        otherLegPaint.setColor(other);
         int doneTranslucent = Color.argb(DONE_ALPHA, Color.red(done), Color.green(done), Color.blue(done));
         openFill.setColor(open);
         openLegPaint.setColor(open);
@@ -304,7 +333,39 @@ class RouteStripView extends View {
         return poi != null && poi.type != POIType.unavailable && poi.latitude != null && poi.longitude != null;
     }
 
+    /** Whether the first step of mission {@code m} is joined by a leg to the last point drawn so far. */
+    private static boolean joinsPrevious(List<Point> points, List<Mission> missions, int m) {
+        return !points.isEmpty() && m > 0
+                && missions.get(m).type != MissionType.anyOrder && missions.get(m - 1).type != MissionType.anyOrder;
+    }
+
+    /** Adds all positioned steps of mission {@code m}, as done or as upcoming. */
+    private static void addMission(List<Point> points, List<Boolean> legs, List<Mission> missions, int m, boolean done, boolean other) {
+        Mission mission = missions.get(m);
+        if (mission.steps == null) return;
+        boolean first = true;
+        for (int i = 0; i < mission.steps.size(); i++) {
+            MissionStep step = mission.steps.get(i);
+            if (!hasPosition(step)) continue;
+            legs.add(first ? joinsPrevious(points, missions, m) : mission.type != MissionType.anyOrder);
+            points.add(new Point(step.poi.latitude, step.poi.longitude, label(m, i), done, other));
+            first = false;
+        }
+    }
+
+    /** Adds the upcoming steps of {@code mission} from step {@code from} on, continuing from the last point. */
+    private static void addSteps(List<Point> points, List<Boolean> legs, Mission mission, int m, int from, boolean other) {
+        boolean joined = mission.type != MissionType.anyOrder;
+        for (int i = from; i < mission.steps.size(); i++) {
+            MissionStep step = mission.steps.get(i);
+            if (!hasPosition(step)) continue;
+            legs.add(joined && !points.isEmpty());
+            points.add(new Point(step.poi.latitude, step.poi.longitude, label(m, i), false, other));
+        }
+    }
+
     private void applyState(State state) {
+        lastState = state;
         location = state.currentLocation;
         List<Point> newPoints = new ArrayList<>();
         List<Boolean> newLegs = new ArrayList<>();
@@ -312,24 +373,34 @@ class RouteStripView extends View {
             List<Mission> missions = new ArrayList<>(state.banner.missions.values());
             // Before "Start", the first mission is the one you're heading for.
             int active = Math.max(state.currentMission, 0);
+            if (showWholeBanner) {
+                // Earlier missions, so you can see where you came from (and the turn into this mission).
+                for (int m = 0; m < Math.min(active, missions.size()); m++) {
+                    addMission(newPoints, newLegs, missions, m, true, false);
+                }
+            }
             if (active < missions.size()) {
                 Mission mission = missions.get(active);
                 boolean joined = mission.type != MissionType.anyOrder;
                 List<MissionStep> steps = mission.steps == null ? Collections.emptyList() : mission.steps;
+                boolean first = true;
                 for (int i = 0; i < steps.size(); i++) {
                     MissionStep step = steps.get(i);
                     if (!hasPosition(step)) continue;
                     boolean done = state.currentMission == active && state.currentMissionVisitedStepIndexes.contains(i);
-                    newLegs.add(joined && !newPoints.isEmpty());
+                    newLegs.add(first ? joinsPrevious(newPoints, missions, active) : joined);
                     newPoints.add(new Point(step.poi.latitude, step.poi.longitude, label(active, i), done));
+                    first = false;
                 }
             }
             if (active + 1 < missions.size()) {
+                int nextStartIndex = -1;
                 Mission next = missions.get(active + 1);
                 if (next.steps != null) {
                     for (int i = 0; i < next.steps.size(); i++) {
                         MissionStep step = next.steps.get(i);
                         if (hasPosition(step)) {
+                            nextStartIndex = i;
                             String nextLabel = label(active + 1, i);
                             Point last = newPoints.isEmpty() ? null : newPoints.get(newPoints.size() - 1);
                             if (last != null && DistanceCalculation.distanceMeters(last.lat, last.lng, step.poi.latitude, step.poi.longitude) < SAME_PORTAL_METERS) {
@@ -341,6 +412,13 @@ class RouteStripView extends View {
                             }
                             break;
                         }
+                    }
+                }
+                if (showWholeBanner) {
+                    // The rest of the next mission and all later missions, drawn in the "upcoming" colour.
+                    if (nextStartIndex >= 0) addSteps(newPoints, newLegs, next, active + 1, nextStartIndex + 1, true);
+                    for (int m = active + 2; m < missions.size(); m++) {
+                        addMission(newPoints, newLegs, missions, m, false, true);
                     }
                 }
             }
@@ -365,7 +443,7 @@ class RouteStripView extends View {
         } else {
             Point first = points.get(0);
             for (Point p : points) {
-                if (!p.done) {
+                if (p.open()) {
                     first = p;
                     break;
                 }
@@ -376,7 +454,7 @@ class RouteStripView extends View {
         double cosLat = Math.cos(Math.toRadians(cLat));
         List<double[]> offsets = new ArrayList<>();
         for (Point p : points) {
-            if (p.done) continue;
+            if (!p.open()) continue;
             offsets.add(rotate(
                     Math.toRadians(p.lng - cLng) * EARTH_RADIUS_METERS * cosLat,
                     Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS));
@@ -464,23 +542,31 @@ class RouteStripView extends View {
         boolean turning = easeHeading();
         boolean stillMoving = easeFraming(desiredFraming()) | turning;
 
-        // Legs: done ones first, open ones on top.
-        for (int pass = 0; pass < 2; pass++) {
+        // Legs: upcoming missions first, then done ones (banners often loop back over earlier missions, and the path
+        // you just walked matters more), open ones on top. A leg takes the state of the step it leads to.
+        for (int pass = 0; pass < 3; pass++) {
             for (int i = 1; i < points.size(); i++) {
                 if (!legBefore.get(i)) continue;
-                boolean done = points.get(i).done;
-                if (done != (pass == 0)) continue;
+                Point to = points.get(i);
+                int kind = to.other ? 0 : to.done ? 1 : 2;
+                if (kind != pass) continue;
                 float[] a = project(points.get(i - 1).lat, points.get(i - 1).lng);
-                float[] b = project(points.get(i).lat, points.get(i).lng);
+                float[] b = project(to.lat, to.lng);
                 Path path = new Path();
                 path.moveTo(a[0], a[1]);
                 path.lineTo(b[0], b[1]);
-                if (!done) canvas.drawPath(path, haloLegPaint);
-                canvas.drawPath(path, done ? doneLegPaint : openLegPaint);
+                if (kind == 2) canvas.drawPath(path, haloLegPaint);
+                canvas.drawPath(path, kind == 0 ? otherLegPaint : kind == 1 ? doneLegPaint : openLegPaint);
             }
         }
 
-        // Steps: small grey dots when done, labelled yellow dots when open.
+        // Steps: small dots when done or in a later mission, labelled dots when open.
+        for (Point p : points) {
+            if (!p.other) continue;
+            float[] xy = project(p.lat, p.lng);
+            canvas.drawCircle(xy[0], xy[1], 4.5f * dp, haloFill);
+            canvas.drawCircle(xy[0], xy[1], 3.5f * dp, otherFill);
+        }
         for (Point p : points) {
             if (!p.done) continue;
             float[] xy = project(p.lat, p.lng);
@@ -488,7 +574,7 @@ class RouteStripView extends View {
         }
         float radius = 7.5f * dp;
         for (Point p : points) {
-            if (p.done) continue;
+            if (!p.open()) continue;
             float[] xy = project(p.lat, p.lng);
             labelPaint.setTextSize((p.label.length() >= 3 ? 7.5f : 9.5f) * dp);
             // Round dot for short labels; a pill wide enough for longer ones such as "1f/2a".

@@ -25,6 +25,13 @@
             app:key="@string/route_strip_enable"
             app:title="@string/preferences_route_strip_enable" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="true"
+            app:dependency="@string/route_strip_enable"
+            app:key="@string/route_show_whole_banner"
+            app:summary="@string/preferences_route_show_whole_banner_summary"
+            app:title="@string/preferences_route_show_whole_banner" />
+
         <ListPreference
             app:defaultValue="north"
             app:dependency="@string/route_strip_enable"
@@ -49,6 +56,15 @@
             app:entryValues="@array/route_color_values"
             app:key="@string/route_color_open"
             app:title="@string/preferences_route_color_open"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
+            app:defaultValue="#FFFFFF"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_color_names"
+            app:entryValues="@array/route_color_values"
+            app:key="@string/route_color_other"
+            app:title="@string/preferences_route_color_other"
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference

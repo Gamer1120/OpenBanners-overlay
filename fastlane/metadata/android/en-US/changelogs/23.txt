@@ -1,0 +1,1 @@
+Show the whole banner on the route map: completed missions, the current mission and upcoming missions, each in its own colour (new setting "Colour of upcoming missions"). On by default; turn it off under Settings → Route map → Show the whole banner.

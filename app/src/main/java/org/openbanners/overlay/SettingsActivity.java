@@ -87,7 +87,7 @@ public class SettingsActivity extends AppCompatActivity {
             assert notificationStepInRangePreference != null;
             addChannelPreference(notificationStepInRangePreference, ServiceNotification.STEP_IN_RANGE_CHANNEL_ID);
 
-            for (int key : new int[]{R.string.route_color_open, R.string.route_color_done, R.string.route_color_me}) {
+            for (int key : new int[]{R.string.route_color_open, R.string.route_color_other, R.string.route_color_done, R.string.route_color_me}) {
                 ListPreference colorPreference = findPreference(getString(key));
                 assert colorPreference != null;
                 addColorPreference(colorPreference);

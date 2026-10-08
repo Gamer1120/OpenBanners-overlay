@@ -35,8 +35,11 @@
     <string name="preferences_clipboard_enable">Copy mission number as passphrase</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
-    <string name="preferences_route_color_open">Colour of open steps and route</string>
+    <string name="preferences_route_color_open">Colour of the current mission</string>
+    <string name="preferences_route_color_other">Colour of upcoming missions</string>
     <string name="preferences_route_color_done">Colour of completed steps</string>
+    <string name="preferences_route_show_whole_banner">Show the whole banner</string>
+    <string name="preferences_route_show_whole_banner_summary">Also draw completed and upcoming missions, not just the current mission</string>
     <string name="preferences_route_color_me">Colour of your position</string>
     <string name="preferences_route_orientation">Map orientation</string>
     <string name="preferences_route_compass_interval">Compass update interval</string>
