@@ -1,0 +1,1 @@
+Compass correction: when the route map follows the compass and your phone points the wrong way, turn the map left or right with the new buttons in the notification. The notification shows the current correction, it resets for every new banner, and the step size (default 15°) is in Settings → Compass correction step.

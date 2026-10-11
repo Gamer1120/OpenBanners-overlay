@@ -145,11 +145,14 @@ public class SettingsActivity extends AppCompatActivity {
             SwitchPreferenceCompat alwaysPreference = findPreference(getString(R.string.route_compass_always));
             ListPreference needlePreference = findPreference(getString(R.string.route_compass_needle));
             Preference intervalPreference = findPreference(getString(R.string.route_compass_interval));
-            assert orientationPreference != null && alwaysPreference != null && needlePreference != null && intervalPreference != null;
+            Preference stepPreference = findPreference(getString(R.string.route_compass_step));
+            assert orientationPreference != null && alwaysPreference != null && needlePreference != null && intervalPreference != null && stepPreference != null;
             Runnable updateCompassVisibility = () -> {
                 needlePreference.setVisible(alwaysPreference.isChecked());
-                intervalPreference.setVisible("compass".equals(orientationPreference.getValue())
-                        || (alwaysPreference.isChecked() && "heading".equals(needlePreference.getValue())));
+                boolean compassRead = "compass".equals(orientationPreference.getValue())
+                        || (alwaysPreference.isChecked() && "heading".equals(needlePreference.getValue()));
+                intervalPreference.setVisible(compassRead);
+                stepPreference.setVisible(compassRead);
             };
             updateCompassVisibility.run();
             // Change listeners run before the new value is stored, so re-check afterwards.

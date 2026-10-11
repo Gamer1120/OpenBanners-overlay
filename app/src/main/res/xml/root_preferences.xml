@@ -90,6 +90,14 @@
             app:useSimpleSummaryProvider="true" />
 
         <ListPreference
+            app:defaultValue="15"
+            app:entries="@array/route_compass_step_names"
+            app:entryValues="@array/route_compass_step_values"
+            app:key="@string/route_compass_step"
+            app:summary="@string/preferences_route_compass_step_summary"
+            app:title="@string/preferences_route_compass_step" />
+
+        <ListPreference
             app:defaultValue="#FFEA00"
             app:dependency="@string/route_strip_enable"
             app:entries="@array/route_color_names"

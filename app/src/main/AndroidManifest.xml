@@ -21,6 +21,7 @@
             android:name=".OverlayService"
             android:foregroundServiceType="location" />
         <receiver android:name=".StopDetectionReceiver" />
+        <receiver android:name=".HeadingOffsetReceiver" android:exported="false" />
 
         <activity
             android:name=".MainActivity"

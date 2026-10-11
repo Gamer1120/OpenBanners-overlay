@@ -142,7 +142,11 @@ class RouteStripView extends View {
     private double facingHeading = Double.NaN;
     private long compassIntervalMs = DEFAULT_COMPASS_INTERVAL_MS;
     private long lastHeadingUpdate;
-    /** Latest sampled heading in degrees clockwise from north, NaN until the first sample. */
+    /** Latest compass reading in degrees clockwise from north, NaN until the first sample. */
+    private double sensorHeading = Double.NaN;
+    /** Manual correction from the notification (positive = map turned left), see {@link State#headingOffset}. */
+    private int headingOffset;
+    /** Corrected heading: {@link #sensorHeading} plus {@link #headingOffset}; NaN until the first sample. */
     private double targetHeading = Double.NaN;
     /** Heading the map is currently drawn with (eases towards {@link #targetHeading}); 0 = north up. */
     private double viewHeading;
@@ -155,7 +159,8 @@ class RouteStripView extends View {
             long now = SystemClock.elapsedRealtime();
             if (!Double.isNaN(targetHeading) && now - lastHeadingUpdate < compassIntervalMs) return;
             lastHeadingUpdate = now;
-            targetHeading = headingFrom(event.values);
+            sensorHeading = headingFrom(event.values);
+            updateTargetHeading();
             postInvalidateOnAnimation();
         }
 
@@ -235,14 +240,20 @@ class RouteStripView extends View {
         SensorManager sensorManager = getContext().getSystemService(SensorManager.class);
         Sensor sensor = sensorManager == null ? null : sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
         if (listen && !compassRegistered && sensor != null) {
+            sensorHeading = Double.NaN;
             targetHeading = Double.NaN;
             compassRegistered = sensorManager.registerListener(compassListener, sensor, SensorManager.SENSOR_DELAY_UI);
         } else if (!listen && compassRegistered) {
             sensorManager.unregisterListener(compassListener);
             compassRegistered = false;
+            sensorHeading = Double.NaN;
             targetHeading = Double.NaN;
             facingHeading = Double.NaN;
         }
+    }
+
+    private void updateTargetHeading() {
+        targetHeading = Double.isNaN(sensorHeading) ? Double.NaN : ((sensorHeading + headingOffset) % 360 + 360) % 360;
     }
 
     /** Heading of the top of the screen in degrees clockwise from north, from a rotation vector. */
@@ -377,6 +388,11 @@ class RouteStripView extends View {
 
     private void applyState(State state) {
         lastState = state;
+        if (state.headingOffset != headingOffset) {
+            headingOffset = state.headingOffset;
+            updateTargetHeading();
+            postInvalidateOnAnimation();
+        }
         location = state.currentLocation;
         List<Point> newPoints = new ArrayList<>();
         List<Boolean> newLegs = new ArrayList<>();

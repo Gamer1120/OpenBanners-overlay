@@ -78,4 +78,22 @@
         <item>2000</item>
         <item>5000</item>
     </string-array>
+    <string-array name="route_compass_step_names">
+        <item>5°</item>
+        <item>10°</item>
+        <item>15°</item>
+        <item>20°</item>
+        <item>30°</item>
+        <item>45°</item>
+        <item>90°</item>
+    </string-array>
+    <string-array name="route_compass_step_values" translatable="false">
+        <item>5</item>
+        <item>10</item>
+        <item>15</item>
+        <item>20</item>
+        <item>30</item>
+        <item>45</item>
+        <item>90</item>
+    </string-array>
 </resources>

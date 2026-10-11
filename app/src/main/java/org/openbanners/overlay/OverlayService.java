@@ -73,6 +73,9 @@ public class OverlayService extends Service {
         if (routeStripView != null) {
             routeStripView.applyPreferences(preferences);
         }
+        // The compass correction buttons depend on the map orientation and the step setting.
+        ServiceNotification.createNotificationChannels(this);
+        ServiceNotification.updateDefaultNotification(this, StateManager.getState());
     }
 
     @Override

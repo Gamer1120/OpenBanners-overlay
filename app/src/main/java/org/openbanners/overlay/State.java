@@ -29,7 +29,17 @@ public class State {
 
     public final boolean locationEnabled;
 
+    /**
+     * Manual correction for the compass, in degrees (positive turns the map left / counterclockwise), set from the
+     * notification when the phone's heading is off. Starts at 0 for every banner.
+     */
+    public final int headingOffset;
+
     private State(Banner banner, int currentMission, boolean error, boolean cooldown, Location currentLocation, ImmutableSet<Integer> currentMissionVisitedStepIndexes, boolean locationEnabled) {
+        this(banner, currentMission, error, cooldown, currentLocation, currentMissionVisitedStepIndexes, locationEnabled, 0);
+    }
+
+    private State(Banner banner, int currentMission, boolean error, boolean cooldown, Location currentLocation, ImmutableSet<Integer> currentMissionVisitedStepIndexes, boolean locationEnabled, int headingOffset) {
         this.banner = banner;
         this.currentMission = currentMission;
         this.error = error;
@@ -37,6 +47,7 @@ public class State {
         this.currentLocation = currentLocation;
         this.currentMissionVisitedStepIndexes = currentMissionVisitedStepIndexes;
         this.locationEnabled = locationEnabled;
+        this.headingOffset = headingOffset;
     }
 
     static State initial() {
@@ -52,12 +63,12 @@ public class State {
     }
 
     State previousMission() {
-        return new State(this.banner, this.currentMission - 1, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled)
+        return new State(this.banner, this.currentMission - 1, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset)
                 .applyLocation();
     }
 
     State nextMission(boolean cooldown) {
-        return new State(this.banner, this.currentMission + 1, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled)
+        return new State(this.banner, this.currentMission + 1, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset)
                 .applyLocation();
     }
 
@@ -71,20 +82,26 @@ public class State {
     }
 
     State cooldownFinished() {
-        return new State(this.banner, this.currentMission, this.error, false, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled);
+        return new State(this.banner, this.currentMission, this.error, false, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset);
     }
 
     State location(Location location) {
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, location, this.currentMissionVisitedStepIndexes, this.locationEnabled).applyLocation();
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, location, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset).applyLocation();
     }
 
     State locationEnabled() {
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, true);
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, true, this.headingOffset);
+    }
+
+    /** Turns the compass correction by {@code degrees} (positive = map turns left), kept within -180..180. */
+    State rotateHeading(int degrees) {
+        int offset = ((this.headingOffset + degrees) % 360 + 540) % 360 - 180;
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, offset);
     }
 
     private State applyLocation() {
         ImmutableSet<Integer> currentMissionVisitedStepIndexes = calculateStepIndexesInRange(this.banner, this.currentMission, this.currentMissionVisitedStepIndexes, this.currentLocation);
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, currentMissionVisitedStepIndexes, this.locationEnabled);
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset);
     }
 
     ImmutableSet<Integer> calculateStepIndexesInRange(Banner banner, int currentMission, ImmutableSet<Integer> finishedSteps, Location location) {

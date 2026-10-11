@@ -67,6 +67,13 @@
     <string name="preferences_route_compass_always">Always show the compass</string>
     <string name="preferences_route_compass_always_summary">Show the compass on the route map, also when the map is north up</string>
     <string name="preferences_route_compass_needle">Compass points to</string>
+    <string name="preferences_route_compass_step">Compass correction step</string>
+    <string name="preferences_route_compass_step_summary">Turn the map by %s with the ↺ and ↻ buttons in the notification, when your phone\'s compass is off. The correction resets for every new banner.</string>
+    <string name="notificationRotateLeft">↺ %d°</string>
+    <string name="notificationRotateRight">↻ %d°</string>
+    <string name="notificationCompassNone">Compass: no correction</string>
+    <string name="notificationCompassLeft">Compass: turned %d° left</string>
+    <string name="notificationCompassRight">Compass: turned %d° right</string>
     <string name="preferences_about">About</string>
     <string name="preferences_licenses">Licences</string>
     <string name="preferences_licenses_summary">Copyright notices and open-source licences</string>

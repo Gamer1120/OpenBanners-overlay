@@ -14,6 +14,7 @@
     <string name="route_compass_interval" translatable="false">route_compass_interval</string>
     <string name="route_compass_always" translatable="false">route_compass_always</string>
     <string name="route_compass_needle" translatable="false">route_compass_needle</string>
+    <string name="route_compass_step" translatable="false">route_compass_step</string>
     <string name="card_items" translatable="false">card_items</string>
     <string name="card_layout" translatable="false">card_layout</string>
     <string name="card_size" translatable="false">card_size</string>

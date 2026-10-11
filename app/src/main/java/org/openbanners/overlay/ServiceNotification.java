@@ -7,9 +7,11 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
+import androidx.preference.PreferenceManager;
 
 import org.openbanners.overlay.api.MissionStep;
 import org.openbanners.overlay.api.Objective;
@@ -24,6 +26,8 @@ final class ServiceNotification {
     private static final int DEFAULT_NOTIFICATION_ID = 1;
     private static final int STEP_IN_RANGE_NOTIFICATION_ID_BASE = 2;
     private static final int STEP_IN_RANGE_NOTIFICATION_ID_MULTIPLIER = 100;
+    private static final int REQUEST_ROTATE_LEFT = 1;
+    private static final int REQUEST_ROTATE_RIGHT = 2;
 
     static void createNotificationChannels(Context context) {
         NotificationManager notificationManager = context.getSystemService(NotificationManager.class);
@@ -52,6 +56,7 @@ final class ServiceNotification {
         ).build();
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context.getApplicationContext(), DEFAULT_CHANNEL_ID);
+        boolean compassCorrection = state.banner != null && compassInUse(context);
         if (state.banner == null) {
             builder
                     .setContentTitle(context.getString(R.string.app_name))
@@ -60,10 +65,20 @@ final class ServiceNotification {
         } else {
             double totalDistance = DistanceCalculation.getTotalDistance(state.banner);
             double remainingDistance = DistanceCalculation.getRemainingDistance(state.banner, state.currentMission, state.currentMissionVisitedStepIndexes, state.currentLocation);
+            String text = context.getString(R.string.notificationRemaining, remainingDistance / 1_000, totalDistance / 1_000);
+            if (compassCorrection) {
+                text += "\n" + compassCorrectionText(context, state.headingOffset);
+            }
             builder
                     .setContentTitle(state.banner.title)
-                    .setContentText(context.getString(R.string.notificationRemaining, remainingDistance / 1_000, totalDistance / 1_000))
+                    .setContentText(text)
+                    .setStyle(new NotificationCompat.BigTextStyle().bigText(text))
                     .setProgress((int) totalDistance, Math.max((int) (totalDistance - remainingDistance), 0), false);
+        }
+        if (compassCorrection) {
+            int step = HeadingOffsetReceiver.stepDegrees(context);
+            builder.addAction(rotateAction(context, REQUEST_ROTATE_LEFT, 1, context.getString(R.string.notificationRotateLeft, step)));
+            builder.addAction(rotateAction(context, REQUEST_ROTATE_RIGHT, -1, context.getString(R.string.notificationRotateRight, step)));
         }
         Notification notification = builder
                 .setSmallIcon(R.drawable.ic_notification)
@@ -74,6 +89,34 @@ final class ServiceNotification {
                 .build();
 
         context.startForeground(DEFAULT_NOTIFICATION_ID, notification);
+    }
+
+    /** The map follows the compass, or the needle shows your heading: only then is a correction useful. */
+    private static boolean compassInUse(Context context) {
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        if (!preferences.getBoolean(context.getString(R.string.route_strip_enable), true)) return false;
+        boolean followCompass = "compass".equals(preferences.getString(context.getString(R.string.route_orientation), "north"));
+        boolean needleHeading = preferences.getBoolean(context.getString(R.string.route_compass_always), false)
+                && "heading".equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));
+        return followCompass || needleHeading;
+    }
+
+    private static String compassCorrectionText(Context context, int offset) {
+        if (offset > 0) return context.getString(R.string.notificationCompassLeft, offset);
+        if (offset < 0) return context.getString(R.string.notificationCompassRight, -offset);
+        return context.getString(R.string.notificationCompassNone);
+    }
+
+    private static NotificationCompat.Action rotateAction(Context context, int requestCode, int direction, String title) {
+        Intent intent = new Intent(context, HeadingOffsetReceiver.class)
+                .putExtra(HeadingOffsetReceiver.EXTRA_DIRECTION, direction);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context,
+                requestCode,
+                intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+        return new NotificationCompat.Action.Builder(R.drawable.ic_notification, title, pendingIntent).build();
     }
 
     static void updateStepReachedNotification(Context context, State newState, State oldState) {
