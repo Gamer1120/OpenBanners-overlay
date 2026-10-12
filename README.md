@@ -28,6 +28,7 @@ Not affiliated with Bannergress or Niantic. Application id `org.openbanners.over
 Licence notices shipped in the app: `app/src/main/res/raw/licenses.txt` (Settings → Licences).
 Targets Android 16 (API 36). Privacy policy: https://openbanners.org/overlay/privacy (source: `docs/privacy.html`).
 Google Play checklist and form answers: `docs/google-play.md`.
+F-Droid recipe, reproducible-build setup and submission steps: `docs/fdroid/README.md`.
 Releases: push a tag `vN` and GitHub Actions publishes a signed APK and AAB.
 Release builds are signed with the key described in `~/.config/openbanners-signing/keystore.properties`
 (kept outside the repo); without it, `assembleRelease` produces an unsigned APK.
