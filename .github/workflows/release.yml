@@ -21,7 +21,7 @@ jobs:
       - uses: actions/setup-java@v5
         with:
           distribution: temurin
-          java-version: '17'
+          java-version: '21'  # same major JDK as the F-Droid buildserver (reproducible builds)
           cache: gradle
 
       - name: Restore signing key

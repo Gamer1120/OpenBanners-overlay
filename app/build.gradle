@@ -23,7 +23,7 @@ android {
         applicationId "org.openbanners.overlay"
         minSdk 26
         targetSdk 36
-        versionCode 29
+        versionCode 30
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -52,6 +52,12 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'org.openbanners.overlay'
+
+    // Google's encrypted dependency list: off in the APK (F-Droid rejects it), kept in the AAB for Play's SDK Index.
+    dependenciesInfo {
+        includeInApk = false
+        includeInBundle = true
+    }
 }
 
 dependencies {
