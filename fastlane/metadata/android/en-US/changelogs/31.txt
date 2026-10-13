@@ -1,0 +1,1 @@
+Smaller download: the app is now built with code shrinking (R8). No visible changes.
