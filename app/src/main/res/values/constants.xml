@@ -10,6 +10,7 @@
     <string name="route_color_me" translatable="false">route_color_me</string>
     <string name="route_color_other" translatable="false">route_color_other</string>
     <string name="route_show_whole_banner" translatable="false">route_show_whole_banner</string>
+    <string name="route_hack_range" translatable="false">route_hack_range</string>
     <string name="route_orientation" translatable="false">route_orientation</string>
     <string name="route_compass_interval" translatable="false">route_compass_interval</string>
     <string name="route_compass_always" translatable="false">route_compass_always</string>

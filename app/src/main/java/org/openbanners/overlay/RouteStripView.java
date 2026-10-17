@@ -63,6 +63,8 @@ class RouteStripView extends View {
      */
     private static final float MAX_TOUCH_THROUGH_ALPHA = 0.8f;
 
+    /** Ingress's hack and deploy range. */
+    static final double HACK_RANGE_METERS = 40;
     private static final int COLOR_HALO = Color.argb(200, 0, 0, 0);
     private static final String DEFAULT_COLOR_OPEN = "#FFEA00";
     private static final String DEFAULT_COLOR_DONE = "#969696";
@@ -119,6 +121,9 @@ class RouteStripView extends View {
     private final Paint otherFill = fill(Color.TRANSPARENT);
     private final Paint otherLegPaint;
     private final Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+    private final Paint hackRangePaint;
+    private final Paint haloRangePaint;
+    private final Paint hackRangeFill = fill(Color.TRANSPARENT);
     private BiConsumer<State, State> stateListener;
 
     /** Steps in drawing order: the route is drawn through them in this order. */
@@ -171,6 +176,8 @@ class RouteStripView extends View {
     private boolean compassRegistered;
     /** Draw every mission of the banner, not just the current one and the start of the next. */
     private boolean showWholeBanner = true;
+    /** Draw a {@link #HACK_RANGE_METERS} circle around you, so you can see which portals are in range. */
+    private boolean showHackRange;
     private State lastState;
 
     private RouteStripView(Context context, int leftPx) {
@@ -180,6 +187,8 @@ class RouteStripView extends View {
         openLegPaint = stroke(Color.TRANSPARENT, 3.5f);
         doneLegPaint = stroke(Color.TRANSPARENT, 3f);
         otherLegPaint = stroke(Color.TRANSPARENT, 2.5f);
+        hackRangePaint = stroke(Color.TRANSPARENT, 1.5f);
+        haloRangePaint = stroke(COLOR_HALO, 3.5f);
         labelPaint.setFakeBoldText(true);
         labelPaint.setTextAlign(Paint.Align.CENTER);
         Resources res = context.getResources();
@@ -228,6 +237,7 @@ class RouteStripView extends View {
         needleShowsHeading = compassAlwaysVisible
                 && COMPASS_NEEDLE_HEADING.equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));
         setCompassListening(followCompass || needleShowsHeading);
+        showHackRange = preferences.getBoolean(context.getString(R.string.route_hack_range), false);
         boolean newShowWholeBanner = preferences.getBoolean(context.getString(R.string.route_show_whole_banner), true);
         if (newShowWholeBanner != showWholeBanner) {
             showWholeBanner = newShowWholeBanner;
@@ -308,6 +318,8 @@ class RouteStripView extends View {
         doneFill.setColor(doneTranslucent);
         doneLegPaint.setColor(doneTranslucent);
         meFill.setColor(me);
+        hackRangePaint.setColor(me);
+        hackRangeFill.setColor(Color.argb(40, Color.red(me), Color.green(me), Color.blue(me)));
         // Labels sit on the open-step colour: dark text on light colours, white text on dark ones.
         labelPaint.setColor(Color.luminance(open) > 0.4f ? Color.BLACK : Color.WHITE);
         invalidate();
@@ -588,6 +600,15 @@ class RouteStripView extends View {
         if (points.isEmpty()) return;
         boolean turning = easeHeading() | easeFacing();
         boolean stillMoving = easeFraming(desiredFraming()) | turning;
+
+        // Hack range below everything else: a projection in metres, so the radius follows the zoom.
+        if (showHackRange && location != null) {
+            float[] me = project(location.getLatitude(), location.getLongitude());
+            float r = (float) (HACK_RANGE_METERS / viewMpp);
+            canvas.drawCircle(me[0], me[1], r, hackRangeFill);
+            canvas.drawCircle(me[0], me[1], r, haloRangePaint);
+            canvas.drawCircle(me[0], me[1], r, hackRangePaint);
+        }
 
         // Legs: upcoming missions first, then done ones (banners often loop back over earlier missions, and the path
         // you just walked matters more), open ones on top. A leg takes the state of the step it leads to.

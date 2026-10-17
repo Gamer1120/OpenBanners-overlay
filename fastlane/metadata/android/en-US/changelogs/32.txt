@@ -1,0 +1,1 @@
+New setting "Draw 40 meter circle around user" (off by default): the route map shows your hack range, so you can see which portals you can reach. The circle scales with the map.

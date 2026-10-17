@@ -57,6 +57,13 @@
             app:summary="@string/preferences_route_show_whole_banner_summary"
             app:title="@string/preferences_route_show_whole_banner" />
 
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:dependency="@string/route_strip_enable"
+            app:key="@string/route_hack_range"
+            app:summary="@string/preferences_route_hack_range_summary"
+            app:title="@string/preferences_route_hack_range" />
+
         <ListPreference
             app:defaultValue="north"
             app:dependency="@string/route_strip_enable"
