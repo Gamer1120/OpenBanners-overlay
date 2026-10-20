@@ -13,11 +13,14 @@ import android.provider.Settings;
 import android.text.SpannableString;
 import android.view.Gravity;
 import android.view.ViewGroup;
+import android.content.DialogInterface;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.text.Spanned;
 import android.text.style.ImageSpan;
 import android.widget.Toast;
@@ -70,11 +73,15 @@ public class SettingsActivity extends AppCompatActivity {
 
     /** Layout text shared to the app (see MainActivity): ask before importing it. */
     static final String EXTRA_IMPORT_LAYOUT = "org.openbanners.overlay.IMPORT_LAYOUT";
+    /** Set after importing a layout that wanted the route map on: confirm the safety points first. */
+    static final String EXTRA_SHOW_ROUTE_DISCLAIMER = "org.openbanners.overlay.SHOW_ROUTE_DISCLAIMER";
 
     public static class SettingsFragment extends PreferenceFragmentCompat {
         @Override
         public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
             ServiceNotification.createNotificationChannels(requireContext());
+            // Before the switches are bound: a route map that's on without confirmation shows as off.
+            RouteDisclaimer.enforce(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()));
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             wrapTitles(getPreferenceScreen());
 
@@ -121,6 +128,21 @@ public class SettingsActivity extends AppCompatActivity {
                 showCardItemsDialog(p);
                 return true;
             });
+
+            SwitchPreferenceCompat routeStripPreference = findPreference(getString(R.string.route_strip_enable));
+            assert routeStripPreference != null;
+            routeStripPreference.setOnPreferenceChangeListener((p, newValue) -> {
+                if (!Boolean.TRUE.equals(newValue)
+                        || RouteDisclaimer.isAccepted(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))) {
+                    return true;
+                }
+                showRouteDisclaimerDialog(routeStripPreference);
+                return false; // stays off until confirmed
+            });
+            if (requireActivity().getIntent().getBooleanExtra(EXTRA_SHOW_ROUTE_DISCLAIMER, false)) {
+                requireActivity().getIntent().removeExtra(EXTRA_SHOW_ROUTE_DISCLAIMER);
+                showRouteDisclaimerDialog(routeStripPreference);
+            }
 
             Preference exportPreference = findPreference(getString(R.string.layout_export));
             Preference importPreference = findPreference(getString(R.string.layout_import));
@@ -203,6 +225,10 @@ public class SettingsActivity extends AppCompatActivity {
                         try {
                             LayoutCodec.importLayout(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()), input.getText().toString());
                             Toast.makeText(getContext(), R.string.layout_imported, Toast.LENGTH_SHORT).show();
+                            // A layout can't switch the route map on without the safety confirmation: ask for it.
+                            if (RouteDisclaimer.enforce(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()))) {
+                                requireActivity().getIntent().putExtra(EXTRA_SHOW_ROUTE_DISCLAIMER, true);
+                            }
                             requireActivity().recreate(); // show the imported values
                         } catch (IllegalArgumentException e) {
                             Toast.makeText(getContext(), e.getMessage(), Toast.LENGTH_LONG).show();
@@ -210,6 +236,54 @@ public class SettingsActivity extends AppCompatActivity {
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
+        }
+
+        /**
+         * Safety points the user has to tick before the route map turns on. Cancel, Back or tapping outside
+         * leaves it off.
+         */
+        private void showRouteDisclaimerDialog(SwitchPreferenceCompat preference) {
+            float density = getResources().getDisplayMetrics().density;
+            LinearLayout content = new LinearLayout(requireContext());
+            content.setOrientation(LinearLayout.VERTICAL);
+            int padding = Math.round(20 * density);
+            content.setPadding(padding, padding / 2, padding, 0);
+            TextView intro = new TextView(requireContext());
+            intro.setText(R.string.route_disclaimer_intro);
+            intro.setTextAppearance(android.R.style.TextAppearance_Material_Subhead);
+            intro.setPadding(0, 0, 0, padding / 2);
+            content.addView(intro);
+            int[] points = {R.string.route_disclaimer_attention, R.string.route_disclaimer_when_safe,
+                    R.string.route_disclaimer_responsible, R.string.route_disclaimer_own_risk};
+            List<CheckBox> checkBoxes = new ArrayList<>();
+            for (int point : points) {
+                CheckBox checkBox = new CheckBox(requireContext());
+                checkBox.setText(point);
+                checkBox.setGravity(Gravity.TOP);
+                checkBox.setPadding(checkBox.getPaddingLeft(), Math.round(6 * density), 0, Math.round(6 * density));
+                checkBoxes.add(checkBox);
+                content.addView(checkBox);
+            }
+            ScrollView scroll = new ScrollView(requireContext());
+            scroll.addView(content);
+            AlertDialog dialog = new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.route_disclaimer_title)
+                    .setView(scroll)
+                    .setPositiveButton(R.string.route_disclaimer_accept, (d, w) -> {
+                        RouteDisclaimer.accept(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()));
+                        preference.setChecked(true);
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+            Button accept = dialog.getButton(DialogInterface.BUTTON_POSITIVE);
+            accept.setEnabled(false);
+            for (CheckBox checkBox : checkBoxes) {
+                checkBox.setOnCheckedChangeListener((b, checked) -> {
+                    boolean all = true;
+                    for (CheckBox c : checkBoxes) all &= c.isChecked();
+                    accept.setEnabled(all);
+                });
+            }
         }
 
         /** Long titles wrap onto a new line instead of being cut off with "…" on narrow screens. */

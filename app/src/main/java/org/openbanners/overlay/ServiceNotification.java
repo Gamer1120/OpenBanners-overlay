@@ -94,7 +94,7 @@ final class ServiceNotification {
     /** The map follows the compass, or the needle shows your heading: only then is a correction useful. */
     private static boolean compassInUse(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
-        if (!preferences.getBoolean(context.getString(R.string.route_strip_enable), true)) return false;
+        if (!RouteDisclaimer.isRouteStripEnabled(context, preferences)) return false;
         boolean followCompass = "compass".equals(preferences.getString(context.getString(R.string.route_orientation), "north"));
         boolean needleHeading = preferences.getBoolean(context.getString(R.string.route_compass_always), false)
                 && "heading".equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));

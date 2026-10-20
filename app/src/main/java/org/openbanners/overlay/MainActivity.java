@@ -8,6 +8,7 @@ import android.provider.Settings;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
     private final ActivityResultLauncher<Intent> requestPermissionResultLauncher = registerForActivityResult(
@@ -34,6 +35,8 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // Upgrades from before the safety confirmation: the route map has to be switched on (and confirmed) again.
+        RouteDisclaimer.enforce(this, PreferenceManager.getDefaultSharedPreferences(this));
 
         String text = getIntent().getStringExtra(Intent.EXTRA_TEXT);
         if (LayoutCodec.looksLikeLayout(text)) {

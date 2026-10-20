@@ -47,6 +47,7 @@ public class OverlayService extends Service {
 
     private void initPreferences() {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        RouteDisclaimer.enforce(this, preferences);
         applyPreferences(preferences);
         preferences.registerOnSharedPreferenceChangeListener(preferenceListener);
     }
@@ -57,7 +58,7 @@ public class OverlayService extends Service {
             overlayView.applyCardPreferences(preferences);
         }
         int cardWidth = overlayView == null ? 0 : overlayView.getCardWidth();
-        boolean showRouteStrip = preferences.getBoolean(getString(R.string.route_strip_enable), true);
+        boolean showRouteStrip = RouteDisclaimer.isRouteStripEnabled(this, preferences);
         if (routeStripView != null && cardWidth != routeStripLeft) {
             // The card changed size: the strip starts at its right edge.
             routeStripView.remove();

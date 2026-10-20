@@ -56,6 +56,13 @@
     <string name="layout_import_action">Import</string>
     <string name="preferences_route_strip">Route map</string>
     <string name="preferences_route_strip_enable">Show route map at the top of the screen</string>
+    <string name="route_disclaimer_title">Before you turn on the route map</string>
+    <string name="route_disclaimer_intro">The route map shows your route at the top of the screen while you play. Please read and confirm each point:</string>
+    <string name="route_disclaimer_attention">I understand that looking at the route map, and planning my next turns, takes attention away from my surroundings.</string>
+    <string name="route_disclaimer_when_safe">I will only look at the map when it\'s safe, and stop first if I need to study it. I will never use it while crossing a road, cycling or driving.</string>
+    <string name="route_disclaimer_responsible">I am responsible for my own safety and will stay aware of traffic, obstacles and other people.</string>
+    <string name="route_disclaimer_own_risk">I use this overlay at my own risk. The developers accept no responsibility for injury, damage or any other harm resulting from its use.</string>
+    <string name="route_disclaimer_accept">Turn on route map</string>
     <string name="preferences_route_color_open">Colour of the current mission</string>
     <string name="preferences_route_color_other">Colour of upcoming missions</string>
     <string name="preferences_route_color_done">Colour of completed steps</string>
