@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.PixelFormat;
+import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
 import android.util.TypedValue;
@@ -47,6 +48,10 @@ class OverlayView extends FrameLayout {
     private final Button buttonMinus;
     private final Button buttonNext;
     private final Button buttonPlus;
+    /** "Close and mark as done", next to the Close button on the last mission. */
+    private final Button buttonDone;
+    /** OpenBanners site for "Close and mark as done". */
+    private final String origin;
     private final LinearLayout cardContent;
     private final float baseButtonTextPx;
     private final float baseCounterTextPx;
@@ -55,7 +60,7 @@ class OverlayView extends FrameLayout {
     private String appliedCardConfig;
     private BiConsumer<State, State> stateListener;
 
-    public OverlayView(Context context, String data) {
+    public OverlayView(Context context, String data, boolean autostart, String origin) {
         super(context);
         LayoutInflater inflater = context.getSystemService(LayoutInflater.class);
         inflater.inflate(R.layout.activity_overlay, this, true);
@@ -63,6 +68,8 @@ class OverlayView extends FrameLayout {
         buttonMinus = findViewById(R.id.buttonMinus);
         buttonNext = findViewById(R.id.buttonNext);
         buttonPlus = findViewById(R.id.buttonPlus);
+        buttonDone = findViewById(R.id.buttonDone);
+        this.origin = origin;
         cardContent = findViewById(R.id.cardContent);
         baseButtonTextPx = buttonNext.getTextSize();
         baseCounterTextPx = textMission.getTextSize();
@@ -77,11 +84,11 @@ class OverlayView extends FrameLayout {
         applyCardPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         setupListeners();
         applyState(StateManager.getState());
-        loadData(data, context);
+        loadData(data, autostart, context);
     }
 
-    public static OverlayView create(Context context, String data) {
-        OverlayView overlayView = new OverlayView(context, data);
+    public static OverlayView create(Context context, String data, boolean autostart, String origin) {
+        OverlayView overlayView = new OverlayView(context, data, autostart, origin);
         context.getSystemService(WindowManager.class).addView(overlayView, overlayView.params);
         return overlayView;
     }
@@ -112,12 +119,12 @@ class OverlayView extends FrameLayout {
         }
         float dp = getResources().getDisplayMetrics().density;
 
-        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext}) {
+        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonDone}) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) parent.removeView(view);
         }
         cardContent.removeAllViews();
-        for (Button button : new Button[]{buttonMinus, buttonPlus, buttonNext}) {
+        for (Button button : new Button[]{buttonMinus, buttonPlus, buttonNext, buttonDone}) {
             button.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseButtonTextPx * scale);
             button.setMinHeight(Math.round(baseButtonMinHeight * scale));
             button.setMinimumHeight(Math.round(baseButtonMinHeight * scale));
@@ -130,11 +137,17 @@ class OverlayView extends FrameLayout {
             views.add(viewFor(item));
         }
         int fullWidth = Math.round(100 * dp * scale);
+        // Width of the card's content, for "Close and mark as done" (MATCH_PARENT in this wrap_content card would keep
+        // the height of a first, wider measure and cut off the wrapped text).
+        int contentWidth = fullWidth;
         switch (layout) {
             case CardItems.LAYOUT_WIDE: {
                 LinearLayout row = row();
+                contentWidth = 0;
                 for (View view : views) {
-                    row.addView(view, new LinearLayout.LayoutParams(view == buttonNext ? Math.round(90 * dp * scale) : naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
+                    int width = view == buttonNext ? Math.round(90 * dp * scale) : naturalWidth(view, dp, scale);
+                    row.addView(view, new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    contentWidth += width;
                 }
                 cardContent.addView(row);
                 break;
@@ -152,13 +165,20 @@ class OverlayView extends FrameLayout {
                     break;
                 }
                 LinearLayout row = row();
+                contentWidth = 0;
                 for (View view : views.subList(0, views.size() - 1)) {
                     row.addView(view, new LinearLayout.LayoutParams(naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
+                    contentWidth += naturalWidth(view, dp, scale);
                 }
                 cardContent.addView(row);
                 cardContent.addView(views.get(views.size() - 1), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 break;
             }
+        }
+        // "Close and mark as done" goes full width below everything (so the card only grows downwards, away from
+        // the route strip), and only when the card has the Next/Close button.
+        if (buttonNext.getParent() != null) {
+            cardContent.addView(buttonDone, new LinearLayout.LayoutParams(contentWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
         }
         if (isAttachedToWindow()) {
             getContext().getSystemService(WindowManager.class).updateViewLayout(this, params);
@@ -206,12 +226,34 @@ class OverlayView extends FrameLayout {
                 StateManager.updateState(state -> state.nextMission(true));
                 new Handler().postDelayed(() -> StateManager.updateState(State::cooldownFinished), COOLDOWN_MILLIS);
             } else {
-                Intent serviceIntent = new Intent();
-                serviceIntent.setComponent(new ComponentName(getContext(), OverlayService.class));
-                getContext().stopService(serviceIntent);
+                stopOverlay();
             }
         });
+        buttonDone.setOnClickListener(v -> {
+            Banner banner = StateManager.getState().banner;
+            if (banner != null && banner.id != null) {
+                openInBrowser(DeepLink.markDoneUrl(origin, banner.id));
+            }
+            stopOverlay();
+        });
         setOnTouchListener(new ViewMoveListener(this));
+    }
+
+    private void stopOverlay() {
+        Intent serviceIntent = new Intent();
+        serviceIntent.setComponent(new ComponentName(getContext(), OverlayService.class));
+        getContext().stopService(serviceIntent);
+    }
+
+    private void openInBrowser(String url) {
+        try {
+            Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(url));
+            intent.addCategory(Intent.CATEGORY_BROWSABLE);
+            intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+            getContext().startActivity(intent);
+        } catch (Exception e) {
+            Toast.makeText(getContext(), "Couldn't open " + url, Toast.LENGTH_SHORT).show();
+        }
     }
 
     public void remove() {
@@ -219,7 +261,7 @@ class OverlayView extends FrameLayout {
         getContext().getSystemService(WindowManager.class).removeView(this);
     }
 
-    private void loadData(String data, Context context) {
+    private void loadData(String data, boolean autostart, Context context) {
         executorService.submit(() -> {
             try {
                 SharedDataParser.ParsedData parsedData = SharedDataParser.parse(data);
@@ -244,6 +286,15 @@ class OverlayView extends FrameLayout {
                     case banner: {
                         String bannerId = parsedData.id;
                         Banner banner = BannerApi.getBanner(bannerId);
+                        if (autostart && !banner.missions.isEmpty()) {
+                            // Opened with "Start with Overlay": begin at mission 1 (1/x) and open it in Ingress right away.
+                            Mission first = banner.missions.values().iterator().next();
+                            HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
+                                StateManager.updateState(state -> state.bannerLoaded(banner, 0));
+                                Ingress.tryLaunchMission(getContext(), first.id);
+                            });
+                            return;
+                        }
                         stateFunction = state -> state.bannerLoaded(banner);
                         break;
                     }
@@ -274,6 +325,7 @@ class OverlayView extends FrameLayout {
             buttonPlus.setEnabled(false);
             buttonNext.setEnabled(false);
             buttonNext.setText(R.string.overlayLoading);
+            buttonDone.setVisibility(GONE);
         } else {
             int numberOfMissions = state.banner.missions.size();
 
@@ -294,6 +346,9 @@ class OverlayView extends FrameLayout {
             buttonMinus.setEnabled(hasPrevious);
             buttonPlus.setEnabled(hasNext);
             buttonNext.setEnabled(!state.cooldown);
+            boolean finished = state.currentMission + 1 == numberOfMissions && state.banner.id != null;
+            buttonDone.setVisibility(finished ? VISIBLE : GONE);
+            buttonDone.setEnabled(!state.cooldown);
         }
     }
 }

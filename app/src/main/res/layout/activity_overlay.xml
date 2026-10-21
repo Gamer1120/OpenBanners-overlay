@@ -47,6 +47,14 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 
+        <!-- Last mission only: closes and marks the banner as done on OpenBanners. -->
+        <Button
+            android:id="@+id/buttonDone"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/overlayCloseMarkDone"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

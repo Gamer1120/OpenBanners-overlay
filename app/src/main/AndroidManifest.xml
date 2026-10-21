@@ -32,6 +32,13 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
+            <!-- "Start with Overlay" on openbanners.org: openbanners-overlay://banner/{id}?start=1 -->
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="openbanners-overlay" android:host="banner" />
+            </intent-filter>
         </activity>
 
         <activity

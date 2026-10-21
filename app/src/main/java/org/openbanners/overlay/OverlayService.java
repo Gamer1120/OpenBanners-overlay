@@ -90,7 +90,9 @@ public class OverlayService extends Service {
 
     private void addOverlay(Intent intent) {
         removeOverlay();
-        overlayView = OverlayView.create(this, intent.getStringExtra(Intent.EXTRA_TEXT));
+        overlayView = OverlayView.create(this, intent.getStringExtra(Intent.EXTRA_TEXT),
+                intent.getBooleanExtra(MainActivity.EXTRA_AUTOSTART, false),
+                DeepLink.safeOrigin(intent.getStringExtra(MainActivity.EXTRA_ORIGIN)));
     }
 
     private void removeOverlay() {

@@ -11,6 +11,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.preference.PreferenceManager;
 
 public class MainActivity extends AppCompatActivity {
+    /** Start at mission 1 and open it in Ingress once the banner has loaded. */
+    static final String EXTRA_AUTOSTART = "org.openbanners.overlay.AUTOSTART";
+    /** The OpenBanners site the banner was opened from (for "Close and mark as done"). */
+    static final String EXTRA_ORIGIN = "org.openbanners.overlay.ORIGIN";
+
     private final ActivityResultLauncher<Intent> requestPermissionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
             result -> startService(false)
@@ -18,9 +23,15 @@ public class MainActivity extends AppCompatActivity {
 
     private void startService(boolean requestPermission) {
         if (Settings.canDrawOverlays(this)) {
-            String data = getIntent().getStringExtra(Intent.EXTRA_TEXT);
             Intent intent = new Intent(this, OverlayService.class);
-            intent.putExtra(Intent.EXTRA_TEXT, data);
+            DeepLink link = Intent.ACTION_VIEW.equals(getIntent().getAction()) ? DeepLink.parse(getIntent().getDataString()) : null;
+            if (link != null) {
+                intent.putExtra(Intent.EXTRA_TEXT, link.bannerUrl());
+                intent.putExtra(EXTRA_AUTOSTART, link.autostart);
+                intent.putExtra(EXTRA_ORIGIN, link.origin);
+            } else {
+                intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
+            }
             startService(intent);
             finish();
         } else if (requestPermission) {

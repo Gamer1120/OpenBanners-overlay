@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">OpenBanners Overlay</string>
     <string name="overlayClose">Close</string>
+    <string name="overlayCloseMarkDone">Close and mark as done</string>
     <string name="overlayNext">Next</string>
     <string name="overlayStart">Start</string>
     <string name="overlayLoading">Loading…</string>

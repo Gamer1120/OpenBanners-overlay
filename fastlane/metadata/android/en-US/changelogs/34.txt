@@ -1,0 +1,2 @@
+Start with Overlay: the "Start with Overlay" button on openbanners.org opens this app at mission 1/x and opens mission 1 in Ingress right away.
+At the end of a banner: "Close" and "Close and mark as done" (opens the banner on OpenBanners and marks it as done, signing in first if needed).
