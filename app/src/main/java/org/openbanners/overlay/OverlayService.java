@@ -11,7 +11,10 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
+import android.view.View;
 
 import androidx.preference.PreferenceManager;
 
@@ -30,6 +33,19 @@ public class OverlayService extends Service {
     private BiConsumer<State, State> stateLocationListener;
 
     private LocationListener locationListener;
+
+    /** "Only show over Ingress": checks which app is in front once a second. */
+    private static final long FOREGROUND_CHECK_MILLIS = 1_000;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    private ForegroundApp foregroundApp;
+    private boolean overlayHidden;
+    private final Runnable foregroundCheck = new Runnable() {
+        @Override
+        public void run() {
+            setOverlayHidden(foregroundApp != null && !foregroundApp.overlayWanted());
+            handler.postDelayed(this, FOREGROUND_CHECK_MILLIS);
+        }
+    };
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -73,14 +89,33 @@ public class OverlayService extends Service {
         }
         if (routeStripView != null) {
             routeStripView.applyPreferences(preferences);
+            routeStripView.setHidden(overlayHidden);
+        }
+        boolean ingressOnly = preferences.getBoolean(getString(R.string.ingress_only), false);  // without Usage access the check finds nothing and the overlay stays
+        handler.removeCallbacks(foregroundCheck);
+        if (ingressOnly) {
+            if (foregroundApp == null) foregroundApp = new ForegroundApp(this);
+            handler.post(foregroundCheck);
+        } else {
+            foregroundApp = null;
+            setOverlayHidden(false);
         }
         // The compass correction buttons depend on the map orientation and the step setting.
         ServiceNotification.createNotificationChannels(this);
         ServiceNotification.updateDefaultNotification(this, StateManager.getState());
     }
 
+    private void setOverlayHidden(boolean hidden) {
+        // Every time, also for views added since the last check; both skip unchanged values.
+        overlayHidden = hidden;
+        int visibility = hidden ? View.GONE : View.VISIBLE;
+        if (overlayView != null && overlayView.getVisibility() != visibility) overlayView.setVisibility(visibility);
+        if (routeStripView != null) routeStripView.setHidden(hidden);
+    }
+
     @Override
     public void onDestroy() {
+        handler.removeCallbacks(foregroundCheck);
         super.onDestroy();
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(preferenceListener);
         StateManager.removeListener(stateLocationListener);

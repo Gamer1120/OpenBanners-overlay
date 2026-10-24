@@ -1,0 +1,1 @@
+New setting "Only show over Ingress": the overlay hides while another app is in front and comes back when you switch to Ingress. Sharing a banner link then also opens Ingress. Needs Usage access, which the app asks for when you switch it on.

@@ -54,6 +54,8 @@ class RouteStripView extends View {
     private static final int NEXT_IN_VIEW = 2;
     /** Catch-up mode (State#justNavigated): frame from the nearest open step, not from the first. */
     private boolean catchUp;
+    /** "Only show over Ingress" and another app is in front. */
+    private boolean hidden;
     private static final double MAX_VISIBLE_METERS = 2_000;
     private static final double EASING = 0.18;
     private static final float HEIGHT_FRACTION = 0.25f;
@@ -335,6 +337,12 @@ class RouteStripView extends View {
         }
     }
 
+    void setHidden(boolean hidden) {
+        if (this.hidden == hidden) return;
+        this.hidden = hidden;
+        setVisibility(points == null || points.isEmpty() || hidden ? GONE : VISIBLE);
+    }
+
     void remove() {
         setCompassListening(false);
         StateManager.removeListener(stateListener);
@@ -471,7 +479,7 @@ class RouteStripView extends View {
         }
         points = newPoints;
         legBefore = newLegs;
-        setVisibility(points.isEmpty() ? GONE : VISIBLE);
+        setVisibility(points.isEmpty() || hidden ? GONE : VISIBLE);
         invalidate();
     }
 

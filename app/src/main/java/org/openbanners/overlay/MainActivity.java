@@ -33,6 +33,18 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             }
             startService(intent);
+            // "Only show over Ingress": a link shared from elsewhere (a browser) opens Ingress so the overlay shows.
+            // "Start with Overlay" opens the mission in Ingress itself.
+            if ((link == null || !link.autostart)
+                    && PreferenceManager.getDefaultSharedPreferences(this).getBoolean(getString(R.string.ingress_only), false)) {
+                Ingress.createLaunchIngressIntent(this).ifPresent(pending -> {
+                    try {
+                        pending.send();
+                    } catch (Exception ignored) {
+                        // Ingress isn't installed or can't start: the overlay just stays visible
+                    }
+                });
+            }
             finish();
         } else if (requestPermission) {
             Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,

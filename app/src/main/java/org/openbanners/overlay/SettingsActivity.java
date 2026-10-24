@@ -91,6 +91,15 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
+            updateIngressOnlySummary();
+        }
+
+        /** "Only show over Ingress" needs Usage access; without it the overlay stays visible, so say so. */
+        private void updateIngressOnlySummary() {
+            SwitchPreferenceCompat preference = findPreference(getString(R.string.ingress_only));
+            if (preference == null) return;
+            boolean missing = preference.isChecked() && !ForegroundApp.hasAccess(requireContext());
+            preference.setSummary(missing ? R.string.preferences_ingress_only_no_access : R.string.preferences_ingress_only_summary);
         }
 
         private void updatePreferences() {
@@ -127,6 +136,19 @@ public class SettingsActivity extends AppCompatActivity {
             cardItemsPreference.setOnPreferenceClickListener(p -> {
                 showCardItemsDialog(p);
                 return true;
+            });
+
+            SwitchPreferenceCompat ingressOnlyPreference = findPreference(getString(R.string.ingress_only));
+            assert ingressOnlyPreference != null;
+            ingressOnlyPreference.setOnPreferenceChangeListener((p, newValue) -> {
+                if (Boolean.TRUE.equals(newValue) && !ForegroundApp.hasAccess(requireContext())) {
+                    Toast.makeText(requireContext(), R.string.preferences_ingress_only_grant, Toast.LENGTH_LONG).show();
+                    startActivity(new Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                }
+                p.getPreferenceManager().getSharedPreferences().edit().putBoolean(p.getKey(), Boolean.TRUE.equals(newValue)).apply();
+                ((SwitchPreferenceCompat) p).setChecked(Boolean.TRUE.equals(newValue));
+                updateIngressOnlySummary();
+                return false;
             });
 
             SwitchPreferenceCompat routeStripPreference = findPreference(getString(R.string.route_strip_enable));

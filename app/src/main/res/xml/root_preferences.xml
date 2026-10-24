@@ -18,6 +18,16 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_ingress">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="@string/ingress_only"
+            app:summary="@string/preferences_ingress_only_summary"
+            app:title="@string/preferences_ingress_only" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_card">
 
         <Preference
