@@ -23,6 +23,10 @@ class SharedDataParser {
             if (optionalParsedData.isPresent()) {
                 return optionalParsedData.get();
             }
+            optionalParsedData = parseOpenBannersPlan(url);
+            if (optionalParsedData.isPresent()) {
+                return optionalParsedData.get();
+            }
             optionalParsedData = parseOpenBannersBanner(url);
             if (optionalParsedData.isPresent()) {
                 return optionalParsedData.get();
@@ -54,6 +58,20 @@ class SharedDataParser {
         return Optional.empty();
     }
 
+    /** Mission Day plans: openbanners.org/planner/{id} (or test.openbanners.org); the plan lives on that site. */
+    static Optional<ParsedData> parseOpenBannersPlan(HttpUrl url) {
+        String host = url.host();
+        if (!url.isHttps() || !(host.equals("openbanners.org") || host.equals("www.openbanners.org") || host.equals("test.openbanners.org"))) {
+            return Optional.empty();
+        }
+        List<String> segments = url.pathSegments().stream().filter(segment -> !segment.isEmpty()).collect(Collectors.toList());
+        if (segments.size() == 2 && segments.get(0).equals("planner") && segments.get(1).matches("[A-Za-z0-9_-]{22}")) {
+            String site = "https://" + (host.equals("www.openbanners.org") ? "openbanners.org" : host);
+            return Optional.of(new ParsedData(ParsedDataType.plan, segments.get(1), site));
+        }
+        return Optional.empty();
+    }
+
     private static Optional<ParsedData> parseIntelMission(HttpUrl url) {
         if (url.host().equals("intel.ingress.com") && url.pathSegments().size() == 2 && url.pathSegments().get(0).equals("mission")) {
             return Optional.of(new ParsedData(ParsedDataType.mission, url.pathSegments().get(1)));
@@ -73,6 +91,7 @@ class SharedDataParser {
     enum ParsedDataType {
         mission,
         banner,
+        plan,
         invalid
     }
 
@@ -81,9 +100,17 @@ class SharedDataParser {
 
         public final String id;
 
+        /** For plans: the OpenBanners site that has it. */
+        public final String site;
+
         private ParsedData(ParsedDataType type, String id) {
+            this(type, id, null);
+        }
+
+        private ParsedData(ParsedDataType type, String id, String site) {
             this.type = type;
             this.id = id;
+            this.site = site;
         }
     }
 }

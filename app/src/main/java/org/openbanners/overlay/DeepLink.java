@@ -14,19 +14,23 @@ import java.util.Locale;
  * {@code openbanners-overlay://banner/{bannerId}?start=1&origin=https%3A%2F%2Ftest.openbanners.org}. With
  * {@code start=1} the overlay begins at mission 1 and opens it in Ingress straight away. {@code origin} is the
  * site the link came from; "Close and mark as done" goes back there (only known OpenBanners sites).
+ * Mission Day plans use {@code openbanners-overlay://plan/{planId}?start=1&origin=…}; the plan lives on that site.
  */
 final class DeepLink {
     static final String SCHEME = "openbanners-overlay";
     static final String DEFAULT_ORIGIN = "https://openbanners.org";
     private static final List<String> ALLOWED_ORIGINS = Arrays.asList(DEFAULT_ORIGIN, "https://test.openbanners.org");
 
+    /** The banner id, or the plan id when {@link #plan}. */
     final String bannerId;
+    final boolean plan;
     final boolean autostart;
     /** Always one of the allowed sites. */
     final String origin;
 
-    private DeepLink(String bannerId, boolean autostart, String origin) {
+    private DeepLink(String bannerId, boolean plan, boolean autostart, String origin) {
         this.bannerId = bannerId;
+        this.plan = plan;
         this.autostart = autostart;
         this.origin = origin;
     }
@@ -58,10 +62,12 @@ final class DeepLink {
         } catch (URISyntaxException e) {
             return null;
         }
-        if (!SCHEME.equalsIgnoreCase(uri.getScheme()) || !"banner".equalsIgnoreCase(uri.getHost())) return null;
+        if (!SCHEME.equalsIgnoreCase(uri.getScheme())) return null;
+        boolean plan = "plan".equalsIgnoreCase(uri.getHost());
+        if (!plan && !"banner".equalsIgnoreCase(uri.getHost())) return null;
         String path = uri.getPath() == null ? "" : uri.getPath();
         String[] segments = path.replaceAll("^/+|/+$", "").split("/");
-        if (segments.length != 1 || !segments[0].matches("[A-Za-z0-9._~-]+")) return null;
+        if (segments.length != 1 || !segments[0].matches(plan ? "[A-Za-z0-9_-]{22}" : "[A-Za-z0-9._~-]+")) return null;
         boolean autostart = false;
         String origin = null;
         String query = uri.getRawQuery();
@@ -74,7 +80,7 @@ final class DeepLink {
                 else if (name.equals("origin")) origin = value;
             }
         }
-        return new DeepLink(segments[0], autostart, safeOrigin(origin));
+        return new DeepLink(segments[0], plan, autostart, safeOrigin(origin));
     }
 
     private static String decode(String value) {
@@ -85,8 +91,8 @@ final class DeepLink {
         }
     }
 
-    /** The banner as a link the overlay already understands (see {@link SharedDataParser}). */
+    /** The banner or plan as a link the overlay already understands (see {@link SharedDataParser}). */
     String bannerUrl() {
-        return "https://openbanners.org/banner/" + bannerId;
+        return plan ? origin + "/planner/" + bannerId : "https://openbanners.org/banner/" + bannerId;
     }
 }

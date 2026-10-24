@@ -27,6 +27,7 @@ import androidx.preference.PreferenceManager;
 import org.openbanners.overlay.api.Banner;
 import org.openbanners.overlay.api.BannerApi;
 import org.openbanners.overlay.api.Mission;
+import org.openbanners.overlay.api.PlanApi;
 import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
@@ -221,6 +222,7 @@ class OverlayView extends FrameLayout {
         buttonPlus.setOnClickListener(v -> StateManager.updateState(state -> state.nextMission(false)));
         buttonNext.setOnClickListener(v -> {
             Optional<Mission> optionalNextMission = StateManager.getState().banner.missions.values().stream().skip(StateManager.getState().currentMission + 1).findFirst();
+            markCurrentPlanMissionDone();
             if (optionalNextMission.isPresent()) {
                 Ingress.tryLaunchMission(getContext(), optionalNextMission.get().id);
                 StateManager.updateState(state -> state.nextMission(true));
@@ -231,12 +233,34 @@ class OverlayView extends FrameLayout {
         });
         buttonDone.setOnClickListener(v -> {
             Banner banner = StateManager.getState().banner;
-            if (banner != null && banner.id != null) {
+            if (banner != null && banner.planId != null) {
+                // A plan: tick off the last mission and go back to the plan.
+                markCurrentPlanMissionDone();
+                openInBrowser(banner.planSite + "/planner/" + banner.planId);
+            } else if (banner != null && banner.id != null) {
                 openInBrowser(DeepLink.markDoneUrl(origin, banner.id));
             }
             stopOverlay();
         });
         setOnTouchListener(new ViewMoveListener(this));
+    }
+
+    /** Following a plan: the mission you were on counts as done there once you go on from it. */
+    private void markCurrentPlanMissionDone() {
+        State state = StateManager.getState();
+        Banner banner = state.banner;
+        if (banner == null || banner.planId == null || state.currentMission < 0) return;
+        Mission mission = banner.missions.values().stream().skip(state.currentMission).findFirst().orElse(null);
+        if (mission == null) return;
+        String site = banner.planSite;
+        String planId = banner.planId;
+        executorService.submit(() -> {
+            try {
+                PlanApi.markDone(site, planId, mission.id);
+            } catch (Exception ignored) {
+                // Offline: it can still be ticked off on the plan page.
+            }
+        });
     }
 
     private void stopOverlay() {
@@ -298,6 +322,19 @@ class OverlayView extends FrameLayout {
                         stateFunction = state -> state.bannerLoaded(banner);
                         break;
                     }
+                    case plan: {
+                        Banner route = PlanApi.getPlanRoute(parsedData.site, parsedData.id);
+                        if (autostart) {
+                            Mission first = route.missions.values().iterator().next();
+                            HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
+                                StateManager.updateState(state -> state.bannerStarted(route));
+                                Ingress.tryLaunchMission(getContext(), first.id);
+                            });
+                            return;
+                        }
+                        stateFunction = state -> state.bannerLoaded(route);
+                        break;
+                    }
                     case invalid: {
                         stateFunction = state -> State.error();
                         break;
@@ -346,7 +383,7 @@ class OverlayView extends FrameLayout {
             buttonMinus.setEnabled(hasPrevious);
             buttonPlus.setEnabled(hasNext);
             buttonNext.setEnabled(!state.cooldown);
-            boolean finished = state.currentMission + 1 == numberOfMissions && state.banner.id != null;
+            boolean finished = state.currentMission + 1 == numberOfMissions && (state.banner.id != null || state.banner.planId != null);
             buttonDone.setVisibility(finished ? VISIBLE : GONE);
             buttonDone.setEnabled(!state.cooldown);
         }

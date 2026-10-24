@@ -2,6 +2,7 @@ package org.openbanners.overlay;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -60,5 +61,19 @@ public class DeepLinkTest {
                 DeepLink.markDoneUrl("https://test.openbanners.org", "level-8-week-2026-4458"));
         assertEquals("https://openbanners.org/banner/a%20b%2Fc?markDone=1", DeepLink.markDoneUrl("https://evil.example", "a b/c"));
         assertEquals("https://openbanners.org/banner/x?markDone=1", DeepLink.markDoneUrl(null, "x"));
+    }
+
+    @Test
+    public void planLinks() {
+        DeepLink link = DeepLink.parse("openbanners-overlay://plan/AbCdEfGhIjKlMnOpQrStUv?start=1&origin=https%3A%2F%2Ftest.openbanners.org");
+        assertNotNull(link);
+        assertTrue(link.plan);
+        assertTrue(link.autostart);
+        assertEquals("https://test.openbanners.org/planner/AbCdEfGhIjKlMnOpQrStUv", link.bannerUrl());
+        // Someone else's site falls back to openbanners.org; bad ids are refused.
+        assertEquals("https://openbanners.org/planner/AbCdEfGhIjKlMnOpQrStUv",
+                DeepLink.parse("openbanners-overlay://plan/AbCdEfGhIjKlMnOpQrStUv?origin=https%3A%2F%2Fevil.example").bannerUrl());
+        assertNull(DeepLink.parse("openbanners-overlay://plan/short"));
+        assertFalse(DeepLink.parse("openbanners-overlay://banner/abc-1234").plan);
     }
 }

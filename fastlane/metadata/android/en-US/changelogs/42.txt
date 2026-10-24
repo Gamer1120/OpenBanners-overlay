@@ -1,0 +1,1 @@
+Mission Day plans from openbanners.org: share a plan (or tap "Start in OpenBanners Overlay" on the plan page) and the overlay follows the missions that aren't done yet, in the plan's order, as one route. Going on from a mission ticks it off in the plan for everyone.

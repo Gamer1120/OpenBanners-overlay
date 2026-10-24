@@ -41,6 +41,7 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="openbanners-overlay" android:host="banner" />
+                <data android:scheme="openbanners-overlay" android:host="plan" />
             </intent-filter>
         </activity>
 
