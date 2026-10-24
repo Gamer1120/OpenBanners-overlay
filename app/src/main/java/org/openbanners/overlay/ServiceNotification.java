@@ -80,6 +80,8 @@ final class ServiceNotification {
             builder.addAction(rotateAction(context, REQUEST_ROTATE_LEFT, 1, context.getString(R.string.notificationRotateLeft, step)));
             builder.addAction(rotateAction(context, REQUEST_ROTATE_RIGHT, -1, context.getString(R.string.notificationRotateRight, step)));
         }
+        // Tapping the notification opens Ingress, and with it the overlay (screach 10-24)
+        Ingress.createLaunchIngressIntent(context).ifPresent(builder::setContentIntent);
         Notification notification = builder
                 .setSmallIcon(R.drawable.ic_notification)
                 .addAction(action)
