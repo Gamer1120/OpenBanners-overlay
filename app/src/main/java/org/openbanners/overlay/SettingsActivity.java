@@ -94,6 +94,19 @@ public class SettingsActivity extends AppCompatActivity {
             updateIngressOnlySummary();
         }
 
+        /**
+         * Straight to this app's Usage access switch (Android 10+ settings accept the package, screach 10-24),
+         * else the list of all apps.
+         */
+        private void openUsageAccessSettings() {
+            Intent intent = new Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS);
+            try {
+                startActivity(new Intent(intent).setData(android.net.Uri.parse("package:" + requireContext().getPackageName())));
+            } catch (android.content.ActivityNotFoundException e) {
+                startActivity(intent);
+            }
+        }
+
         /** "Only show over Ingress" needs Usage access; without it the overlay stays visible, so say so. */
         private void updateIngressOnlySummary() {
             SwitchPreferenceCompat preference = findPreference(getString(R.string.ingress_only));
@@ -143,7 +156,7 @@ public class SettingsActivity extends AppCompatActivity {
             ingressOnlyPreference.setOnPreferenceChangeListener((p, newValue) -> {
                 if (Boolean.TRUE.equals(newValue) && !ForegroundApp.hasAccess(requireContext())) {
                     Toast.makeText(requireContext(), R.string.preferences_ingress_only_grant, Toast.LENGTH_LONG).show();
-                    startActivity(new Intent(android.provider.Settings.ACTION_USAGE_ACCESS_SETTINGS));
+                    openUsageAccessSettings();
                 }
                 p.getPreferenceManager().getSharedPreferences().edit().putBoolean(p.getKey(), Boolean.TRUE.equals(newValue)).apply();
                 ((SwitchPreferenceCompat) p).setChecked(Boolean.TRUE.equals(newValue));

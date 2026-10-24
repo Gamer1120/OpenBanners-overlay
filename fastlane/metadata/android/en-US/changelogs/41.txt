@@ -1,0 +1,1 @@
+Switching on "Only show over Ingress" now opens the Usage access switch of this app directly (on most phones), instead of the list of all apps.
