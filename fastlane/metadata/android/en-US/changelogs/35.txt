@@ -1,0 +1,1 @@
+Restarted in the middle of a banner: the first portal of a mission you reach now counts, with every portal before it, and the mission continues in order from there (nearby alerts work again). This holds while you click through the missions you did before the restart. Normal mission starts and "Start with Overlay" stay strictly in order.

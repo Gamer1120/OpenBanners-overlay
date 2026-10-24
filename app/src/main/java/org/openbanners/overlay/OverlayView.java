@@ -290,7 +290,7 @@ class OverlayView extends FrameLayout {
                             // Opened with "Start with Overlay": begin at mission 1 (1/x) and open it in Ingress right away.
                             Mission first = banner.missions.values().iterator().next();
                             HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
-                                StateManager.updateState(state -> state.bannerLoaded(banner, 0));
+                                StateManager.updateState(state -> state.bannerStarted(banner));
                                 Ingress.tryLaunchMission(getContext(), first.id);
                             });
                             return;

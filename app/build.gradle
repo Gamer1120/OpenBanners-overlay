@@ -17,13 +17,17 @@ if (signingPropsFile.exists()) {
 def hasSigningKey = signingProps['storeFile'] != null
 
 android {
+    // State tests build android.location.Location; with defaults every Location is at 0,0
+    testOptions {
+        unitTests.returnDefaultValues = true
+    }
     compileSdk 36
 
     defaultConfig {
         applicationId "org.openbanners.overlay"
         minSdk 26
         targetSdk 36
-        versionCode 34
+        versionCode 35
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
