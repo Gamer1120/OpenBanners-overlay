@@ -1,0 +1,1 @@
+Route map zoom fix for 37: after + or - (or a restart) the map frames the portal nearest to you and the one after it again, instead of the whole mission.

@@ -52,6 +52,8 @@ class RouteStripView extends View {
     private static final double EARTH_RADIUS_METERS = 6_371_000;
     private static final double VISIBLE_METERS = 150;
     private static final int NEXT_IN_VIEW = 2;
+    /** Catch-up mode (State#justNavigated): frame from the nearest open step, not from the first. */
+    private boolean catchUp;
     private static final double MAX_VISIBLE_METERS = 2_000;
     private static final double EASING = 0.18;
     private static final float HEIGHT_FRACTION = 0.25f;
@@ -406,6 +408,7 @@ class RouteStripView extends View {
             postInvalidateOnAnimation();
         }
         location = state.currentLocation;
+        catchUp = state.justNavigated;
         List<Point> newPoints = new ArrayList<>();
         List<Boolean> newLegs = new ArrayList<>();
         if (state.banner != null) {
@@ -493,19 +496,23 @@ class RouteStripView extends View {
         double cosLat = Math.cos(Math.toRadians(cLat));
         // Frame the next open steps in route order plus the nearest open one (for any-order missions), not the
         // three nearest: those could be anywhere in the mission (screach 10-24: "sometimes I see the whole mission").
-        List<double[]> offsets = new ArrayList<>();
-        double[] nearest = null;
+        // In catch-up mode (after +/- or a restart) the open steps before you aren't marked yet, so route order would
+        // start at the mission's first portal and frame the whole path (v37, screach 10-24): frame the nearest open
+        // step and the one after it instead.
+        List<double[]> open = new ArrayList<>();
+        int nearest = -1;
         for (Point p : points) {
             if (!p.open()) continue;
             double[] offset = rotate(
                     Math.toRadians(p.lng - cLng) * EARTH_RADIUS_METERS * cosLat,
                     Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS);
-            if (offsets.size() < NEXT_IN_VIEW) offsets.add(offset);
-            if (nearest == null || offset[0] * offset[0] + offset[1] * offset[1] < nearest[0] * nearest[0] + nearest[1] * nearest[1]) {
-                nearest = offset;
-            }
+            open.add(offset);
+            if (nearest < 0 || squared(offset) < squared(open.get(nearest))) nearest = open.size() - 1;
         }
-        if (nearest != null && !offsets.contains(nearest)) offsets.add(nearest);
+        List<double[]> offsets = new ArrayList<>();
+        int from = catchUp && nearest >= 0 ? nearest : 0;
+        for (int i = from; i < Math.min(from + NEXT_IN_VIEW, open.size()); i++) offsets.add(open.get(i));
+        if (nearest >= 0 && !offsets.contains(open.get(nearest))) offsets.add(open.get(nearest));
         double w = Math.max(getWidth(), 1);
         double h = Math.max(getHeight(), 1);
         double margin = 14 * dp;
@@ -527,6 +534,10 @@ class RouteStripView extends View {
         }
         mpp = Math.min(mpp, MAX_VISIBLE_METERS / w);
         return new double[]{cLat, cLng, mpp};
+    }
+
+    private static double squared(double[] offset) {
+        return offset[0] * offset[0] + offset[1] * offset[1];
     }
 
     /** Moves the shown framing toward the desired one; returns true while still moving. */
