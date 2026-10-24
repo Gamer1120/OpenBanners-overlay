@@ -1,0 +1,1 @@
+Restart fix: clicking through the missions you did before a restart no longer ends the restart early when one of them has a portal near you (in 35 the mission you were actually on then stayed unmarked).

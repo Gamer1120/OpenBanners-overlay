@@ -58,7 +58,6 @@ public class StateRestartTest {
     public void resumingMidMissionMarksTheEarliestPortalInRangeAndEverythingBefore() {
         State state = State.initial().bannerLoaded(banner("..x.x."), 0).location(HERE);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
-        assertFalse(state.justRestarted);
     }
 
     @Test
@@ -75,15 +74,32 @@ public class StateRestartTest {
         assertTrue(state.justRestarted);
         state = state.nextMission(false).location(HERE);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
-        assertFalse(state.justRestarted);
     }
 
     @Test
-    public void afterTheFirstPortalMissionsAreStrictlyInOrderAgain() {
-        State state = State.initial().bannerLoaded(banner("x...", "..x."), 0).location(HERE);
-        assertEquals(ImmutableSet.of(0), state.currentMissionVisitedStepIndexes);
-        // next mission: walking past portal 3 on the way to portal 1 marks nothing
-        assertEquals(ImmutableSet.of(), state.nextMission(false).currentMissionVisitedStepIndexes);
+    public void anEarlierMissionNearbyOnTheWayDoesNotEndTheRestart() {
+        // v35 bug (screach 10-24): standing at 9f, clicking + through mission 8 whose last portal is right there
+        State state = State.initial().bannerLoaded(banner("...x", "..x...")).location(HERE).nextMission(false);
+        assertEquals(ImmutableSet.of(0, 1, 2, 3), state.currentMissionVisitedStepIndexes);
+        state = state.nextMission(false);
+        assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
+        assertTrue(state.justRestarted);
+    }
+
+    @Test
+    public void walkingOnFromTheAnchorEndsTheRestart() {
+        Banner b = banner("x.x.", "..x.");
+        State anchored = State.initial().bannerLoaded(b, 0).location(HERE);
+        assertEquals(ImmutableSet.of(0), anchored.currentMissionVisitedStepIndexes);
+        assertTrue(anchored.justRestarted);
+        // portal 2 (index 1) far away: nothing more; then pretend he reached it
+        b.missions.get(0).steps.get(1).poi.latitude = 0.0;
+        b.missions.get(0).steps.get(1).poi.longitude = 0.0;
+        State walked = anchored.location(HERE);
+        assertEquals(ImmutableSet.of(0, 1, 2), walked.currentMissionVisitedStepIndexes);
+        assertFalse(walked.justRestarted);
+        // next mission is strict again: portal 3 nearby on the way to portal 1 marks nothing
+        assertEquals(ImmutableSet.of(), walked.nextMission(false).currentMissionVisitedStepIndexes);
     }
 
     @Test

@@ -39,7 +39,8 @@ public class State {
      * True after the overlay was (re)opened on a banner without "Start with Overlay": the player may be in the middle
      * of it, so the first portal of a sequential mission that comes into range may be any of them (the earliest one in
      * range wins, and everything before it counts as done). Stays true while they click through missions they did
-     * before the restart, and ends at the first portal marked visited; from then on missions are strictly in order.
+     * before the restart (even if one of them gets anchored on the way), and ends once he walks on from an anchored
+     * portal to the next one; from then on missions are strictly in order.
      */
     public final boolean justRestarted;
 
@@ -123,11 +124,19 @@ public class State {
 
     private State applyLocation() {
         ImmutableSet<Integer> visited = calculateStepIndexesInRange(this.banner, this.currentMission, this.currentMissionVisitedStepIndexes, this.currentLocation);
-        if (visited.isEmpty() && this.justRestarted) {
-            visited = resumeAtEarliestInRange(this.banner, this.currentMission, this.currentLocation);
+        boolean restarted = this.justRestarted;
+        if (restarted) {
+            if (visited.isEmpty()) {
+                // anchoring keeps the restart: clicking on through the missions he did before must still work
+                // (v35, screach 10-24: standing at 9f and clicking + through missions 1-8 anchored on one of them)
+                visited = resumeAtEarliestInRange(this.banner, this.currentMission, this.currentLocation);
+            } else if (visited.size() > this.currentMissionVisitedStepIndexes.size()
+                    && !this.currentMissionVisitedStepIndexes.isEmpty()) {
+                restarted = false;  // walked on to the next portal of an anchored mission: strictly in order from here
+            }
         }
         return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, visited, this.locationEnabled, this.headingOffset,
-                this.justRestarted && visited.isEmpty());
+                restarted);
     }
 
     /**
@@ -185,7 +194,7 @@ public class State {
         } else {
             newStepsInRange = Sets.difference(newState.currentMissionVisitedStepIndexes, oldState.currentMissionVisitedStepIndexes);
         }
-        if (oldState.justRestarted && !newState.justRestarted && newState.currentLocation != null) {
+        if (oldState.justRestarted && newState.currentLocation != null) {
             // resumed after a restart: the portals before it count as done, but only the ones in range are news
             Mission mission = newState.banner.missions.get(newState.currentMission);
             assert mission != null;
