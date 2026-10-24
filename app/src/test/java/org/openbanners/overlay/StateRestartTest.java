@@ -71,7 +71,7 @@ public class StateRestartTest {
     public void clickingThroughEarlierMissionsKeepsTheRestart() {
         State state = State.initial().bannerLoaded(banner("....", "....", "..x."));
         state = state.nextMission(false).nextMission(false);
-        assertTrue(state.justRestarted);
+        assertTrue(state.justNavigated);
         state = state.nextMission(false).location(HERE);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
     }
@@ -83,7 +83,7 @@ public class StateRestartTest {
         assertEquals(ImmutableSet.of(0, 1, 2, 3), state.currentMissionVisitedStepIndexes);
         state = state.nextMission(false);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
-        assertTrue(state.justRestarted);
+        assertTrue(state.justNavigated);
     }
 
     @Test
@@ -91,21 +91,34 @@ public class StateRestartTest {
         Banner b = banner("x.x.", "..x.");
         State anchored = State.initial().bannerLoaded(b, 0).location(HERE);
         assertEquals(ImmutableSet.of(0), anchored.currentMissionVisitedStepIndexes);
-        assertTrue(anchored.justRestarted);
+        assertTrue(anchored.justNavigated);
         // portal 2 (index 1) far away: nothing more; then pretend he reached it
         b.missions.get(0).steps.get(1).poi.latitude = 0.0;
         b.missions.get(0).steps.get(1).poi.longitude = 0.0;
         State walked = anchored.location(HERE);
         assertEquals(ImmutableSet.of(0, 1, 2), walked.currentMissionVisitedStepIndexes);
-        assertFalse(walked.justRestarted);
-        // next mission is strict again: portal 3 nearby on the way to portal 1 marks nothing
-        assertEquals(ImmutableSet.of(), walked.nextMission(false).currentMissionVisitedStepIndexes);
+        assertFalse(walked.justNavigated);
+        // the Next button is strict again: portal 3 nearby on the way to portal 1 marks nothing
+        assertEquals(ImmutableSet.of(), walked.nextMission(true).currentMissionVisitedStepIndexes);
     }
 
     @Test
     public void startWithOverlayIsStrictlyInOrderFromTheStart() {
         State state = State.initial().bannerStarted(banner("..x.")).location(HERE);
         assertEquals(ImmutableSet.of(), state.currentMissionVisitedStepIndexes);
-        assertFalse(state.justRestarted);
+        assertFalse(state.justNavigated);
+    }
+
+    @Test
+    public void plusAndMinusTurnCatchUpBackOn() {
+        // screach 10-24: +/- back and forth to reset the zoom should still mark where he is
+        Banner b = banner("x.x.", "..x.");
+        State walked = State.initial().bannerStarted(b);
+        assertFalse(walked.justNavigated);
+        State back = walked.nextMission(false).previousMission().location(HERE);
+        assertEquals(ImmutableSet.of(0), back.currentMissionVisitedStepIndexes);
+        State next = walked.nextMission(false).location(HERE);
+        assertEquals(ImmutableSet.of(0, 1, 2), next.currentMissionVisitedStepIndexes);
+        assertEquals(ImmutableSet.of(), walked.nextMission(true).location(HERE).currentMissionVisitedStepIndexes);
     }
 }

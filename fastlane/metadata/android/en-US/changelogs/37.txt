@@ -1,0 +1,2 @@
+Route map zoom: frames the next one or two portals in route order (it sometimes zoomed out to the whole mission).
+Catch-up after + and -: after clicking to a mission with + or -, the first portal of it you reach counts with every portal before it, then in order. The Next button and "Start with Overlay" stay strictly in order from portal 1.

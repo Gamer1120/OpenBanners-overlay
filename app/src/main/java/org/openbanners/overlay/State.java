@@ -36,13 +36,13 @@ public class State {
     public final int headingOffset;
 
     /**
-     * True after the overlay was (re)opened on a banner without "Start with Overlay": the player may be in the middle
-     * of it, so the first portal of a sequential mission that comes into range may be any of them (the earliest one in
-     * range wins, and everything before it counts as done). Stays true while they click through missions they did
-     * before the restart (even if one of them gets anchored on the way), and ends once he walks on from an anchored
-     * portal to the next one; from then on missions are strictly in order.
+     * Catch-up mode: true after the overlay was (re)opened on a banner without "Start with Overlay", and after every
+     * +/- press (screach 10-24: "just navigated" — that's what you do after a restart, or to reset the zoom). The
+     * player may be in the middle of the mission, so the earliest portal of it in range counts with everything before
+     * it. It survives clicking on through missions (even if one gets anchored on the way) and ends once he walks on
+     * from the anchored portal to the next one. "Start with Overlay" and the Next button stay strictly in order.
      */
-    public final boolean justRestarted;
+    public final boolean justNavigated;
 
     private State(Banner banner, int currentMission, boolean error, boolean cooldown, Location currentLocation, ImmutableSet<Integer> currentMissionVisitedStepIndexes, boolean locationEnabled) {
         this(banner, currentMission, error, cooldown, currentLocation, currentMissionVisitedStepIndexes, locationEnabled, 0);
@@ -52,8 +52,8 @@ public class State {
         this(banner, currentMission, error, cooldown, currentLocation, currentMissionVisitedStepIndexes, locationEnabled, headingOffset, false);
     }
 
-    private State(Banner banner, int currentMission, boolean error, boolean cooldown, Location currentLocation, ImmutableSet<Integer> currentMissionVisitedStepIndexes, boolean locationEnabled, int headingOffset, boolean justRestarted) {
-        this.justRestarted = justRestarted;
+    private State(Banner banner, int currentMission, boolean error, boolean cooldown, Location currentLocation, ImmutableSet<Integer> currentMissionVisitedStepIndexes, boolean locationEnabled, int headingOffset, boolean justNavigated) {
+        this.justNavigated = justNavigated;
         this.banner = banner;
         this.currentMission = currentMission;
         this.error = error;
@@ -76,13 +76,15 @@ public class State {
         return new State(null, -1, true, false, null, ImmutableSet.of(), false);
     }
 
+    /** The - button: catch-up mode on. */
     State previousMission() {
-        return new State(this.banner, this.currentMission - 1, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, this.justRestarted)
+        return new State(this.banner, this.currentMission - 1, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, true)
                 .applyLocation();
     }
 
+    /** {@code cooldown}: the Next button (strictly in order from portal 1); without it the + button (catch-up mode). */
     State nextMission(boolean cooldown) {
-        return new State(this.banner, this.currentMission + 1, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, this.justRestarted)
+        return new State(this.banner, this.currentMission + 1, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, !cooldown)
                 .applyLocation();
     }
 
@@ -99,32 +101,32 @@ public class State {
         return bannerLoaded(banner, 0, false);
     }
 
-    private State bannerLoaded(Banner banner, int currentMission, boolean justRestarted) {
-        return new State(banner, currentMission, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, 0, justRestarted)
+    private State bannerLoaded(Banner banner, int currentMission, boolean justNavigated) {
+        return new State(banner, currentMission, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, 0, justNavigated)
                 .applyLocation();
     }
 
     State cooldownFinished() {
-        return new State(this.banner, this.currentMission, this.error, false, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset, this.justRestarted);
+        return new State(this.banner, this.currentMission, this.error, false, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset, this.justNavigated);
     }
 
     State location(Location location) {
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, location, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset, this.justRestarted).applyLocation();
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, location, this.currentMissionVisitedStepIndexes, this.locationEnabled, this.headingOffset, this.justNavigated).applyLocation();
     }
 
     State locationEnabled() {
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, true, this.headingOffset, this.justRestarted);
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, true, this.headingOffset, this.justNavigated);
     }
 
     /** Turns the compass correction by {@code degrees} (positive = map turns left), kept within -180..180. */
     State rotateHeading(int degrees) {
         int offset = ((this.headingOffset + degrees) % 360 + 540) % 360 - 180;
-        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, offset, this.justRestarted);
+        return new State(this.banner, this.currentMission, this.error, this.cooldown, this.currentLocation, this.currentMissionVisitedStepIndexes, this.locationEnabled, offset, this.justNavigated);
     }
 
     private State applyLocation() {
         ImmutableSet<Integer> visited = calculateStepIndexesInRange(this.banner, this.currentMission, this.currentMissionVisitedStepIndexes, this.currentLocation);
-        boolean restarted = this.justRestarted;
+        boolean restarted = this.justNavigated;
         if (restarted) {
             if (visited.isEmpty()) {
                 // anchoring keeps the restart: clicking on through the missions he did before must still work
@@ -194,7 +196,7 @@ public class State {
         } else {
             newStepsInRange = Sets.difference(newState.currentMissionVisitedStepIndexes, oldState.currentMissionVisitedStepIndexes);
         }
-        if (oldState.justRestarted && newState.currentLocation != null) {
+        if (oldState.justNavigated && newState.currentLocation != null) {
             // resumed after a restart: the portals before it count as done, but only the ones in range are news
             Mission mission = newState.banner.missions.get(newState.currentMission);
             assert mission != null;

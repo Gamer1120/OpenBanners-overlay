@@ -43,15 +43,15 @@ import java.util.function.BiConsumer;
  * Draws the current mission's steps as labelled dots ("5c" = mission 5, step 3) with legs
  * in step order, plus the next mission's first step so you can see where to go afterwards.
  * No basemap: an equirectangular projection centred on your location, zoomed to at least
- * {@link #VISIBLE_METERS} across and out just far enough to show the
- * {@link #NEAREST_OPEN_IN_VIEW} nearest open steps. Yellow = open, grey = done, cyan = you.
+ * {@link #VISIBLE_METERS} across and out just far enough to show the next
+ * {@link #NEXT_IN_VIEW} open steps in route order and the nearest open one. Yellow = open, grey = done, cyan = you.
  * Ingress's map is almost grayscale, so colours are saturated and drawn on a dark halo.
  */
 @SuppressLint("ViewConstructor")
 class RouteStripView extends View {
     private static final double EARTH_RADIUS_METERS = 6_371_000;
     private static final double VISIBLE_METERS = 150;
-    private static final int NEAREST_OPEN_IN_VIEW = 3;
+    private static final int NEXT_IN_VIEW = 2;
     private static final double MAX_VISIBLE_METERS = 2_000;
     private static final double EASING = 0.18;
     private static final float HEIGHT_FRACTION = 0.25f;
@@ -491,14 +491,21 @@ class RouteStripView extends View {
             cLng = first.lng;
         }
         double cosLat = Math.cos(Math.toRadians(cLat));
+        // Frame the next open steps in route order plus the nearest open one (for any-order missions), not the
+        // three nearest: those could be anywhere in the mission (screach 10-24: "sometimes I see the whole mission").
         List<double[]> offsets = new ArrayList<>();
+        double[] nearest = null;
         for (Point p : points) {
             if (!p.open()) continue;
-            offsets.add(rotate(
+            double[] offset = rotate(
                     Math.toRadians(p.lng - cLng) * EARTH_RADIUS_METERS * cosLat,
-                    Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS));
+                    Math.toRadians(p.lat - cLat) * EARTH_RADIUS_METERS);
+            if (offsets.size() < NEXT_IN_VIEW) offsets.add(offset);
+            if (nearest == null || offset[0] * offset[0] + offset[1] * offset[1] < nearest[0] * nearest[0] + nearest[1] * nearest[1]) {
+                nearest = offset;
+            }
         }
-        offsets.sort((a, b) -> Double.compare(a[0] * a[0] + a[1] * a[1], b[0] * b[0] + b[1] * b[1]));
+        if (nearest != null && !offsets.contains(nearest)) offsets.add(nearest);
         double w = Math.max(getWidth(), 1);
         double h = Math.max(getHeight(), 1);
         double margin = 14 * dp;
@@ -507,10 +514,12 @@ class RouteStripView extends View {
         int[] onScreen = new int[2];
         getLocationOnScreen(onScreen);
         double hiddenTop = Math.max(statusBarHeightPx - onScreen[1], 0);
-        double roomUp = Math.max(h / 2 - hiddenTop - margin, 1);
+        // never less than half the room below: a position read during a window change once left almost none, and the
+        // next portal (usually ahead, so up) then zoomed the map out to the whole mission
+        double roomUp = Math.max(h / 2 - hiddenTop - margin, (h / 2 - margin) / 2);
         double roomDown = Math.max(h / 2 - margin, 1);
         double mpp = VISIBLE_METERS / w;
-        for (int i = 0; i < Math.min(NEAREST_OPEN_IN_VIEW, offsets.size()); i++) {
+        for (int i = 0; i < offsets.size(); i++) {
             double dx = offsets.get(i)[0];
             double dy = offsets.get(i)[1];
             mpp = Math.max(mpp, Math.abs(dx) / roomX);
