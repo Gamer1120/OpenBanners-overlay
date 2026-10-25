@@ -76,15 +76,29 @@ public class State {
         return new State(null, -1, true, false, null, ImmutableSet.of(), false);
     }
 
-    /** The - button: catch-up mode on. */
+    /**
+     * The - button: catch-up mode on. Wraps around: - on the first mission (or before the start) goes to the last
+     * (screach 10-25: at 1/23 he needed 20x + to reach 20/23 instead of 4x -).
+     */
     State previousMission() {
-        return new State(this.banner, this.currentMission - 1, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, true)
+        int target = this.currentMission - 1;
+        if (target < 0 && this.banner != null && !this.banner.missions.isEmpty()) {
+            target = this.banner.missions.size() - 1;
+        }
+        return new State(this.banner, target, false, false, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, true)
                 .applyLocation();
     }
 
-    /** {@code cooldown}: the Next button (strictly in order from portal 1); without it the + button (catch-up mode). */
+    /**
+     * {@code cooldown}: the Next button (strictly in order from portal 1, no wrap-around: on the last mission it's
+     * Close); without it the + button (catch-up mode), which wraps from the last mission to the first.
+     */
     State nextMission(boolean cooldown) {
-        return new State(this.banner, this.currentMission + 1, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, !cooldown)
+        int target = this.currentMission + 1;
+        if (!cooldown && this.banner != null && target >= this.banner.missions.size()) {
+            target = 0;
+        }
+        return new State(this.banner, target, false, cooldown, this.currentLocation, ImmutableSet.of(), this.locationEnabled, this.headingOffset, !cooldown)
                 .applyLocation();
     }
 

@@ -378,10 +378,10 @@ class OverlayView extends FrameLayout {
                 }
             }
 
-            boolean hasPrevious = state.currentMission >= 0;
-            boolean hasNext = state.currentMission < numberOfMissions - 1;
-            buttonMinus.setEnabled(hasPrevious);
-            buttonPlus.setEnabled(hasNext);
+            // +/- wrap around (- on the first mission goes to the last, + on the last to the first)
+            boolean hasMissions = numberOfMissions > 0;
+            buttonMinus.setEnabled(hasMissions);
+            buttonPlus.setEnabled(hasMissions);
             buttonNext.setEnabled(!state.cooldown);
             boolean finished = state.currentMission + 1 == numberOfMissions && (state.banner.id != null || state.banner.planId != null);
             buttonDone.setVisibility(finished ? VISIBLE : GONE);
