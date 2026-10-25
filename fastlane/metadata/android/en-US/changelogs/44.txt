@@ -1,0 +1,1 @@
+Only show over Ingress: the overlay also hides while another app is open next to Ingress in a pop-up window or split screen, and stays hidden when that app is maximised. It comes back once only Ingress is left.

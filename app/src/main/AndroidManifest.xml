@@ -64,5 +64,10 @@
 
     <queries>
         <package android:name="com.nianticproject.ingress" />
+        <!-- The launcher, so "Only show over Ingress" ignores it -->
+        <intent>
+            <action android:name="android.intent.action.MAIN" />
+            <category android:name="android.intent.category.HOME" />
+        </intent>
     </queries>
 </manifest>
