@@ -60,6 +60,8 @@ class OverlayView extends FrameLayout {
     /** Card settings currently applied, to skip rebuilding when unrelated settings change. */
     private String appliedCardConfig;
     private BiConsumer<State, State> stateListener;
+    /** Set when the overlay was opened without a link it can use; the error state then says "Unsupported link". */
+    private volatile boolean unsupportedLink;
 
     public OverlayView(Context context, String data, boolean autostart, String origin) {
         super(context);
@@ -336,6 +338,10 @@ class OverlayView extends FrameLayout {
                         break;
                     }
                     case invalid: {
+                        // No link we can open (nothing shared, or a link the app doesn't know): say so instead of "Error".
+                        unsupportedLink = true;
+                        HandlerCompat.createAsync(Looper.getMainLooper()).post(() ->
+                                Toast.makeText(context, R.string.overlayUnsupportedLink, Toast.LENGTH_LONG).show());
                         stateFunction = state -> State.error();
                         break;
                     }
@@ -345,8 +351,11 @@ class OverlayView extends FrameLayout {
                 }
                 HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> StateManager.updateState(stateFunction));
             } catch (Exception e) {
-                HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> StateManager.updateState(state -> State.error()));
-                Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                // Toasts need the main thread (this runs on the executor).
+                HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
+                    StateManager.updateState(state -> State.error());
+                    Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                });
             }
         });
     }
@@ -354,7 +363,7 @@ class OverlayView extends FrameLayout {
     private void applyState(State state) {
         if (state.banner == null) {
             if (state.error) {
-                textMission.setText(R.string.overlayError);
+                textMission.setText(unsupportedLink ? R.string.overlayUnsupportedLink : R.string.overlayError);
             } else {
                 textMission.setText(R.string.overlayEllipsis);
             }

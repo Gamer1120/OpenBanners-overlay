@@ -67,7 +67,7 @@ final class DeepLink {
         if (!plan && !"banner".equalsIgnoreCase(uri.getHost())) return null;
         String path = uri.getPath() == null ? "" : uri.getPath();
         String[] segments = path.replaceAll("^/+|/+$", "").split("/");
-        if (segments.length != 1 || !segments[0].matches(plan ? "[A-Za-z0-9_-]{22}" : "[A-Za-z0-9._~-]+")) return null;
+        if (segments.length != 1 || !(plan ? segments[0].matches("[A-Za-z0-9_-]{22}") : isBannerId(segments[0]))) return null;
         boolean autostart = false;
         String origin = null;
         String query = uri.getRawQuery();
@@ -83,6 +83,27 @@ final class DeepLink {
         return new DeepLink(segments[0], plan, autostart, safeOrigin(origin));
     }
 
+    /** Longest banner id we accept; Bannergress slugs are far shorter. */
+    static final int MAX_BANNER_ID_LENGTH = 200;
+
+    /**
+     * Bannergress banner ids are slugs of the title and can contain any letter (st-paulus-dom-münster-4d07, café-…,
+     * straße-…), so only refuse what can't be a single path segment: empty, too long, slashes, whitespace,
+     * control/format characters and URL delimiters.
+     */
+    static boolean isBannerId(String id) {
+        if (id == null || id.isEmpty() || id.length() > MAX_BANNER_ID_LENGTH) return false;
+        for (int i = 0; i < id.length(); ) {
+            int c = id.codePointAt(i);
+            i += Character.charCount(c);
+            if (c == '/' || c == '\\' || c == '?' || c == '#' || c == '%') return false;
+            if (Character.isWhitespace(c) || Character.isSpaceChar(c) || Character.isISOControl(c)) return false;
+            int type = Character.getType(c);
+            if (type == Character.FORMAT || type == Character.UNASSIGNED || type == Character.SURROGATE || type == Character.PRIVATE_USE) return false;
+        }
+        return true;
+    }
+
     private static String decode(String value) {
         try {
             return URLDecoder.decode(value, StandardCharsets.UTF_8.name());
@@ -93,6 +114,15 @@ final class DeepLink {
 
     /** The banner or plan as a link the overlay already understands (see {@link SharedDataParser}). */
     String bannerUrl() {
-        return plan ? origin + "/planner/" + bannerId : "https://openbanners.org/banner/" + bannerId;
+        // Percent-encoded, so ids with letters like ü survive the URL matching in SharedDataParser.
+        return plan ? origin + "/planner/" + bannerId : "https://openbanners.org/banner/" + encodePathSegment(bannerId);
+    }
+
+    private static String encodePathSegment(String segment) {
+        try {
+            return URLEncoder.encode(segment, StandardCharsets.UTF_8.name()).replace("+", "%20");
+        } catch (Exception e) {
+            return segment;
+        }
     }
 }

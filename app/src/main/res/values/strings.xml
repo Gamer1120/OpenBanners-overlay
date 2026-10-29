@@ -11,6 +11,7 @@
     <string name="notificationAction">Stop</string>
     <string name="notificationRemaining">%1$1.1f km remaining (%2$1.1f km total)</string>
     <string name="overlayError">Error</string>
+    <string name="overlayUnsupportedLink">Unsupported link</string>
     <string name="overlayEllipsis">…</string>
     <string name="overlayMinus">−</string>
     <string name="overlayPlus">+</string>

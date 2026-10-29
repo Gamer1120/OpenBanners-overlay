@@ -13,6 +13,10 @@ class SharedDataParser {
     private static final ImmutableSet<String> OPENBANNERS_BANNER_PATHS = ImmutableSet.of("banner", "bannerguider", "bannerguiderwithoutlocation");
 
     static ParsedData parse(String data) {
+        if (data == null || data.trim().isEmpty()) {
+            // Nothing was shared (e.g. a link the app doesn't understand opened it): not a crash, just unsupported.
+            return new ParsedData(ParsedDataType.invalid, null);
+        }
         Matcher matcher = android.util.Patterns.WEB_URL.matcher(data);
         while (matcher.find()) {
             HttpUrl url = HttpUrl.parse(matcher.group());

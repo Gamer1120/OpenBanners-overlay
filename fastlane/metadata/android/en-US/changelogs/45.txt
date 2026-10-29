@@ -1,0 +1,1 @@
+Fix: "Start with Overlay" works again for banners with accented letters in their name (ü, é, ß, ç, …), e.g. St. Paulus Dom Münster. Links the app can't open now show "Unsupported link" instead of "Error".

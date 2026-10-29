@@ -36,11 +36,19 @@ public class BannerApi {
         });
     }
 
+    /**
+     * The banner's API URL. The id is the decoded slug (e.g. st-paulus-dom-münster-4d07) and gets percent-encoded
+     * exactly once here: .../bnrs/st-paulus-dom-m%C3%BCnster-4d07.
+     */
+    public static HttpUrl bannerUrl(String bannerId) {
+        return Objects.requireNonNull(HttpUrl.parse(baseUrl)).newBuilder()
+                .addPathSegment("bnrs")
+                .addPathSegment(bannerId)
+                .build();
+    }
+
     public static Banner getBanner(String bannerId) throws IOException {
-        HttpUrl.Builder urlBuilder = Objects.requireNonNull(HttpUrl.parse(baseUrl)).newBuilder();
-        urlBuilder.addPathSegment("bnrs");
-        urlBuilder.addEncodedPathSegment(bannerId);
-        Request request = new Request.Builder().url(urlBuilder.build()).build();
+        Request request = new Request.Builder().url(bannerUrl(bannerId)).build();
         ResponseBody responseBody = client.newCall(request).execute().body();
         assert responseBody != null;
         return objectMapper.readValue(responseBody.string(), Banner.class);
