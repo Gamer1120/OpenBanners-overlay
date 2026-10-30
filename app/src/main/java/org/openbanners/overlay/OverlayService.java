@@ -73,6 +73,23 @@ public class OverlayService extends Service {
         if (overlayView != null) {
             overlayView.applyCardPreferences(preferences);
         }
+        applyRouteStrip(preferences);
+        boolean ingressOnly = preferences.getBoolean(getString(R.string.ingress_only), false);  // without Usage access the check finds nothing and the overlay stays
+        handler.removeCallbacks(foregroundCheck);
+        if (ingressOnly) {
+            if (foregroundApp == null) foregroundApp = new ForegroundApp(this);
+            handler.post(foregroundCheck);
+        } else {
+            foregroundApp = null;
+            setOverlayHidden(false);
+        }
+        // The compass correction buttons depend on the map orientation and the step setting.
+        ServiceNotification.createNotificationChannels(this);
+        ServiceNotification.updateDefaultNotification(this, StateManager.getState());
+    }
+
+    /** Shows, hides or moves the route strip; it starts at the card's right edge. */
+    private void applyRouteStrip(SharedPreferences preferences) {
         int cardWidth = overlayView == null ? 0 : overlayView.getCardWidth();
         boolean showRouteStrip = RouteDisclaimer.isRouteStripEnabled(this, preferences);
         if (routeStripView != null && cardWidth != routeStripLeft) {
@@ -91,18 +108,6 @@ public class OverlayService extends Service {
             routeStripView.applyPreferences(preferences);
             routeStripView.setHidden(overlayHidden);
         }
-        boolean ingressOnly = preferences.getBoolean(getString(R.string.ingress_only), false);  // without Usage access the check finds nothing and the overlay stays
-        handler.removeCallbacks(foregroundCheck);
-        if (ingressOnly) {
-            if (foregroundApp == null) foregroundApp = new ForegroundApp(this);
-            handler.post(foregroundCheck);
-        } else {
-            foregroundApp = null;
-            setOverlayHidden(false);
-        }
-        // The compass correction buttons depend on the map orientation and the step setting.
-        ServiceNotification.createNotificationChannels(this);
-        ServiceNotification.updateDefaultNotification(this, StateManager.getState());
     }
 
     private void setOverlayHidden(boolean hidden) {
@@ -128,6 +133,10 @@ public class OverlayService extends Service {
         overlayView = OverlayView.create(this, intent.getStringExtra(Intent.EXTRA_TEXT),
                 intent.getBooleanExtra(MainActivity.EXTRA_AUTOSTART, false),
                 DeepLink.safeOrigin(intent.getStringExtra(MainActivity.EXTRA_ORIGIN)));
+        // On the last mission the card can change size (Close items instead of Start / Next): keep the strip next to it.
+        overlayView.setCardChangedListener(() -> handler.post(() -> {
+            if (overlayView != null) applyRouteStrip(PreferenceManager.getDefaultSharedPreferences(this));
+        }));
     }
 
     private void removeOverlay() {

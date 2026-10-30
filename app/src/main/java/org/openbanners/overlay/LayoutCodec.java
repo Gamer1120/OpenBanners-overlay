@@ -20,7 +20,11 @@ import java.util.List;
 final class LayoutCodec {
     /** Marks the text as an OpenBanners Overlay layout. */
     static final String FORMAT = "openbanners-overlay-layout";
-    private static final int VERSION = 1;
+    /**
+     * Newest version this app reads. Version 2: the card items can include the Close buttons and hidden items ("-x"),
+     * which version 1 apps (before 48) reject; layouts that don't use them are still exported as version 1.
+     */
+    private static final int VERSION = 2;
 
     /** One exported setting and how to check an imported value. */
     private static final class Setting {
@@ -73,7 +77,8 @@ final class LayoutCodec {
             }
             JSONObject root = new JSONObject();
             root.put("format", FORMAT);
-            root.put("version", VERSION);
+            String cardItems = settings.optString(context.getString(R.string.card_items), null);
+            root.put("version", CardItems.needsNewFormat(cardItems) ? VERSION : 1);
             root.put("settings", settings);
             return root.toString();
         } catch (JSONException e) {
@@ -120,7 +125,7 @@ final class LayoutCodec {
                 if (!(value instanceof String)) throw invalid(key);
                 String string = (String) value;
                 if (!isValid(context, setting, string)) throw invalid(key);
-                editor.putString(key, setting.allowed == CARD_ITEMS ? String.join(",", CardItems.parse(string)) : string);
+                editor.putString(key, setting.allowed == CARD_ITEMS ? CardItems.normalize(string) : string);
             }
         }
         editor.apply();
@@ -134,12 +139,7 @@ final class LayoutCodec {
     }
 
     private static boolean isValid(Context context, Setting setting, String value) {
-        if (setting.allowed == CARD_ITEMS) {
-            for (String item : value.split(",")) {
-                if (!CardItems.ALL.contains(item.trim())) return false;
-            }
-            return true;
-        }
+        if (setting.allowed == CARD_ITEMS) return CardItems.isValid(value);
         if (setting.allowed == COLOR) {
             try {
                 Color.parseColor(value);

@@ -49,7 +49,9 @@ class OverlayView extends FrameLayout {
     private final Button buttonMinus;
     private final Button buttonNext;
     private final Button buttonPlus;
-    /** "Close and mark as done", next to the Close button on the last mission. */
+    /** "Close" on the last mission (where Start / Next is hidden). */
+    private final Button buttonClose;
+    /** "Close and mark as done" on the last mission. */
     private final Button buttonDone;
     /** OpenBanners site for "Close and mark as done". */
     private final String origin;
@@ -57,8 +59,18 @@ class OverlayView extends FrameLayout {
     private final float baseButtonTextPx;
     private final float baseCounterTextPx;
     private final int baseButtonMinHeight;
-    /** Card settings currently applied, to skip rebuilding when unrelated settings change. */
+    /** Card settings from the preferences: layout, size and items (see {@link CardItems}). */
+    private String cardLayout = CardItems.LAYOUT_TWO_ROWS;
+    private String cardSize = "1.0";
+    private String cardItems = CardItems.DEFAULT;
+    /** On the last mission: Start / Next is replaced by Close. */
+    private boolean lastMission;
+    /** On the last mission of a banner or plan: "Close and mark as done" can show. */
+    private boolean canMarkDone;
+    /** Card settings and mission phase currently applied, to skip rebuilding when nothing relevant changed. */
     private String appliedCardConfig;
+    /** Called after the card was rebuilt because the mission phase changed (its size may differ). */
+    private Runnable cardChangedListener;
     private BiConsumer<State, State> stateListener;
     /** Set when the overlay was opened without a link it can use; the error state then says "Unsupported link". */
     private volatile boolean unsupportedLink;
@@ -71,6 +83,7 @@ class OverlayView extends FrameLayout {
         buttonMinus = findViewById(R.id.buttonMinus);
         buttonNext = findViewById(R.id.buttonNext);
         buttonPlus = findViewById(R.id.buttonPlus);
+        buttonClose = findViewById(R.id.buttonClose);
         buttonDone = findViewById(R.id.buttonDone);
         this.origin = origin;
         cardContent = findViewById(R.id.cardContent);
@@ -102,32 +115,44 @@ class OverlayView extends FrameLayout {
         return getMeasuredWidth();
     }
 
+    /** Called on the main thread after the card was rebuilt for the last mission (or back); it may have resized. */
+    void setCardChangedListener(Runnable listener) {
+        cardChangedListener = listener;
+    }
+
     /**
      * Arranges the card from the settings: which items are shown and in which order ({@link CardItems}),
      * the layout (two rows, one wide row, or one tall column) and the size.
      */
     void applyCardPreferences(SharedPreferences preferences) {
         Context context = getContext();
-        String layout = preferences.getString(context.getString(R.string.card_layout), CardItems.LAYOUT_TWO_ROWS);
-        String sizeValue = preferences.getString(context.getString(R.string.card_size), "1.0");
-        String items = preferences.getString(context.getString(R.string.card_items), CardItems.DEFAULT);
-        String config = layout + "|" + sizeValue + "|" + items;
-        if (config.equals(appliedCardConfig)) return;
+        cardLayout = preferences.getString(context.getString(R.string.card_layout), CardItems.LAYOUT_TWO_ROWS);
+        cardSize = preferences.getString(context.getString(R.string.card_size), "1.0");
+        cardItems = preferences.getString(context.getString(R.string.card_items), CardItems.DEFAULT);
+        rebuildCard();
+    }
+
+    /** Builds the card for the settings and the mission phase (last mission or not); returns whether it changed. */
+    private boolean rebuildCard() {
+        String layout = cardLayout;
+        String config = layout + "|" + cardSize + "|" + cardItems + "|" + lastMission + "|" + canMarkDone;
+        if (config.equals(appliedCardConfig)) return false;
         appliedCardConfig = config;
         float scale;
         try {
-            scale = Float.parseFloat(sizeValue);
+            scale = Float.parseFloat(cardSize);
         } catch (NumberFormatException e) {
             scale = 1f;
         }
         float dp = getResources().getDisplayMetrics().density;
 
-        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonDone}) {
+        Button[] buttons = {buttonMinus, buttonPlus, buttonNext, buttonClose, buttonDone};
+        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonClose, buttonDone}) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) parent.removeView(view);
         }
         cardContent.removeAllViews();
-        for (Button button : new Button[]{buttonMinus, buttonPlus, buttonNext, buttonDone}) {
+        for (Button button : buttons) {
             button.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseButtonTextPx * scale);
             button.setMinHeight(Math.round(baseButtonMinHeight * scale));
             button.setMinimumHeight(Math.round(baseButtonMinHeight * scale));
@@ -135,57 +160,41 @@ class OverlayView extends FrameLayout {
         textMission.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseCounterTextPx * scale);
         textMission.setGravity(Gravity.CENTER);
 
-        List<View> views = new ArrayList<>();
-        for (String item : CardItems.parse(items)) {
-            views.add(viewFor(item));
-        }
+        List<CardItems.Line> lines = CardItems.arrange(CardItems.parseConfig(cardItems), layout, lastMission, canMarkDone);
         int fullWidth = Math.round(100 * dp * scale);
-        // Width of the card's content, for "Close and mark as done" (MATCH_PARENT in this wrap_content card would keep
-        // the height of a first, wider measure and cut off the wrapped text).
+        // Width of the card's content, for full-width lines in the two-row and wide layouts ("Close and mark as done";
+        // MATCH_PARENT in this wrap_content card would keep the height of a first, wider measure and cut off the
+        // wrapped text): the row's width, or a single item's width if there is no row.
         int contentWidth = fullWidth;
-        switch (layout) {
-            case CardItems.LAYOUT_WIDE: {
-                LinearLayout row = row();
-                contentWidth = 0;
-                for (View view : views) {
-                    int width = view == buttonNext ? Math.round(90 * dp * scale) : naturalWidth(view, dp, scale);
-                    row.addView(view, new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    contentWidth += width;
-                }
-                cardContent.addView(row);
-                break;
-            }
-            case CardItems.LAYOUT_TALL: {
-                for (View view : views) {
-                    cardContent.addView(view, new LinearLayout.LayoutParams(fullWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-                }
-                break;
-            }
-            default: {
-                // Two rows: all items but the last side by side, the last one full width below (the original card).
-                if (views.size() == 1) {
-                    cardContent.addView(views.get(0), new LinearLayout.LayoutParams(fullWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
-                    break;
-                }
-                LinearLayout row = row();
-                contentWidth = 0;
-                for (View view : views.subList(0, views.size() - 1)) {
-                    row.addView(view, new LinearLayout.LayoutParams(naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
-                    contentWidth += naturalWidth(view, dp, scale);
-                }
-                cardContent.addView(row);
-                cardContent.addView(views.get(views.size() - 1), new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-                break;
+        if (!CardItems.LAYOUT_TALL.equals(layout)) {
+            for (CardItems.Line line : lines) {
+                if (!line.row) continue;
+                int width = 0;
+                for (String item : line.items) width += naturalWidth(viewFor(item), dp, scale);
+                contentWidth = width;
             }
         }
-        // "Close and mark as done" goes full width below everything (so the card only grows downwards, away from
-        // the route strip), and only when the card has the Next/Close button.
-        if (buttonNext.getParent() != null) {
-            cardContent.addView(buttonDone, new LinearLayout.LayoutParams(contentWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+        for (CardItems.Line line : lines) {
+            if (line.row) {
+                LinearLayout row = row();
+                for (String item : line.items) {
+                    View view = viewFor(item);
+                    row.addView(view, new LinearLayout.LayoutParams(naturalWidth(view, dp, scale), ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+                cardContent.addView(row);
+            } else {
+                View view = viewFor(line.items.get(0));
+                int width = CardItems.LAYOUT_TALL.equals(layout) ? fullWidth
+                        : view == buttonDone ? contentWidth
+                        // Two rows: the last item fills the width below the row (the original card).
+                        : lines.size() > 1 ? ViewGroup.LayoutParams.MATCH_PARENT : fullWidth;
+                cardContent.addView(view, new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
+            }
         }
         if (isAttachedToWindow()) {
             getContext().getSystemService(WindowManager.class).updateViewLayout(this, params);
         }
+        return true;
     }
 
     private LinearLayout row() {
@@ -197,7 +206,7 @@ class OverlayView extends FrameLayout {
 
     /** Width of an item when it sits in a row: the original card's widths, scaled. */
     private int naturalWidth(View view, float dp, float scale) {
-        int widthDp = view == textMission ? 60 : view == buttonNext ? 90 : 40;
+        int widthDp = view == textMission ? 60 : view == buttonNext || view == buttonClose || view == buttonDone ? 90 : 40;
         return Math.round(widthDp * dp * scale);
     }
 
@@ -209,6 +218,10 @@ class OverlayView extends FrameLayout {
                 return textMission;
             case CardItems.PLUS:
                 return buttonPlus;
+            case CardItems.CLOSE:
+                return buttonClose;
+            case CardItems.DONE:
+                return buttonDone;
             default:
                 return buttonNext;
         }
@@ -232,6 +245,11 @@ class OverlayView extends FrameLayout {
             } else {
                 stopOverlay();
             }
+        });
+        // Like Start / Next on the last mission: the plan's last mission counts as done, and the overlay closes.
+        buttonClose.setOnClickListener(v -> {
+            markCurrentPlanMissionDone();
+            stopOverlay();
         });
         buttonDone.setOnClickListener(v -> {
             Banner banner = StateManager.getState().banner;
@@ -361,6 +379,8 @@ class OverlayView extends FrameLayout {
     }
 
     private void applyState(State state) {
+        boolean wasLastMission = lastMission;
+        boolean couldMarkDone = canMarkDone;
         if (state.banner == null) {
             if (state.error) {
                 textMission.setText(unsupportedLink ? R.string.overlayUnsupportedLink : R.string.overlayError);
@@ -371,7 +391,8 @@ class OverlayView extends FrameLayout {
             buttonPlus.setEnabled(false);
             buttonNext.setEnabled(false);
             buttonNext.setText(R.string.overlayLoading);
-            buttonDone.setVisibility(GONE);
+            lastMission = false;
+            canMarkDone = false;
         } else {
             int numberOfMissions = state.banner.missions.size();
 
@@ -392,9 +413,14 @@ class OverlayView extends FrameLayout {
             buttonMinus.setEnabled(hasMissions);
             buttonPlus.setEnabled(hasMissions);
             buttonNext.setEnabled(!state.cooldown);
-            boolean finished = state.currentMission + 1 == numberOfMissions && (state.banner.id != null || state.banner.planId != null);
-            buttonDone.setVisibility(finished ? VISIBLE : GONE);
+            // The last mission: Close (and Close and mark as done) instead of Start / Next, where the user put them.
+            lastMission = state.currentMission != -1 && state.currentMission + 1 == numberOfMissions;
+            canMarkDone = state.currentMission + 1 == numberOfMissions && (state.banner.id != null || state.banner.planId != null);
+            buttonClose.setEnabled(!state.cooldown);
             buttonDone.setEnabled(!state.cooldown);
+        }
+        if ((wasLastMission != lastMission || couldMarkDone != canMarkDone) && rebuildCard() && cardChangedListener != null) {
+            cardChangedListener.run();
         }
     }
 }

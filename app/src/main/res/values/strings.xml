@@ -43,7 +43,10 @@
     <string name="card_item_counter">Mission counter</string>
     <string name="card_item_plus">+ (next mission)</string>
     <string name="card_item_next">Start / Next</string>
-    <string name="card_items_keep_one">Keep at least one item on the card.</string>
+    <string name="card_item_close">Close (last mission only)</string>
+    <string name="card_item_done">Close and mark as done (last mission only)</string>
+    <string name="card_items_last_mission_note">On the last mission, Start / Next is hidden and the two Close buttons appear where you put them (Close right next to Start / Next takes its place). Close and mark as done always gets a line of its own. Stop in the notification always closes the overlay too.</string>
+    <string name="card_items_keep_one">Keep at least one item on the card, also on the last mission.</string>
     <string name="card_items_reset">Reset</string>
     <string name="preferences_layouts">Share layouts</string>
     <string name="preferences_layout_export">Export layout</string>

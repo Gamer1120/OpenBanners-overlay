@@ -396,6 +396,10 @@ public class SettingsActivity extends AppCompatActivity {
                     return getString(R.string.card_item_counter);
                 case CardItems.PLUS:
                     return getString(R.string.card_item_plus);
+                case CardItems.CLOSE:
+                    return getString(R.string.card_item_close);
+                case CardItems.DONE:
+                    return getString(R.string.card_item_done);
                 default:
                     return getString(R.string.card_item_next);
             }
@@ -411,20 +415,28 @@ public class SettingsActivity extends AppCompatActivity {
             preference.setSummary(String.join(", ", names));
         }
 
-        /** Dialog with a checkbox per card item (shown or not) and arrows to move it up or down. */
+        /**
+         * Dialog with a checkbox per card item (shown or not) and arrows to move it up or down. The Close items are
+         * marked as last-mission-only, with a note on how they replace Start / Next there.
+         */
         private void showCardItemsDialog(Preference preference) {
-            List<String> order = new ArrayList<>(CardItems.parse(storedCardItems()));
-            Set<String> shown = new HashSet<>(order);
-            for (String item : CardItems.ALL) {
-                if (!order.contains(item)) order.add(item);
-            }
+            CardItems.Config config = CardItems.parseConfig(storedCardItems());
+            List<String> order = new ArrayList<>(config.order);
+            Set<String> shown = new HashSet<>(config.shown);
             LinearLayout list = new LinearLayout(requireContext());
             list.setOrientation(LinearLayout.VERTICAL);
             int padding = Math.round(16 * getResources().getDisplayMetrics().density);
             list.setPadding(padding, padding / 2, padding / 2, 0);
+            TextView note = new TextView(requireContext());
+            note.setText(R.string.card_items_last_mission_note);
+            note.setPadding(padding / 4, 0, padding / 2, padding / 2);
+            LinearLayout rows = new LinearLayout(requireContext());
+            rows.setOrientation(LinearLayout.VERTICAL);
+            list.addView(rows);
+            list.addView(note);
             Runnable[] render = new Runnable[1];
             render[0] = () -> {
-                list.removeAllViews();
+                rows.removeAllViews();
                 for (int i = 0; i < order.size(); i++) {
                     String item = order.get(i);
                     int index = i;
@@ -437,7 +449,7 @@ public class SettingsActivity extends AppCompatActivity {
                     checkBox.setOnCheckedChangeListener((b, checked) -> {
                         if (checked) {
                             shown.add(item);
-                        } else if (shown.size() > 1) {
+                        } else if (!CardItems.leavesCardEmpty(without(shown, item))) {
                             shown.remove(item);
                         } else {
                             b.setChecked(true);
@@ -453,20 +465,18 @@ public class SettingsActivity extends AppCompatActivity {
                         Collections.swap(order, index, index + 1);
                         render[0].run();
                     }));
-                    list.addView(row);
+                    rows.addView(row);
                 }
             };
             render[0].run();
+            ScrollView scroll = new ScrollView(requireContext());
+            scroll.addView(list);
             new AlertDialog.Builder(requireContext())
                     .setTitle(R.string.preferences_card_items)
-                    .setView(list)
+                    .setView(scroll)
                     .setPositiveButton(android.R.string.ok, (d, w) -> {
-                        List<String> result = new ArrayList<>();
-                        for (String item : order) {
-                            if (shown.contains(item)) result.add(item);
-                        }
                         PreferenceManager.getDefaultSharedPreferences(requireContext()).edit()
-                                .putString(getString(R.string.card_items), String.join(",", result)).apply();
+                                .putString(getString(R.string.card_items), new CardItems.Config(order, shown).format()).apply();
                         updateCardItemsSummary(preference);
                     })
                     .setNeutralButton(R.string.card_items_reset, (d, w) -> {
@@ -476,6 +486,12 @@ public class SettingsActivity extends AppCompatActivity {
                     })
                     .setNegativeButton(android.R.string.cancel, null)
                     .show();
+        }
+
+        private static Set<String> without(Set<String> items, String item) {
+            Set<String> result = new HashSet<>(items);
+            result.remove(item);
+            return result;
         }
 
         private Button arrowButton(String text, boolean enabled, Runnable action) {
