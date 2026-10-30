@@ -92,6 +92,42 @@ public class SettingsActivity extends AppCompatActivity {
         public void onResume() {
             super.onResume();
             updateIngressOnlySummary();
+            reconcileBannergressLinks();
+        }
+
+        /**
+         * The switch is what the user wants; make the link handler's enabled state match it (e.g. after a backup
+         * restore) and refresh the Android 12+ status line, which can change in Android settings meanwhile.
+         */
+        private void reconcileBannergressLinks() {
+            SwitchPreferenceCompat preference = findPreference(getString(R.string.bannergress_links));
+            Preference status = findPreference(getString(R.string.bannergress_links_status));
+            if (preference == null || status == null) return;
+            try {
+                BannergressLinkActivity.setEnabled(requireContext(), preference.isChecked());
+            } catch (RuntimeException ignored) {
+                // Leave it; the switch still shows the user's choice.
+            }
+            updateBannergressLinksStatus(preference.isChecked(), status);
+        }
+
+        private void updateBannergressLinksStatus(boolean on, Preference status) {
+            boolean show = on && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S;
+            status.setVisible(show);
+            if (show) {
+                status.setSummary(BannergressLinkActivity.isLinkHandlingApproved(requireContext())
+                        ? R.string.links_status_active : R.string.links_status_not_set_up);
+            }
+        }
+
+        /** Android 12+ only lets an app open web links after the user allows it under "Open by default". */
+        private void showLinkSetupDialog() {
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.links_setup_title)
+                    .setMessage(R.string.links_setup_message)
+                    .setPositiveButton(R.string.links_setup_open, (d, w) -> BannergressLinkActivity.openLinkSettings(requireContext()))
+                    .setNegativeButton(R.string.links_setup_later, null)
+                    .show();
         }
 
         /**
@@ -178,6 +214,28 @@ public class SettingsActivity extends AppCompatActivity {
                 requireActivity().getIntent().removeExtra(EXTRA_SHOW_ROUTE_DISCLAIMER);
                 showRouteDisclaimerDialog(routeStripPreference);
             }
+
+            SwitchPreferenceCompat bannergressLinksPreference = findPreference(getString(R.string.bannergress_links));
+            Preference bannergressLinksStatus = findPreference(getString(R.string.bannergress_links_status));
+            assert bannergressLinksPreference != null && bannergressLinksStatus != null;
+            bannergressLinksPreference.setOnPreferenceChangeListener((p, newValue) -> {
+                boolean on = Boolean.TRUE.equals(newValue);
+                try {
+                    BannergressLinkActivity.setEnabled(requireContext(), on);
+                } catch (RuntimeException e) {
+                    return false;
+                }
+                updateBannergressLinksStatus(on, bannergressLinksStatus);
+                if (on && Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+                        && !BannergressLinkActivity.isLinkHandlingApproved(requireContext())) {
+                    showLinkSetupDialog();
+                }
+                return true;
+            });
+            bannergressLinksStatus.setOnPreferenceClickListener(p -> {
+                BannergressLinkActivity.openLinkSettings(requireContext());
+                return true;
+            });
 
             Preference exportPreference = findPreference(getString(R.string.layout_export));
             Preference importPreference = findPreference(getString(R.string.layout_import));

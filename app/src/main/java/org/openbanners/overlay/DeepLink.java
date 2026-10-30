@@ -118,7 +118,8 @@ final class DeepLink {
         return plan ? origin + "/planner/" + bannerId : "https://openbanners.org/banner/" + encodePathSegment(bannerId);
     }
 
-    private static String encodePathSegment(String segment) {
+    /** A banner id as one URL path segment (UTF-8 percent-encoded, spaces as %20). */
+    static String encodePathSegment(String segment) {
         try {
             return URLEncoder.encode(segment, StandardCharsets.UTF_8.name()).replace("+", "%20");
         } catch (Exception e) {

@@ -196,6 +196,22 @@
             app:title="@string/preferences_clipboard_enable" />
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_links">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="@string/bannergress_links"
+            app:summary="@string/preferences_bannergress_links_summary"
+            app:title="@string/preferences_bannergress_links" />
+
+        <Preference
+            app:isPreferenceVisible="false"
+            app:key="@string/bannergress_links_status"
+            app:persistent="false"
+            app:title="@string/preferences_bannergress_links_status" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_about">
 
         <Preference

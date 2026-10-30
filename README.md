@@ -23,6 +23,9 @@ showing the current mission's steps as labelled dots (`5c` = mission 5, step 3),
 done steps in grey, your position in cyan, and the next mission's first step. It keeps the nearest
 3 open steps in view. Toggle under Settings → Route map. Besides bannergress.com and Ingress mission links,
 it also accepts shared openbanners.org banner links (same banner ids). Location is requested at high accuracy.
+Opt-in (Settings → Links): tapped bannergress.com banner links open the same banner on openbanners.org in the
+browser (`BannergressLinkActivity`, disabled in the manifest until switched on; Android 12+ also needs the user's
+OK under "Open by default").
 
 Not affiliated with Bannergress or Niantic. Application id `org.openbanners.overlay`; own icon.
 Licence notices shipped in the app: `app/src/main/res/raw/licenses.txt` (Settings → Licences).

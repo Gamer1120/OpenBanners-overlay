@@ -45,6 +45,26 @@
             </intent-filter>
         </activity>
 
+        <!-- Settings → Links: bannergress.com banner links open on openbanners.org. Disabled until the user
+             turns it on (no autoVerify: Android 12+ needs the user's OK under "Open by default"). -->
+        <activity
+            android:name=".BannergressLinkActivity"
+            android:enabled="false"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:noHistory="true"
+            android:theme="@android:style/Theme.NoDisplay">
+            <intent-filter tools:ignore="AppLinkWarning">
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+                <data android:scheme="https" />
+                <data android:host="bannergress.com" />
+                <data android:host="www.bannergress.com" />
+                <data android:pathPrefix="/banner/" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".LicensesActivity"
             android:exported="false" />
@@ -68,6 +88,12 @@
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.HOME" />
+        </intent>
+        <!-- Browsers, so Bannergress links can be handed to the default browser instead of back to this app -->
+        <intent>
+            <action android:name="android.intent.action.VIEW" />
+            <category android:name="android.intent.category.BROWSABLE" />
+            <data android:scheme="https" />
         </intent>
     </queries>
 </manifest>

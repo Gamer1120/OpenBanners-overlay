@@ -1,0 +1,1 @@
+New, off by default: Settings → Links → "Open Bannergress links on OpenBanners". When on, banner links to bannergress.com open the same banner on openbanners.org in your browser. On Android 12 and newer, allow it once under "Open by default" (the app shows you where).
