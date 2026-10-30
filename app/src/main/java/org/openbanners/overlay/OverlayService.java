@@ -4,17 +4,16 @@ import android.os.Build;
 
 import android.location.LocationRequest;
 
-import android.Manifest;
 import android.app.Service;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.preference.PreferenceManager;
 
@@ -54,11 +53,34 @@ public class OverlayService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        stateNotificationListener = StateManager.addListener(this::handleStateNotification);
-        stateLocationListener = StateManager.addListener(this::handleStateLocation);
+        ServiceNotification.resetForegroundFailure();
+        // A new share or link while the overlay runs starts the service again: keep one listener of each.
+        if (stateNotificationListener == null) stateNotificationListener = StateManager.addListener(this::handleStateNotification);
+        if (stateLocationListener == null) stateLocationListener = StateManager.addListener(this::handleStateLocation);
+        if (intent == null) {
+            // Not restarted by the system (START_NOT_STICKY), but don't crash if it happens.
+            stopSelf();
+            return START_NOT_STICKY;
+        }
         addOverlay(intent);
+        showLocationHintOnce();
         initPreferences();
         return START_NOT_STICKY;
+    }
+
+    /** Key of the flag that the "location is off" hint was shown. */
+    private static final String LOCATION_HINT_SHOWN = "location_hint_shown";
+
+    /**
+     * Without location the overlay still works, but distances and your position stay empty: say so once,
+     * without asking for the permission here (Settings → Use location does that).
+     */
+    private void showLocationHintOnce() {
+        if (LocationPermission.granted(this)) return;
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        if (preferences.getBoolean(LOCATION_HINT_SHOWN, false)) return;
+        preferences.edit().putBoolean(LOCATION_HINT_SHOWN, true).apply();
+        Toast.makeText(getApplicationContext(), R.string.location_off_hint, Toast.LENGTH_LONG).show();
     }
 
     private void initPreferences() {
@@ -125,7 +147,11 @@ public class OverlayService extends Service {
         PreferenceManager.getDefaultSharedPreferences(this).unregisterOnSharedPreferenceChangeListener(preferenceListener);
         StateManager.removeListener(stateLocationListener);
         StateManager.removeListener(stateNotificationListener);
+        stateLocationListener = null;
+        stateNotificationListener = null;
         removeOverlay();
+        removeLocationListening();
+        ServiceNotification.cancelDefaultNotification(this);
     }
 
     private void addOverlay(Intent intent) {
@@ -166,17 +192,23 @@ public class OverlayService extends Service {
     }
 
     private void addLocationListening() {
-        if (locationListener == null && checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        // Without permission nothing is requested: distances and the route strip's position just stay empty.
+        if (locationListener == null && LocationPermission.granted(this)) {
             LocationManager locationManager = getSystemService(LocationManager.class);
             locationListener = location -> StateManager.updateState(state -> state.location(location));
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                // Walking pace with a 40 m step radius needs GPS; the default (balanced) request may stay on Wi-Fi/cell.
-                LocationRequest request = new LocationRequest.Builder(1_000)
-                        .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
-                        .build();
-                locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, request, getMainExecutor(), locationListener);
-            } else {
-                locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 100, 0, locationListener);
+            try {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+                    // Walking pace with a 40 m step radius needs GPS; the default (balanced) request may stay on Wi-Fi/cell.
+                    LocationRequest request = new LocationRequest.Builder(1_000)
+                            .setQuality(LocationRequest.QUALITY_HIGH_ACCURACY)
+                            .build();
+                    locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, request, getMainExecutor(), locationListener);
+                } else {
+                    locationManager.requestLocationUpdates(LocationManager.FUSED_PROVIDER, 100, 0, locationListener);
+                }
+            } catch (RuntimeException e) {
+                // Permission revoked in between, or no fused provider: try again on the next state change.
+                locationListener = null;
             }
         }
     }

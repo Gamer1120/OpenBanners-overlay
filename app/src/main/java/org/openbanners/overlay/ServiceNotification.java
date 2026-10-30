@@ -8,6 +8,10 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ServiceInfo;
+import android.os.Build;
+import android.util.Log;
+import android.widget.Toast;
 
 import androidx.annotation.StringRes;
 import androidx.core.app.NotificationCompat;
@@ -40,6 +44,9 @@ final class ServiceNotification {
         channelStepInRange.setImportance(NotificationManager.IMPORTANCE_NONE);
         notificationManager.createNotificationChannel(channelStepInRange);
     }
+
+    /** Set once startForeground failed for this process: from then on only post the notification. */
+    private static boolean foregroundFailed;
 
     static void updateDefaultNotification(Service context, State state) {
         Intent deleteIntent = new Intent(context, StopDetectionReceiver.class);
@@ -90,7 +97,49 @@ final class ServiceNotification {
                 .setOngoing(true)
                 .build();
 
-        context.startForeground(DEFAULT_NOTIFICATION_ID, notification);
+        showDefaultNotification(context, notification);
+    }
+
+    /**
+     * Makes the service a foreground service with the notification where Android allows it (see
+     * {@link ForegroundMode}), else just posts the notification. Never throws: a refused foreground start
+     * leaves the overlay running with an ordinary notification and a message.
+     */
+    private static void showDefaultNotification(Service context, Notification notification) {
+        ForegroundMode mode = foregroundFailed ? ForegroundMode.NOT_FOREGROUND
+                : ForegroundMode.choose(Build.VERSION.SDK_INT, LocationPermission.granted(context));
+        try {
+            switch (mode) {
+                case LEGACY:
+                    context.startForeground(DEFAULT_NOTIFICATION_ID, notification);
+                    return;
+                case LOCATION:
+                    context.startForeground(DEFAULT_NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_LOCATION);
+                    return;
+                default:
+                    break;
+            }
+        } catch (RuntimeException e) {
+            // SecurityException, ForegroundServiceStartNotAllowedException, ...: keep the overlay, say why.
+            Log.w("ServiceNotification", "startForeground failed", e);
+            foregroundFailed = true;
+            Toast.makeText(context.getApplicationContext(), R.string.foreground_failed, Toast.LENGTH_LONG).show();
+        }
+        try {
+            context.getSystemService(NotificationManager.class).notify(DEFAULT_NOTIFICATION_ID, notification);
+        } catch (RuntimeException e) {
+            Log.w("ServiceNotification", "notify failed", e);
+        }
+    }
+
+    /** A posted (not foreground) notification stays after the service stops: remove it. */
+    static void cancelDefaultNotification(Context context) {
+        context.getSystemService(NotificationManager.class).cancel(DEFAULT_NOTIFICATION_ID);
+    }
+
+    /** A new service start may try the foreground service again (e.g. after the permission was granted). */
+    static void resetForegroundFailure() {
+        foregroundFailed = false;
     }
 
     /** The map follows the compass, or the needle shows your heading: only then is a correction useful. */

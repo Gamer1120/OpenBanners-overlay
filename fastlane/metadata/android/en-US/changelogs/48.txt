@@ -1,0 +1,2 @@
+Customize the Close and Close and mark as done buttons on the last mission: show, hide or move them like the other card items.
+Fixed a crash when starting the overlay without location permission on Android 14 and newer. Without location the overlay still shows the missions; distances and your position stay empty until you turn on "Use location".

@@ -204,6 +204,10 @@ public class State {
         }
     }
     static ImmutableMap<Integer, MissionStep> getNewStepsInRange(State newState, State oldState) {
+        if (newState.banner == null || newState.banner.missions.get(newState.currentMission) == null) {
+            // Banner loaded but not started yet (mission -1), e.g. the first location fix after granting location.
+            return ImmutableMap.of();
+        }
         Set<Integer> newStepsInRange;
         if (newState.currentMission != oldState.currentMission) {
             newStepsInRange = newState.currentMissionVisitedStepIndexes;

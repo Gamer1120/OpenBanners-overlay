@@ -29,6 +29,9 @@
     <string name="preferences_introduction">This companion app to Ingress Prime lets you keep an eye on the banner you are currently passing through.\n\nTo start progress tracking, just share a Bannergress or OpenBanners banner link with the app.\n\nOpenBanners Overlay is based on Banner Overlay by The Bannergress Team and is not affiliated with Bannergress or Niantic.</string>
     <string name="preferences_location">Location</string>
     <string name="preferences_location_enable">Use location</string>
+    <string name="location_off_hint">No location permission: distances and your position stay empty. Settings → Use location.</string>
+    <string name="permission_denied_open_settings">Android no longer asks for this permission. Allow it under Permissions in the app\'s Android settings.</string>
+    <string name="foreground_failed">Android didn\'t let the overlay run as a foreground service. It keeps running, but Android may close it while it\'s in the background.</string>
     <string name="preferences_notifications">Notifications</string>
     <string name="preferences_notifications_enable">Use notifications</string>
     <string name="preferences_notification_progress">Progress</string>

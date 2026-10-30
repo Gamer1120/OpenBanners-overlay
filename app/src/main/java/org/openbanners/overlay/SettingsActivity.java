@@ -45,18 +45,30 @@ import java.util.Set;
 import java.util.function.Function;
 
 public class SettingsActivity extends AppCompatActivity {
-    private final ActivityResultLauncher<String> locationEnabler = registerSwitchEnabler(R.string.location_enable);
-    private final ActivityResultLauncher<String> notificationsEnabler = registerSwitchEnabler(R.string.notifications_enable);
+    private final ActivityResultLauncher<String> locationEnabler = registerSwitchEnabler(R.string.location_enable, Manifest.permission.ACCESS_FINE_LOCATION);
+    private final ActivityResultLauncher<String> notificationsEnabler = registerSwitchEnabler(R.string.notifications_enable, Manifest.permission.POST_NOTIFICATIONS);
 
-    private ActivityResultLauncher<String> registerSwitchEnabler(@StringRes int key) {
+    private ActivityResultLauncher<String> registerSwitchEnabler(@StringRes int key, String permission) {
         return registerForActivityResult(new ActivityResultContracts.RequestPermission(), isGranted -> {
-            if (isGranted) {
-                SettingsFragment settingsFragment = ((SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.settings));
+            SettingsFragment settingsFragment = ((SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.settings));
+            boolean granted = isGranted || (key == R.string.location_enable && LocationPermission.granted(this));
+            if (granted) {
                 assert settingsFragment != null;
                 SwitchPreferenceCompat preference = settingsFragment.findPreference(getString(key));
                 assert preference != null;
                 preference.setChecked(true);
                 preference.setEnabled(false);
+                // A running overlay picks the permission up now (location foreground service, location updates).
+                StateManager.updateState(state -> state);
+            } else if (!shouldShowRequestPermissionRationale(permission)) {
+                // Denied for good (or "Don't allow" twice): Android no longer asks, so point to the app's settings.
+                Toast.makeText(this, R.string.permission_denied_open_settings, Toast.LENGTH_LONG).show();
+                try {
+                    startActivity(new Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                            android.net.Uri.parse("package:" + getPackageName())));
+                } catch (android.content.ActivityNotFoundException ignored) {
+                    // The toast says where to go.
+                }
             }
         });
     }
@@ -91,6 +103,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
+            updatePermissionSwitches();
             updateIngressOnlySummary();
             reconcileBannergressLinks();
         }
@@ -155,6 +168,7 @@ public class SettingsActivity extends AppCompatActivity {
             SwitchPreferenceCompat locationEnablePreference = findPreference(getString(R.string.location_enable));
             assert locationEnablePreference != null;
             addPermissionPreference(locationEnablePreference, Manifest.permission.ACCESS_FINE_LOCATION, z -> z.locationEnabler);
+            updatePermissionSwitches();
 
             SwitchPreferenceCompat notificationsEnablePreference = findPreference(getString(R.string.notifications_enable));
             assert notificationsEnablePreference != null;
@@ -567,13 +581,25 @@ public class SettingsActivity extends AppCompatActivity {
             preference.setChecked(hasPermission);
             preference.setEnabled(!hasPermission);
             preference.setOnPreferenceChangeListener((x, newValue) -> {
-                if (shouldShowRequestPermissionRationale(permission)) {
-                    Toast.makeText(getContext(), "Permission has been permanently denied.", Toast.LENGTH_SHORT).show();
-                } else {
-                    launcherFunction.apply((SettingsActivity) getActivity()).launch(permission);
-                }
+                // Android shows the dialog again after one "Don't allow"; once it stops asking, the result
+                // handler points to the app's settings.
+                launcherFunction.apply((SettingsActivity) getActivity()).launch(permission);
                 return false;
             });
+        }
+
+        /**
+         * Location may be granted (precise or approximate) or revoked in Android settings meanwhile: show it, and
+         * let a running overlay pick a new permission up.
+         */
+        private void updatePermissionSwitches() {
+            SwitchPreferenceCompat location = findPreference(getString(R.string.location_enable));
+            if (location == null) return;
+            boolean granted = LocationPermission.granted(requireContext());
+            boolean changed = location.isChecked() != granted;
+            location.setChecked(granted);
+            location.setEnabled(!granted);
+            if (changed && granted) StateManager.updateState(state -> state);
         }
     }
 }

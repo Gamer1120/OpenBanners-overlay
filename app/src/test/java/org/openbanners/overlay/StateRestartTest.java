@@ -68,6 +68,14 @@ public class StateRestartTest {
     }
 
     @Test
+    public void noStepNewsBeforeAMissionIsChosen() {
+        // A banner shared without starting it: mission -1, so the first location fix has no current mission.
+        State before = State.initial().bannerLoaded(banner("..x..."));
+        State after = before.location(HERE);
+        assertTrue(State.getNewStepsInRange(after, before).isEmpty());
+    }
+
+    @Test
     public void clickingThroughEarlierMissionsKeepsTheRestart() {
         State state = State.initial().bannerLoaded(banner("....", "....", "..x."));
         state = state.nextMission(false).nextMission(false);
