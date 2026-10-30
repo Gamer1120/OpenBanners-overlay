@@ -96,7 +96,7 @@
     <string name="preferences_ingress_only_no_access">Usage access is off, so the overlay always shows. Turn this off and on again to grant it.</string>
     <string name="preferences_links">Links</string>
     <string name="preferences_bannergress_links">Open Bannergress links on OpenBanners</string>
-    <string name="preferences_bannergress_links_summary">Banner links to bannergress.com open the same banner on openbanners.org.</string>
+    <string name="preferences_bannergress_links_summary">Banner links to bannergress.com from other apps open the same banner on openbanners.org. Links in your browser stay on Bannergress.</string>
     <string name="preferences_bannergress_links_status">Status</string>
     <string name="links_status_active">Active</string>
     <string name="links_status_not_set_up">Not set up yet: tap to finish in Android settings</string>

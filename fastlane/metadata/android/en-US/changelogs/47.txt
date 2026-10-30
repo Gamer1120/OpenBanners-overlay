@@ -1,0 +1,1 @@
+"Open Bannergress links on OpenBanners" now only redirects links from other apps (Telegram, Discord, mail, ...). Links you tap in your browser, such as "View on Bannergress" on openbanners.org or while browsing Bannergress, stay on bannergress.com.

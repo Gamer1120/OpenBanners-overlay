@@ -18,8 +18,8 @@ import android.widget.Toast;
 import java.util.Map;
 
 /**
- * Opens bannergress.com banner links on openbanners.org (Settings → Links, off by default). No UI: it hands the link
- * to a browser and finishes. The component is disabled in the manifest and only enabled while the setting is on, so
+ * Opens bannergress.com banner links from other apps on openbanners.org (Settings → Links, off by default); links
+ * tapped in a browser stay on bannergress.com. No UI: it hands the link to a browser and finishes. The component is disabled in the manifest and only enabled while the setting is on, so
  * nothing changes for people who don't turn it on. Doesn't start the overlay and doesn't use the network.
  */
 public class BannergressLinkActivity extends Activity {
@@ -28,14 +28,67 @@ public class BannergressLinkActivity extends Activity {
         super.onCreate(savedInstanceState);
         try {
             String link = getIntent() == null ? null : getIntent().getDataString();
-            String target = BannergressLink.toOpenBanners(link);
-            if (target == null) target = link; // not a banner page: open the original link, just not in this app
-            if (target != null) openInBrowser(this, Uri.parse(target));
+            String browser = sourceBrowser();
+            if (browser != null) {
+                // Tapped in a browser (e.g. "View on Bannergress" on openbanners.org, or browsing Bannergress):
+                // leave it alone and open the original link in that browser.
+                if (link != null) openInBrowser(this, Uri.parse(link), browser);
+            } else {
+                String target = BannergressLink.toOpenBanners(link);
+                if (target == null) target = link; // not a banner page: open the original link, just not in this app
+                if (target != null) openInBrowser(this, Uri.parse(target));
+            }
         } catch (RuntimeException e) {
             // Never crash on a link someone tapped.
             Toast.makeText(getApplicationContext(), R.string.links_no_browser, Toast.LENGTH_LONG).show();
         }
         finish();
+    }
+
+    /**
+     * The browser the link was tapped in (see {@link LinkSource}): its package, {@link LinkSource#UNKNOWN_BROWSER},
+     * or null when the link came from another app.
+     */
+    private String sourceBrowser() {
+        Intent intent = getIntent();
+        String appId = null;
+        try {
+            appId = intent == null ? null : intent.getStringExtra(LinkSource.EXTRA_APPLICATION_ID);
+        } catch (RuntimeException ignored) {
+            // bad extras: treat as absent
+        }
+        Uri referrer = null;
+        try {
+            referrer = getReferrer();
+        } catch (RuntimeException ignored) {
+            // bad extras: treat as absent
+        }
+        return LinkSource.browserPackage(referrer == null ? null : referrer.toString(), appId, getPackageName(),
+                pkg -> isBrowser(this, pkg));
+    }
+
+    /** Whether {@code pkg} opens ordinary https web pages (a browser). */
+    static boolean isBrowser(Context context, String pkg) {
+        Intent probe = new Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com/"))
+                .addCategory(Intent.CATEGORY_BROWSABLE)
+                .setPackage(pkg);
+        return !context.getPackageManager().queryIntentActivities(probe, 0).isEmpty();
+    }
+
+    /** Opens {@code uri} in {@code browser} if it can, else like {@link #openInBrowser(Context, Uri)}. */
+    static void openInBrowser(Context context, Uri uri, String browser) {
+        if (browser != null && !browser.isEmpty() && !browser.equals(context.getPackageName())) {
+            try {
+                context.startActivity(new Intent(Intent.ACTION_VIEW, uri)
+                        .addCategory(Intent.CATEGORY_BROWSABLE)
+                        .addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                        .setPackage(browser));
+                return;
+            } catch (ActivityNotFoundException | SecurityException ignored) {
+                // fall through to the default browser
+            }
+        }
+        openInBrowser(context, uri);
     }
 
     /**
