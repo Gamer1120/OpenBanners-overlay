@@ -84,6 +84,12 @@ of the overlay in use are fine.
   on-device-only location processing does not count.)
 - Encryption in transit: all network traffic is HTTPS.
 - Data deletion: not applicable (no data collected).
+- **To decide before the release with "Back up to OpenBanners" (versionCode 51+):** the optional settings
+  backup sends the app's settings to openbanners.org under the user's Bannergress account. That is
+  probably "collected" in Play's sense: data type *App activity → Other user-generated content* (or
+  *Other actions*), optional, user-initiated, purpose *App functionality*, not shared, deletable on
+  openbanners.org (⋮ → Settings). If declared, the deletion answer becomes "users can request deletion"
+  with https://openbanners.org/privacy.
 
 ### Permissions declarations
 

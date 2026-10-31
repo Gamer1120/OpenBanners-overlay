@@ -168,6 +168,22 @@
 
     </PreferenceCategory>
 
+    <PreferenceCategory app:title="@string/preferences_account_backup">
+
+        <Preference
+            app:key="openbanners_backup"
+            app:persistent="false"
+            app:summary="@string/preferences_backup_summary"
+            app:title="@string/preferences_backup" />
+
+        <Preference
+            app:key="openbanners_restore"
+            app:persistent="false"
+            app:summary="@string/preferences_restore_summary"
+            app:title="@string/preferences_restore" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_notifications">
 
         <SwitchPreferenceCompat

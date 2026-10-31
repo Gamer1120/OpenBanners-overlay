@@ -37,11 +37,18 @@ import androidx.preference.PreferenceGroup;
 import androidx.preference.PreferenceManager;
 import androidx.preference.SwitchPreferenceCompat;
 
+import java.io.IOException;
+import java.text.DateFormat;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Date;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 import java.util.function.Function;
 
 public class SettingsActivity extends AppCompatActivity {
@@ -82,6 +89,18 @@ public class SettingsActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction().replace(R.id.settings, new SettingsFragment()).commit();
         }
     }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        SettingsFragment fragment = (SettingsFragment) getSupportFragmentManager().findFragmentById(R.id.settings);
+        if (fragment != null && fragment.isAdded()) fragment.handleAccountLink();
+    }
+
+    /** Sent by {@link AccountLinkActivity}: the one-time code and state from openbanners.org/overlay/connect. */
+    static final String EXTRA_LINK_CODE = "org.openbanners.overlay.LINK_CODE";
+    static final String EXTRA_LINK_STATE = "org.openbanners.overlay.LINK_STATE";
 
     /** Layout text shared to the app (see MainActivity): ask before importing it. */
     static final String EXTRA_IMPORT_LAYOUT = "org.openbanners.overlay.IMPORT_LAYOUT";
@@ -262,6 +281,19 @@ public class SettingsActivity extends AppCompatActivity {
                 showImportDialog(null);
                 return true;
             });
+            Preference backupPreference = findPreference("openbanners_backup");
+            Preference restorePreference = findPreference("openbanners_restore");
+            assert backupPreference != null && restorePreference != null;
+            backupPreference.setOnPreferenceClickListener(p -> {
+                startAccountLink(OpenBannersAccount.ACTION_BACKUP);
+                return true;
+            });
+            restorePreference.setOnPreferenceClickListener(p -> {
+                startAccountLink(OpenBannersAccount.ACTION_RESTORE);
+                return true;
+            });
+            handleAccountLink();
+
             String shared = requireActivity().getIntent().getStringExtra(SettingsActivity.EXTRA_IMPORT_LAYOUT);
             if (shared != null) {
                 requireActivity().getIntent().removeExtra(SettingsActivity.EXTRA_IMPORT_LAYOUT);
@@ -298,6 +330,176 @@ public class SettingsActivity extends AppCompatActivity {
             orientationPreference.setOnPreferenceChangeListener(recheck);
             alwaysPreference.setOnPreferenceChangeListener(recheck);
             needlePreference.setOnPreferenceChangeListener(recheck);
+        }
+
+        private static final ExecutorService network = Executors.newSingleThreadExecutor();
+
+        /** Explains what happens, then opens openbanners.org/overlay/connect in the browser (see OpenBannersAccount). */
+        private void startAccountLink(String action) {
+            boolean backup = OpenBannersAccount.ACTION_BACKUP.equals(action);
+            new AlertDialog.Builder(requireContext())
+                    .setTitle(backup ? R.string.backup_start_title : R.string.restore_start_title)
+                    .setMessage(backup ? R.string.backup_start_message : R.string.restore_start_message)
+                    .setPositiveButton(R.string.account_continue, (d, w) -> {
+                        android.net.Uri page = OpenBannersAccount.start(requireContext(), action);
+                        try {
+                            startActivity(new Intent(Intent.ACTION_VIEW, page).addCategory(Intent.CATEGORY_BROWSABLE));
+                        } catch (android.content.ActivityNotFoundException e) {
+                            Toast.makeText(requireContext(), R.string.account_no_browser, Toast.LENGTH_LONG).show();
+                        }
+                    })
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+        }
+
+        /** Back from the browser with a one-time code: back up, or fetch the backup and offer to restore it. */
+        void handleAccountLink() {
+            Intent intent = requireActivity().getIntent();
+            String code = intent.getStringExtra(EXTRA_LINK_CODE);
+            String state = intent.getStringExtra(EXTRA_LINK_STATE);
+            if (code == null || state == null) return;
+            intent.removeExtra(EXTRA_LINK_CODE);
+            intent.removeExtra(EXTRA_LINK_STATE);
+            OpenBannersAccount.Pending pending = OpenBannersAccount.takePending(requireContext());
+            if (pending == null || !pending.matches(state, System.currentTimeMillis())) {
+                showMessage(R.string.account_link_expired);
+                return;
+            }
+            boolean backup = OpenBannersAccount.ACTION_BACKUP.equals(pending.action);
+            Map<String, ?> stored = PreferenceManager.getDefaultSharedPreferences(requireContext()).getAll();
+            int appVersion = appVersion();
+            AlertDialog progress = new AlertDialog.Builder(requireContext())
+                    .setMessage(R.string.account_working)
+                    .setCancelable(false)
+                    .show();
+            network.execute(() -> {
+                try {
+                    String token = OpenBannersAccount.exchange(code, pending.verifier);
+                    if (backup) {
+                        OpenBannersAccount.putBackup(token, appVersion, SettingsBackup.collect(stored));
+                        onUi(progress, () -> showMessage(R.string.backup_done));
+                    } else {
+                        OpenBannersAccount.Backup found = OpenBannersAccount.getBackup(token);
+                        onUi(progress, () -> showRestoreDialog(found));
+                    }
+                } catch (OpenBannersAccount.ApiException e) {
+                    // openbanners.org answered: its message says what went wrong (e.g. an expired sign-in).
+                    String message = e.getMessage() == null ? "" : e.getMessage();
+                    onUi(progress, () -> showMessage(message));
+                } catch (IOException e) {
+                    String message = e.getMessage() == null ? "" : e.getMessage();
+                    onUi(progress, () -> showMessage(getString(R.string.account_failed, message)));
+                }
+            });
+        }
+
+        private void onUi(AlertDialog progress, Runnable action) {
+            android.app.Activity activity = getActivity();
+            if (activity == null) return;
+            activity.runOnUiThread(() -> {
+                if (progress.isShowing()) progress.dismiss();
+                if (isAdded()) action.run();
+            });
+        }
+
+        private AlertDialog showMessage(int message) {
+            return showMessage(getString(message));
+        }
+
+        private AlertDialog showMessage(String message) {
+            return new AlertDialog.Builder(requireContext()).setMessage(message).setPositiveButton(android.R.string.ok, null).show();
+        }
+
+        private int appVersion() {
+            try {
+                android.content.pm.PackageInfo info = requireContext().getPackageManager().getPackageInfo(requireContext().getPackageName(), 0);
+                return Build.VERSION.SDK_INT >= Build.VERSION_CODES.P ? (int) info.getLongVersionCode() : info.versionCode;
+            } catch (PackageManager.NameNotFoundException e) {
+                return 1;
+            }
+        }
+
+        /** Lists what would change and restores only after the user confirms. Returns the dialog shown. */
+        AlertDialog showRestoreDialog(OpenBannersAccount.Backup backup) {
+            if (backup == null) {
+                return showMessage(R.string.restore_none);
+            }
+            android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            SettingsBackup.Plan plan = SettingsBackup.plan(backup.settings, preferences.getAll());
+            if (plan.changes.isEmpty()) {
+                return showMessage(R.string.restore_same);
+            }
+            StringBuilder message = new StringBuilder(getString(R.string.restore_confirm_intro, backupDate(backup.createdAt), backup.appVersion));
+            message.append('\n');
+            for (SettingsBackup.Change change : plan.changes) {
+                message.append("\n• ").append(settingTitle(change.setting)).append(": ")
+                        .append(settingValue(change.setting, change.from)).append(" → ").append(settingValue(change.setting, change.to));
+            }
+            if (!plan.unknown.isEmpty()) message.append("\n\n").append(getString(R.string.restore_skipped_newer, plan.unknown.size()));
+            if (!plan.invalid.isEmpty()) message.append("\n\n").append(getString(R.string.restore_invalid, plan.invalid.size()));
+            boolean routeMapOn = Boolean.TRUE.equals(plan.values.get(getString(R.string.route_strip_enable)));
+            if (routeMapOn && !RouteDisclaimer.isAccepted(requireContext(), preferences)) {
+                message.append("\n\n").append(getString(R.string.restore_route_map_note));
+            }
+            return new AlertDialog.Builder(requireContext())
+                    .setTitle(R.string.restore_confirm_title)
+                    .setMessage(message.toString())
+                    .setPositiveButton(R.string.restore_action, (d, w) -> applyRestore(plan))
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .show();
+        }
+
+        private void applyRestore(SettingsBackup.Plan plan) {
+            android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            android.content.SharedPreferences.Editor editor = preferences.edit();
+            for (Map.Entry<String, Object> entry : plan.values.entrySet()) {
+                if (entry.getValue() instanceof Boolean) {
+                    editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
+                } else {
+                    editor.putString(entry.getKey(), String.valueOf(entry.getValue()));
+                }
+            }
+            editor.commit();
+            Toast.makeText(getContext(), R.string.restore_done, Toast.LENGTH_SHORT).show();
+            // Like an imported layout: the route map needs the safety confirmation on this phone.
+            if (RouteDisclaimer.enforce(requireContext(), preferences)) {
+                requireActivity().getIntent().putExtra(EXTRA_SHOW_ROUTE_DISCLAIMER, true);
+            }
+            StateManager.updateState(state -> state);
+            requireActivity().recreate(); // show the restored values (onResume also re-applies the Links switch)
+        }
+
+        private String backupDate(String iso) {
+            try {
+                return DateFormat.getDateTimeInstance(DateFormat.MEDIUM, DateFormat.SHORT).format(Date.from(Instant.parse(iso)));
+            } catch (RuntimeException e) {
+                return iso;
+            }
+        }
+
+        private CharSequence settingTitle(SettingsBackup.Setting setting) {
+            Preference preference = findPreference(setting.key);
+            return preference != null && preference.getTitle() != null ? preference.getTitle() : setting.key;
+        }
+
+        private String settingValue(SettingsBackup.Setting setting, Object value) {
+            if (value instanceof Boolean) return getString((Boolean) value ? R.string.value_on : R.string.value_off);
+            String text = String.valueOf(value);
+            if (setting.kind == SettingsBackup.Kind.CARD_ITEMS) {
+                List<String> names = new ArrayList<>();
+                for (String item : CardItems.parse(text)) names.add(cardItemName(item));
+                return String.join(", ", names);
+            }
+            Preference preference = findPreference(setting.key);
+            if (preference instanceof ListPreference) {
+                ListPreference list = (ListPreference) preference;
+                int index = list.findIndexOfValue(text);
+                if (index >= 0 && list.getEntries() != null) {
+                    // Colours are shown as "● Name  #hex" (addColorPreference): drop the dot.
+                    return list.getEntries()[index].toString().replace("\u25CF", "").trim();
+                }
+            }
+            return text;
         }
 
         private void exportLayout() {
