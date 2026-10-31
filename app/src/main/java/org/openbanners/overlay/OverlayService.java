@@ -158,6 +158,7 @@ public class OverlayService extends Service {
         removeOverlay();
         overlayView = OverlayView.create(this, intent.getStringExtra(Intent.EXTRA_TEXT),
                 intent.getBooleanExtra(MainActivity.EXTRA_AUTOSTART, false),
+                intent.getIntExtra(MainActivity.EXTRA_START_MISSION, 0),
                 DeepLink.safeOrigin(intent.getStringExtra(MainActivity.EXTRA_ORIGIN)));
         // On the last mission the card can change size (Close items instead of Start / Next): keep the strip next to it.
         overlayView.setCardChangedListener(() -> handler.post(() -> {

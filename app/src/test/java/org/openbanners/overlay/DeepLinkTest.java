@@ -108,4 +108,51 @@ public class DeepLinkTest {
         assertNull(DeepLink.parse("openbanners-overlay://plan/short"));
         assertFalse(DeepLink.parse("openbanners-overlay://banner/abc-1234").plan);
     }
+
+    @Test
+    public void missionLinksStartAtThatMission() {
+        DeepLink link = DeepLink.parse("openbanners-overlay://mission/level-8-week-2026-4458/7?start=1&origin=https%3A%2F%2Ftest.openbanners.org");
+        assertNotNull(link);
+        assertEquals("level-8-week-2026-4458", link.bannerId);
+        assertFalse(link.plan);
+        assertTrue(link.autostart);
+        assertEquals(6, link.startMission);
+        assertEquals("https://test.openbanners.org", link.origin);
+        assertEquals("https://openbanners.org/banner/level-8-week-2026-4458", link.bannerUrl());
+
+        assertEquals(0, DeepLink.parse("openbanners-overlay://mission/x/1?start=1").startMission);
+        assertEquals(17, DeepLink.parse("openbanners-overlay://mission/x/18/?start=1").startMission);
+        assertEquals("st-paulus-dom-münster-4d07",
+                DeepLink.parse("openbanners-overlay://mission/st-paulus-dom-m%C3%BCnster-4d07/3?start=1").bannerId);
+        // Without start=1 it just loads (at that mission).
+        DeepLink noStart = DeepLink.parse("openbanners-overlay://mission/x/3");
+        assertFalse(noStart.autostart);
+        assertEquals(2, noStart.startMission);
+    }
+
+    @Test
+    public void badMissionLinksAreRefused() {
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/0?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/-1?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/abc?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/1.5?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/%2B3?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/99999?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/x/2/3?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission//3?start=1"));
+        assertNull(DeepLink.parse("openbanners-overlay://mission/a%2Fb/3?start=1"));
+    }
+
+    @Test
+    public void bannerLinksStillStartAtMissionOne() {
+        DeepLink link = DeepLink.parse("openbanners-overlay://banner/level-8-week-2026-4458?start=1&origin=https%3A%2F%2Fopenbanners.org");
+        assertNotNull(link);
+        assertTrue(link.autostart);
+        assertEquals(0, link.startMission);
+        assertEquals(0, DeepLink.parse("openbanners-overlay://plan/AbCdEfGhIjKlMnOpQrStUv?start=1").startMission);
+        // A mission number after a banner link isn't part of the old link type.
+        assertNull(DeepLink.parse("openbanners-overlay://banner/x/3?start=1"));
+    }
 }

@@ -112,7 +112,21 @@ public class State {
 
     /** {@code fromStart}: opened with "Start with Overlay" at mission 1, so missions stay strictly in order. */
     State bannerStarted(Banner banner) {
-        return bannerLoaded(banner, 0, false);
+        return bannerStarted(banner, 0);
+    }
+
+    /**
+     * "Start with Overlay from here": like {@link #bannerStarted(Banner)} but at {@code startMission} (0-based), strictly
+     * in order from its first portal. Out of range falls back to mission 1.
+     */
+    State bannerStarted(Banner banner, int startMission) {
+        return bannerLoaded(banner, startMissionIndex(banner, startMission), false);
+    }
+
+    /** {@code startMission} if the banner has that mission, else 0 (mission 1). */
+    static int startMissionIndex(Banner banner, int startMission) {
+        int count = banner == null || banner.missions == null ? 0 : banner.missions.size();
+        return startMission >= 0 && startMission < count ? startMission : 0;
     }
 
     private State bannerLoaded(Banner banner, int currentMission, boolean justNavigated) {

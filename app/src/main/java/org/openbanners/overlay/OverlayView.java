@@ -75,7 +75,8 @@ class OverlayView extends FrameLayout {
     /** Set when the overlay was opened without a link it can use; the error state then says "Unsupported link". */
     private volatile boolean unsupportedLink;
 
-    public OverlayView(Context context, String data, boolean autostart, String origin) {
+    /** {@code startMission}: 0-based mission to begin at when {@code autostart} ("Start with Overlay from here"). */
+    public OverlayView(Context context, String data, boolean autostart, int startMission, String origin) {
         super(context);
         LayoutInflater inflater = context.getSystemService(LayoutInflater.class);
         inflater.inflate(R.layout.activity_overlay, this, true);
@@ -100,11 +101,11 @@ class OverlayView extends FrameLayout {
         applyCardPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         setupListeners();
         applyState(StateManager.getState());
-        loadData(data, autostart, context);
+        loadData(data, autostart, startMission, context);
     }
 
-    public static OverlayView create(Context context, String data, boolean autostart, String origin) {
-        OverlayView overlayView = new OverlayView(context, data, autostart, origin);
+    public static OverlayView create(Context context, String data, boolean autostart, int startMission, String origin) {
+        OverlayView overlayView = new OverlayView(context, data, autostart, startMission, origin);
         context.getSystemService(WindowManager.class).addView(overlayView, overlayView.params);
         return overlayView;
     }
@@ -305,7 +306,7 @@ class OverlayView extends FrameLayout {
         getContext().getSystemService(WindowManager.class).removeView(this);
     }
 
-    private void loadData(String data, boolean autostart, Context context) {
+    private void loadData(String data, boolean autostart, int startMission, Context context) {
         executorService.submit(() -> {
             try {
                 SharedDataParser.ParsedData parsedData = SharedDataParser.parse(data);
@@ -330,16 +331,20 @@ class OverlayView extends FrameLayout {
                     case banner: {
                         String bannerId = parsedData.id;
                         Banner banner = BannerApi.getBanner(bannerId);
+                        int start = State.startMissionIndex(banner, startMission);
                         if (autostart && !banner.missions.isEmpty()) {
-                            // Opened with "Start with Overlay": begin at mission 1 (1/x) and open it in Ingress right away.
-                            Mission first = banner.missions.values().iterator().next();
+                            // Opened with "Start with Overlay": begin at mission 1 (1/x), or at the mission chosen with
+                            // "Start with Overlay from here" (mission 1 if the banner has no such mission), and open it
+                            // in Ingress right away.
+                            Mission first = Iterables.get(banner.missions.values(), start);
                             HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
-                                StateManager.updateState(state -> state.bannerStarted(banner));
+                                StateManager.updateState(state -> state.bannerStarted(banner, start));
                                 Ingress.tryLaunchMission(getContext(), first.id);
                             });
                             return;
                         }
-                        stateFunction = state -> state.bannerLoaded(banner);
+                        // A mission link without start=1 just shows that mission.
+                        stateFunction = start > 0 ? state -> state.bannerLoaded(banner, start) : state -> state.bannerLoaded(banner);
                         break;
                     }
                     case plan: {

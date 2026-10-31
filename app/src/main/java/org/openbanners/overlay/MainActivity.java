@@ -15,6 +15,8 @@ public class MainActivity extends AppCompatActivity {
     static final String EXTRA_AUTOSTART = "org.openbanners.overlay.AUTOSTART";
     /** The OpenBanners site the banner was opened from (for "Close and mark as done"). */
     static final String EXTRA_ORIGIN = "org.openbanners.overlay.ORIGIN";
+    /** Mission to start at (0-based) with {@link #EXTRA_AUTOSTART}: "Start with Overlay from here" on a mission. */
+    static final String EXTRA_START_MISSION = "org.openbanners.overlay.START_MISSION";
 
     private final ActivityResultLauncher<Intent> requestPermissionResultLauncher = registerForActivityResult(
             new ActivityResultContracts.StartActivityForResult(),
@@ -29,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.putExtra(Intent.EXTRA_TEXT, link.bannerUrl());
                 intent.putExtra(EXTRA_AUTOSTART, link.autostart);
                 intent.putExtra(EXTRA_ORIGIN, link.origin);
+                intent.putExtra(EXTRA_START_MISSION, link.startMission);
             } else {
                 intent.putExtra(Intent.EXTRA_TEXT, getIntent().getStringExtra(Intent.EXTRA_TEXT));
             }

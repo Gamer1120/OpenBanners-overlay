@@ -15,6 +15,9 @@ import java.util.Locale;
  * {@code start=1} the overlay begins at mission 1 and opens it in Ingress straight away. {@code origin} is the
  * site the link came from; "Close and mark as done" goes back there (only known OpenBanners sites).
  * Mission Day plans use {@code openbanners-overlay://plan/{planId}?start=1&origin=…}; the plan lives on that site.
+ * "Start with Overlay from here" on a mission uses {@code openbanners-overlay://mission/{bannerId}/{n}?start=1&origin=…}
+ * with n the 1-based mission number: the overlay begins at that mission instead of mission 1. It's its own host so
+ * older app versions don't match it and the site shows its install/update dialog.
  */
 final class DeepLink {
     static final String SCHEME = "openbanners-overlay";
@@ -25,15 +28,21 @@ final class DeepLink {
     final String bannerId;
     final boolean plan;
     final boolean autostart;
+    /** Mission to begin at (0-based); 0 except for mission links. */
+    final int startMission;
     /** Always one of the allowed sites. */
     final String origin;
 
-    private DeepLink(String bannerId, boolean plan, boolean autostart, String origin) {
+    private DeepLink(String bannerId, boolean plan, boolean autostart, int startMission, String origin) {
         this.bannerId = bannerId;
         this.plan = plan;
         this.autostart = autostart;
+        this.startMission = startMission;
         this.origin = origin;
     }
+
+    /** Highest mission number we accept in a mission link; banners are far shorter. */
+    static final int MAX_MISSION_NUMBER = 9999;
 
     /** The site for "Close and mark as done": {@code origin} if it's a known OpenBanners site, else openbanners.org. */
     static String safeOrigin(String origin) {
@@ -64,10 +73,17 @@ final class DeepLink {
         }
         if (!SCHEME.equalsIgnoreCase(uri.getScheme())) return null;
         boolean plan = "plan".equalsIgnoreCase(uri.getHost());
-        if (!plan && !"banner".equalsIgnoreCase(uri.getHost())) return null;
+        boolean mission = "mission".equalsIgnoreCase(uri.getHost());
+        if (!plan && !mission && !"banner".equalsIgnoreCase(uri.getHost())) return null;
         String path = uri.getPath() == null ? "" : uri.getPath();
         String[] segments = path.replaceAll("^/+|/+$", "").split("/");
-        if (segments.length != 1 || !(plan ? segments[0].matches("[A-Za-z0-9_-]{22}") : isBannerId(segments[0]))) return null;
+        if (segments.length != (mission ? 2 : 1) || !(plan ? segments[0].matches("[A-Za-z0-9_-]{22}") : isBannerId(segments[0]))) return null;
+        int startMission = 0;
+        if (mission) {
+            int number = parseMissionNumber(segments[1]);
+            if (number < 1) return null;
+            startMission = number - 1;
+        }
         boolean autostart = false;
         String origin = null;
         String query = uri.getRawQuery();
@@ -80,7 +96,14 @@ final class DeepLink {
                 else if (name.equals("origin")) origin = value;
             }
         }
-        return new DeepLink(segments[0], plan, autostart, safeOrigin(origin));
+        return new DeepLink(segments[0], plan, autostart, startMission, safeOrigin(origin));
+    }
+
+    /** The 1-based mission number of a mission link, or -1 when it isn't a plain number from 1 to the maximum. */
+    static int parseMissionNumber(String segment) {
+        if (segment == null || !segment.matches("[0-9]{1,4}")) return -1;
+        int number = Integer.parseInt(segment);
+        return number >= 1 && number <= MAX_MISSION_NUMBER ? number : -1;
     }
 
     /** Longest banner id we accept; Bannergress slugs are far shorter. */

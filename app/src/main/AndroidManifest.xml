@@ -35,13 +35,15 @@
                 <category android:name="android.intent.category.DEFAULT" />
                 <data android:mimeType="text/plain" />
             </intent-filter>
-            <!-- "Start with Overlay" on openbanners.org: openbanners-overlay://banner/{id}?start=1 -->
+            <!-- "Start with Overlay" on openbanners.org: openbanners-overlay://banner/{id}?start=1;
+                 "Start with Overlay from here" on a mission: openbanners-overlay://mission/{id}/{n}?start=1 -->
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
                 <data android:scheme="openbanners-overlay" android:host="banner" />
                 <data android:scheme="openbanners-overlay" android:host="plan" />
+                <data android:scheme="openbanners-overlay" android:host="mission" />
             </intent-filter>
         </activity>
 

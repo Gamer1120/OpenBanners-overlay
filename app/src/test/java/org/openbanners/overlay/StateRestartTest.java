@@ -55,6 +55,18 @@ public class StateRestartTest {
     }
 
     @Test
+    public void startingFromAMissionBeginsThereStrictlyInOrder() {
+        State state = State.initial().bannerStarted(banner("....", "x...", "...."), 1);
+        assertEquals(1, state.currentMission);
+        assertFalse(state.justNavigated);
+        assertEquals(0, State.initial().bannerStarted(banner("....", "....")).currentMission);
+        // A mission the banner doesn't have (the banner changed since the page was loaded): mission 1.
+        assertEquals(0, State.initial().bannerStarted(banner("....", "...."), 2).currentMission);
+        assertEquals(0, State.initial().bannerStarted(banner("....", "...."), -1).currentMission);
+        assertEquals(1, State.startMissionIndex(banner("....", "...."), 1));
+    }
+
+    @Test
     public void resumingMidMissionMarksTheEarliestPortalInRangeAndEverythingBefore() {
         State state = State.initial().bannerLoaded(banner("..x.x."), 0).location(HERE);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
