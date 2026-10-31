@@ -276,10 +276,16 @@ public class SettingsActivity extends AppCompatActivity {
             Preference intervalPreference = findPreference(getString(R.string.route_compass_interval));
             Preference stepPreference = findPreference(getString(R.string.route_compass_step));
             assert orientationPreference != null && alwaysPreference != null && needlePreference != null && intervalPreference != null && stepPreference != null;
+            boolean hasCompass = RouteOrientation.hasCompassSensor(requireContext());
+            if (!hasCompass) {
+                // Without a compass sensor the map is always north up; say so instead of the chosen value.
+                orientationPreference.setSummaryProvider(null);
+                orientationPreference.setSummary(R.string.preferences_route_orientation_no_sensor);
+            }
             Runnable updateCompassVisibility = () -> {
                 needlePreference.setVisible(alwaysPreference.isChecked());
-                boolean compassRead = "compass".equals(orientationPreference.getValue())
-                        || (alwaysPreference.isChecked() && "heading".equals(needlePreference.getValue()));
+                boolean compassRead = hasCompass && (RouteOrientation.COMPASS.equals(orientationPreference.getValue())
+                        || (alwaysPreference.isChecked() && "heading".equals(needlePreference.getValue())));
                 intervalPreference.setVisible(compassRead);
                 stepPreference.setVisible(compassRead);
             };

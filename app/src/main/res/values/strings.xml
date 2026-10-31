@@ -80,6 +80,7 @@
     <string name="preferences_route_hack_range_summary">Shows which portals are within hack range</string>
     <string name="preferences_route_color_me">Colour of your position</string>
     <string name="preferences_route_orientation">Map orientation</string>
+    <string name="preferences_route_orientation_no_sensor">This phone has no compass sensor, so the map stays north up.</string>
     <string name="preferences_route_compass_interval">Compass update interval</string>
     <string name="preferences_route_compass_always">Always show the compass</string>
     <string name="preferences_route_compass_always_summary">Show the compass on the route map, also when the map is north up</string>

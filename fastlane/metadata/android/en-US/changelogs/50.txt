@@ -1,0 +1,1 @@
+Map follows the compass by default. If you already picked north up, nothing changes for you. Phones without a compass sensor keep the map north up.

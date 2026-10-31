@@ -75,7 +75,7 @@
             app:title="@string/preferences_route_hack_range" />
 
         <ListPreference
-            app:defaultValue="north"
+            app:defaultValue="compass"
             app:dependency="@string/route_strip_enable"
             app:entries="@array/route_orientation_names"
             app:entryValues="@array/route_orientation_values"

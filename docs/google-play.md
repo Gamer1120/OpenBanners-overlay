@@ -52,7 +52,7 @@ video is not in the repo; upload it unlisted to YouTube and paste that link.
   • Optionally copy the mission number to the clipboard for passphrase missions.
   • Optionally show the whole banner: completed missions, the current one and the ones still ahead, each in its own colour.
   • Choose your own colours for the current mission, upcoming missions, completed steps and your position.
-  • Keep the map north up, or let it turn with your compass.
+  • The map turns with your compass, or keep it north up if you prefer.
   • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
   • Share your layout with friends, or import theirs.
 

@@ -146,8 +146,9 @@ final class ServiceNotification {
     private static boolean compassInUse(Context context) {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
         if (!RouteDisclaimer.isRouteStripEnabled(context, preferences)) return false;
-        boolean followCompass = "compass".equals(preferences.getString(context.getString(R.string.route_orientation), "north"));
-        boolean needleHeading = preferences.getBoolean(context.getString(R.string.route_compass_always), false)
+        boolean followCompass = RouteOrientation.followsCompass(context, preferences);
+        boolean needleHeading = RouteOrientation.hasCompassSensor(context)
+                && preferences.getBoolean(context.getString(R.string.route_compass_always), false)
                 && "heading".equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));
         return followCompass || needleHeading;
     }

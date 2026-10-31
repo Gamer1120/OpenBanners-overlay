@@ -76,7 +76,6 @@ class RouteStripView extends View {
     private static final String DEFAULT_COLOR_OTHER = "#FFFFFF";
     /** Completed steps are drawn semi-transparent so the open route stands out. */
     private static final int DONE_ALPHA = 170;
-    private static final String ORIENTATION_COMPASS = "compass";
     private static final String COMPASS_NEEDLE_HEADING = "heading";
     private static final long DEFAULT_COMPASS_INTERVAL_MS = 1000;
     /** Fraction of the remaining turn applied per frame when the compass heading changes. */
@@ -231,7 +230,8 @@ class RouteStripView extends View {
     void applyPreferences(SharedPreferences preferences) {
         applyColors(preferences);
         Context context = getContext();
-        followCompass = ORIENTATION_COMPASS.equals(preferences.getString(context.getString(R.string.route_orientation), "north"));
+        // Without a compass sensor the map stays north up, whatever the setting says.
+        followCompass = RouteOrientation.followsCompass(context, preferences);
         try {
             compassIntervalMs = Long.parseLong(preferences.getString(context.getString(R.string.route_compass_interval), String.valueOf(DEFAULT_COMPASS_INTERVAL_MS)));
         } catch (NumberFormatException e) {
@@ -252,7 +252,7 @@ class RouteStripView extends View {
 
     private void setCompassListening(boolean listen) {
         SensorManager sensorManager = getContext().getSystemService(SensorManager.class);
-        Sensor sensor = sensorManager == null ? null : sensorManager.getDefaultSensor(Sensor.TYPE_ROTATION_VECTOR);
+        Sensor sensor = RouteOrientation.compassSensor(getContext());
         if (listen && !compassRegistered && sensor != null) {
             sensorHeading = Double.NaN;
             targetHeading = Double.NaN;
