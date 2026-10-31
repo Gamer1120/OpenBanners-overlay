@@ -55,6 +55,7 @@ video is not in the repo; upload it unlisted to YouTube and paste that link.
   • The map turns with your compass, or keep it north up if you prefer.
   • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
   • Share your layout with friends, or import theirs.
+  • Optionally back up your settings to OpenBanners and restore them on another phone (sign in with Bannergress).
 
   The overlay lets touches pass through to Ingress, so you can keep playing as usual.
 
@@ -68,8 +69,11 @@ of the overlay in use are fine.
 ## App content forms
 
 - **Ads:** No ads.
-- **App access:** All functionality available without special access (no login). Mention that a banner
-  link has to be shared with the app, e.g. https://openbanners.org/banner/level-8-week-2026-4458.
+- **App access:** All functionality available without special access. Mention that a banner
+  link has to be shared with the app, e.g. https://openbanners.org/banner/level-8-week-2026-4458, and that the
+  optional Settings → OpenBanners backup signs in with any Google account through Bannergress on openbanners.org
+  (no app-specific account or test credentials needed). If Play review asks for credentials anyway, switch to
+  "All or some functionality is restricted" and give these same instructions.
 - **Target audience:** 18+ (or 13+); not designed for children.
 - **Content rating questionnaire:** category "Utility, productivity, communication, or other"; answer
   No to violence, sexuality, language, controlled substances, gambling; users cannot interact or share
@@ -78,18 +82,32 @@ of the overlay in use are fine.
 
 ### Data safety
 
-- Does the app collect or share any of the required user data types? **No.**
-  (Location is used only on the device and never leaves it. The Bannergress API request contains a
-  public banner ID only. Play's definition of "collect" covers data transmitted off the device, so
-  on-device-only location processing does not count.)
-- Encryption in transit: all network traffic is HTTPS.
-- Data deletion: not applicable (no data collected).
-- **To decide before the release with "Back up to OpenBanners" (versionCode 51+):** the optional settings
-  backup sends the app's settings to openbanners.org under the user's Bannergress account. That is
-  probably "collected" in Play's sense: data type *App activity → Other user-generated content* (or
-  *Other actions*), optional, user-initiated, purpose *App functionality*, not shared, deletable on
-  openbanners.org (⋮ → Settings). If declared, the deletion answer becomes "users can request deletion"
-  with https://openbanners.org/privacy.
+Final answers from versionCode 51 (optional settings backup). Play counts data as "collected" when the app sends
+it off the device to the developer's server, even if optional; location stays on the device and is not collected.
+The Data safety form can't be set through the Play Developer API (the service account only uploads releases), so
+enter it by hand in Play Console → Policy → App content → Data safety:
+
+1. **Data collection and security**
+   - Does your app collect or share any of the required user data types? **Yes**
+   - Is all of the user data collected by your app encrypted in transit? **Yes** (HTTPS only)
+   - Which methods of account creation does your app support? **OAuth** (the backup is kept under the user's
+     Bannergress/Google sign-in on openbanners.org). Delete-account link: https://openbanners.org/privacy
+     (explains ⋮ → Settings → delete; signing in there is enough, no app needed).
+   - Do you provide a way for users to request that their data is deleted? **Yes**, URL:
+     https://openbanners.org/privacy (deletion in ⋮ → Settings on openbanners.org).
+2. **Data types:** tick only **App activity → Other user-generated content**. Leave everything else unticked
+   (Location: not collected, it never leaves the device; Personal info / User IDs: the app sends only a
+   short-lived backup token, never the account ID or e-mail; Device or other IDs: none; App info and
+   performance: no crash logs or analytics).
+3. **Other user-generated content → questions**
+   - Collected: **Yes**. Shared: **No** (only stored on openbanners.org, the developer's own service).
+   - Is this data processed ephemerally? **No** (the backup is stored until replaced or deleted).
+   - Is this data required, or can users choose whether it's collected? **Users can choose** (optional).
+   - Why is this user data collected? **App functionality** only.
+   - Covers: the settings backup (overlay, mission card, route map and compass options) and the "mission done"
+     marks the app writes to a Mission Day plan the user opened from an openbanners.org/planner link.
+4. **Preview** shows "Data collected: App activity", "Data is encrypted in transit", "You can request that data
+   be deleted", "No data shared with third parties". Submit; the change goes live without a new release.
 
 ### Permissions declarations
 

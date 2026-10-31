@@ -1,0 +1,1 @@
+New: back up your settings to OpenBanners and restore them, for example on a new phone (Settings → OpenBanners backup). Optional; you sign in with Bannergress on openbanners.org for each backup or restore.

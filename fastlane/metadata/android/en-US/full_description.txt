@@ -11,6 +11,7 @@ Share a banner link from OpenBanners or Bannergress with the app and it shows a 
 • The map turns with your compass, or keep it north up if you prefer.
 • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
 • Share your layout with friends, or import theirs.
+• Optionally back up your settings to OpenBanners and restore them on another phone (sign in with Bannergress).
 
 The overlay lets touches pass through to Ingress, so you can keep playing as usual.
 
