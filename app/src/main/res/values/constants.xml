@@ -3,7 +3,9 @@
     <string name="notifications_enable" translatable="false">notifications_enable</string>
     <string name="notification_progress" translatable="false">notification_progress</string>
     <string name="notification_step_in_range" translatable="false">notification_step_in_range</string>
-    <string name="clipboard_enable" translatable="false">clipboard_enable</string>
+    <string name="passphrase_source" translatable="false">passphrase_source</string>
+    <string name="passphrase_fallback" translatable="false">passphrase_fallback</string>
+    <string name="passphrase_autocopy" translatable="false">passphrase_autocopy</string>
     <string name="route_strip_enable" translatable="false">route_strip_enable</string>
     <string name="ingress_only" translatable="false">ingress_only</string>
     <string name="route_disclaimer_accepted_version" translatable="false">route_disclaimer_accepted_version</string>

@@ -204,12 +204,37 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="@string/preferences_clipboard">
+    <!-- The source is stored as passphrase_source (none / mission / openbanners); SettingsActivity keeps the three
+         radio buttons in sync with it. -->
+    <PreferenceCategory app:title="@string/preferences_passphrases">
 
-        <SwitchPreference
-            app:key="@string/clipboard_enable"
+        <org.openbanners.overlay.RadioPreference
+            app:key="passphrase_source_none"
+            app:persistent="false"
+            app:title="@string/passphrase_source_none" />
+
+        <org.openbanners.overlay.RadioPreference
+            app:key="passphrase_source_mission"
+            app:persistent="false"
+            app:summary="@string/passphrase_source_mission_summary"
+            app:title="@string/passphrase_source_mission" />
+
+        <org.openbanners.overlay.RadioPreference
+            app:key="passphrase_source_openbanners"
+            app:persistent="false"
+            app:summary="@string/passphrase_source_openbanners_summary"
+            app:title="@string/passphrase_source_openbanners" />
+
+        <org.openbanners.overlay.SubCheckBoxPreference
             app:defaultValue="false"
-            app:title="@string/preferences_clipboard_enable" />
+            app:key="@string/passphrase_fallback"
+            app:title="@string/preferences_passphrase_fallback" />
+
+        <CheckBoxPreference
+            app:defaultValue="false"
+            app:key="@string/passphrase_autocopy"
+            app:title="@string/preferences_passphrase_autocopy" />
+
     </PreferenceCategory>
 
     <PreferenceCategory app:title="@string/preferences_links">

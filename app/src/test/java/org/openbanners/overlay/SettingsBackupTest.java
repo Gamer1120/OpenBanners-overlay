@@ -47,7 +47,13 @@ public class SettingsBackupTest {
                 assertEquals(CardItems.DEFAULT, setting.defaultValue);
                 continue;
             }
-            Matcher element = Pattern.compile("<(\\w+)\\s(?:(?!/>|<).)*?app:key=\"@string/" + setting.key + "\"(?:(?!<).)*?/>", Pattern.DOTALL).matcher(screen);
+            if (setting.key.equals(PassphraseSettings.SOURCE)) {
+                // Three radio buttons on the screen, one per choice (SettingsActivity.setUpPassphrases).
+                assertEquals(Passphrases.SOURCE_NONE, setting.defaultValue);
+                for (String choice : setting.choices) assertTrue(choice, screen.contains("app:key=\"passphrase_source_" + choice + "\""));
+                continue;
+            }
+            Matcher element = Pattern.compile("<([\\w.]+)\\s(?:(?!/>|<).)*?app:key=\"@string/" + setting.key + "\"(?:(?!<).)*?/>", Pattern.DOTALL).matcher(screen);
             assertTrue("on the Settings screen: " + setting.key, element.find());
             String xml = element.group();
             Matcher def = Pattern.compile("app:defaultValue=\"([^\"]*)\"").matcher(xml);
@@ -70,7 +76,7 @@ public class SettingsBackupTest {
     public void everyPersistedPreferenceIsBackedUp() throws Exception {
         String screen = res("xml/root_preferences.xml");
         List<String> notBackedUp = Arrays.asList("location_enable", "notifications_enable"); // permissions: Android decides
-        Matcher keys = Pattern.compile("<(SwitchPreferenceCompat|SwitchPreference|ListPreference)\\b[^>]*?app:key=\"@string/(\\w+)\"", Pattern.DOTALL).matcher(screen);
+        Matcher keys = Pattern.compile("<((?:[\\w.]*)(?:SwitchPreferenceCompat|SwitchPreference|ListPreference|CheckBoxPreference))\\b[^>]*?app:key=\"@string/(\\w+)\"", Pattern.DOTALL).matcher(screen);
         int count = 0;
         while (keys.find()) {
             String key = keys.group(2);
@@ -78,8 +84,10 @@ public class SettingsBackupTest {
             assertNotNull("add " + key + " to SettingsBackup.SETTINGS", SettingsBackup.find(key));
             count++;
         }
-        assertEquals(SettingsBackup.SETTINGS.size() - 1, count); // + card_items, a plain Preference with its own dialog
+        // + card_items (a plain Preference with its own dialog) and passphrase_source (radio buttons)
+        assertEquals(SettingsBackup.SETTINGS.size() - 2, count);
         assertNotNull(SettingsBackup.find("card_items"));
+        assertNotNull(SettingsBackup.find(PassphraseSettings.SOURCE));
     }
 
     @Test
@@ -91,7 +99,8 @@ public class SettingsBackupTest {
         stored.put("location_hint_shown", true); // not a setting
         stored.put("route_disclaimer_accepted_version", 1); // asked again on the restoring phone
         Map<String, Object> backup = SettingsBackup.collect(stored);
-        assertEquals(SettingsBackup.SETTINGS.size(), backup.size());
+        assertEquals(SettingsBackup.SETTINGS.size() + 1, backup.size()); // + the old clipboard switch for older apps
+        assertEquals(false, backup.get("clipboard_enable"));
         assertEquals("north", backup.get("route_orientation"));
         assertEquals(true, backup.get("route_strip_enable"));
         assertEquals("1.0", backup.get("card_size"));
@@ -136,6 +145,63 @@ public class SettingsBackupTest {
         assertTrue(plan.changes.isEmpty());
         assertTrue(plan.unknown.isEmpty());
         assertTrue(plan.invalid.isEmpty());
+    }
+
+    @Test
+    public void oldClipboardSwitchIsBackedUpAsPassphraseSettings() {
+        Map<String, Object> stored = new HashMap<>();
+        stored.put("clipboard_enable", true); // never opened version 52's settings yet
+        Map<String, Object> backup = SettingsBackup.collect(stored);
+        assertEquals("mission", backup.get("passphrase_source"));
+        assertEquals(true, backup.get("passphrase_autocopy"));
+        assertEquals(false, backup.get("passphrase_fallback"));
+        // Older apps: their switch, and card items they can read.
+        assertEquals(true, backup.get("clipboard_enable"));
+        assertEquals(CardItems.DEFAULT, backup.get("card_items"));
+        assertEquals("minus,counter,plus,passphrase,next,close,done", backup.get(SettingsBackup.CARD_ITEMS_WITH_PASSPHRASE));
+    }
+
+    @Test
+    public void backupFromBefore52WithClipboardOnRestoresMissionNumberAndAutoCopy() {
+        Map<String, Object> backup = new HashMap<>();
+        backup.put("clipboard_enable", true);
+        backup.put("card_items", "minus,counter,plus,next");
+        SettingsBackup.Plan plan = SettingsBackup.plan(backup, new HashMap<>());
+        assertTrue(plan.unknown.isEmpty()); // clipboard_enable is understood, not "from a newer app"
+        assertEquals("mission", plan.values.get("passphrase_source"));
+        assertEquals(true, plan.values.get("passphrase_autocopy"));
+        assertEquals(false, plan.values.get("passphrase_fallback"));
+        assertEquals("minus,counter,plus,passphrase,next,close,done", plan.values.get("card_items"));
+        assertFalse(plan.values.containsKey("clipboard_enable"));
+    }
+
+    @Test
+    public void backupFromBefore52WithClipboardOffKeepsPassphrasesOff() {
+        Map<String, Object> backup = new HashMap<>();
+        backup.put("clipboard_enable", false);
+        SettingsBackup.Plan plan = SettingsBackup.plan(backup, new HashMap<>());
+        assertTrue(plan.unknown.isEmpty());
+        assertEquals("none", plan.values.get("passphrase_source"));
+        assertEquals(false, plan.values.get("passphrase_autocopy"));
+        assertEquals(CardItems.DEFAULT, plan.values.get("card_items"));
+        assertTrue(plan.changes.isEmpty());
+    }
+
+    @Test
+    public void newBackupRestoresTheCardWithThePassphraseButton() {
+        Map<String, Object> current = new HashMap<>();
+        current.put("passphrase_source", "openbanners");
+        current.put("passphrase_fallback", true);
+        current.put("card_items", "passphrase,minus,counter,plus,next,close,done");
+        Map<String, Object> backup = SettingsBackup.collect(current);
+        assertEquals(false, backup.get("clipboard_enable"));
+        assertEquals(CardItems.DEFAULT, backup.get("card_items"));
+        SettingsBackup.Plan plan = SettingsBackup.plan(backup, new HashMap<>());
+        assertEquals("passphrase,minus,counter,plus,next,close,done", plan.values.get("card_items"));
+        assertEquals("openbanners", plan.values.get("passphrase_source"));
+        assertEquals(true, plan.values.get("passphrase_fallback"));
+        assertTrue(plan.unknown.isEmpty());
+        assertTrue(SettingsBackup.plan(backup, current).changes.isEmpty());
     }
 
     @Test

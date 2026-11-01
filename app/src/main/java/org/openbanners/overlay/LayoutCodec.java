@@ -23,8 +23,9 @@ final class LayoutCodec {
     /**
      * Newest version this app reads. Version 2: the card items can include the Close buttons and hidden items ("-x"),
      * which version 1 apps (before 48) reject; layouts that don't use them are still exported as version 1.
+     * Version 3: the card has the 🔑 Passphrase item (apps before 52 reject it); a removed 🔑 item is left out instead.
      */
-    private static final int VERSION = 2;
+    private static final int VERSION = 3;
 
     /** One exported setting and how to check an imported value. */
     private static final class Setting {
@@ -77,13 +78,24 @@ final class LayoutCodec {
             }
             JSONObject root = new JSONObject();
             root.put("format", FORMAT);
-            String cardItems = settings.optString(context.getString(R.string.card_items), null);
-            root.put("version", CardItems.needsNewFormat(cardItems) ? VERSION : 1);
+            String cardItemsKey = context.getString(R.string.card_items);
+            String cardItems = settings.optString(cardItemsKey, null);
+            if (CardItems.mentionsPassphrase(cardItems) && !CardItems.showsPassphrase(cardItems)) {
+                cardItems = CardItems.withoutHiddenPassphrase(cardItems);
+                settings.put(cardItemsKey, cardItems);
+            }
+            root.put("version", version(cardItems));
             root.put("settings", settings);
             return root.toString();
         } catch (JSONException e) {
             throw new IllegalStateException(e);
         }
+    }
+
+    /** The oldest format version that can hold these card items. */
+    static int version(String cardItems) {
+        if (CardItems.showsPassphrase(cardItems)) return 3;
+        return CardItems.needsNewFormat(cardItems) ? 2 : 1;
     }
 
     /** Whether {@code text} contains a layout (it may be surrounded by other text, e.g. from a chat message). */
@@ -129,6 +141,8 @@ final class LayoutCodec {
             }
         }
         editor.apply();
+        // A layout from someone without passphrases: keep 🔑 on your card if you use them.
+        PassphraseSettings.addCardItemIfNew(preferences);
     }
 
     private static Setting find(Context context, String key) {

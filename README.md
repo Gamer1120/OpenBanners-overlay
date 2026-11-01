@@ -28,6 +28,14 @@ openbanners.org in the browser; links tapped in a browser stay on bannergress.co
 decides from the referrer). `BannergressLinkActivity` is disabled in the manifest until switched on; Android 12+
 also needs the user's OK under "Open by default".
 
+Passphrases (Settings → Passphrases, off by default): a 🔑 button on the mission card copies the selected mission's
+passphrase, or lists them when it has several (step labels as on the route map). Source: the mission number, or
+crowd-sourced answers from openbanners.org (`GET /_openbanners/passphrases/v1/banners/{id}`, public, only live answers,
+matched to steps by portal id; downloaded only with that source, cached for offline use; hidden when the author opted
+out), optionally falling back to the mission number. Optional auto-copy when switching to a mission with exactly one
+passphrase. Nothing depends on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
+switch (migrated: on → mission number + auto-copy). Logic and tests: `Passphrases`, `PassphraseSettings`.
+
 Not affiliated with Bannergress or Niantic. Application id `org.openbanners.overlay`; own icon.
 Licence notices shipped in the app: `app/src/main/res/raw/licenses.txt` (Settings → Licences).
 Targets Android 16 (API 36). Privacy policy: https://openbanners.org/overlay/privacy (source: `docs/privacy.html`).

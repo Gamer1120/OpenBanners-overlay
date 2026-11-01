@@ -24,7 +24,15 @@ final class CardItems {
     static final String CLOSE = "close";
     /** Last mission only: closes the overlay and marks the banner as done on OpenBanners. Gets a line of its own. */
     static final String DONE = "done";
+    /**
+     * 🔑 Passphrase (version 52): only on missions with a passphrase step, and only when a passphrase source is
+     * chosen. Not part of the default: it joins the card (before Start / Next) when a source is first chosen.
+     */
+    static final String PASSPHRASE = "passphrase";
+    /** The default items (without {@link #PASSPHRASE}). */
     static final List<String> ALL = Arrays.asList(MINUS, COUNTER, PLUS, NEXT, CLOSE, DONE);
+    /** Every item this version knows. */
+    static final List<String> KNOWN = Arrays.asList(MINUS, COUNTER, PLUS, NEXT, CLOSE, DONE, PASSPHRASE);
     /** Items that only appear on the last mission. */
     static final List<String> LAST_MISSION_ONLY = Arrays.asList(CLOSE, DONE);
     /** Marks a hidden item in the stored list. */
@@ -69,6 +77,11 @@ final class CardItems {
         return LAST_MISSION_ONLY.contains(item);
     }
 
+    /** Items that don't show on every mission: the Close items and 🔑 Passphrase. */
+    static boolean isConditional(String item) {
+        return isLastMissionOnly(item) || PASSPHRASE.equals(item);
+    }
+
     /**
      * Reads a stored value. Unknown and duplicate entries are dropped. Values from before version 48 (without Close
      * and "Close and mark as done") keep looking like they did: the always-present items that are missing were hidden,
@@ -84,13 +97,13 @@ final class CardItems {
                 String trimmed = token.trim();
                 boolean hidden = trimmed.startsWith(HIDDEN);
                 String item = hidden ? trimmed.substring(HIDDEN.length()).trim() : trimmed;
-                if (!ALL.contains(item) || order.contains(item)) continue;
+                if (!KNOWN.contains(item) || order.contains(item)) continue;
                 order.add(item);
                 if (!hidden) shown.add(item);
             }
         }
         boolean anyAlwaysShown = false;
-        for (String item : shown) anyAlwaysShown |= !isLastMissionOnly(item);
+        for (String item : shown) anyAlwaysShown |= !isConditional(item);
         if (!anyAlwaysShown) return defaultConfig();
 
         for (String item : ALL) {
@@ -128,9 +141,55 @@ final class CardItems {
         for (String token : value.split(",")) {
             String trimmed = token.trim();
             if (trimmed.startsWith(HIDDEN)) trimmed = trimmed.substring(HIDDEN.length()).trim();
-            if (!ALL.contains(trimmed)) return false;
+            if (!KNOWN.contains(trimmed)) return false;
         }
         return true;
+    }
+
+    /** Whether the value has the 🔑 item at all (shown or removed by the user). */
+    static boolean mentionsPassphrase(String value) {
+        if (value == null) return false;
+        for (String token : value.split(",")) {
+            String trimmed = token.trim();
+            if (trimmed.startsWith(HIDDEN)) trimmed = trimmed.substring(HIDDEN.length()).trim();
+            if (PASSPHRASE.equals(trimmed)) return true;
+        }
+        return false;
+    }
+
+    /** Whether the 🔑 item is on the card (which apps before version 52 can't read). */
+    static boolean showsPassphrase(String value) {
+        return value != null && parseConfig(value).shown.contains(PASSPHRASE);
+    }
+
+    /** {@code value} with the 🔑 item shown right before Start / Next, unless the value already has it. */
+    static String withPassphrase(String value) {
+        Config config = parseConfig(value);
+        if (config.order.contains(PASSPHRASE)) return config.format();
+        List<String> order = new ArrayList<>(config.order);
+        int next = order.indexOf(NEXT);
+        order.add(next < 0 ? order.size() : next, PASSPHRASE);
+        Set<String> shown = new LinkedHashSet<>(config.shown);
+        shown.add(PASSPHRASE);
+        return new Config(order, shown).format();
+    }
+
+    /** {@code value} without the 🔑 item (for apps before version 52, which reject it). */
+    static String withoutPassphrase(String value) {
+        Config config = parseConfig(value);
+        if (!config.order.contains(PASSPHRASE)) return config.format();
+        List<String> order = new ArrayList<>(config.order);
+        order.remove(PASSPHRASE);
+        return new Config(order, config.shown).format();
+    }
+
+    /** {@code value} without the 🔑 item if it's hidden (for apps before version 52, which reject it). */
+    static String withoutHiddenPassphrase(String value) {
+        Config config = parseConfig(value);
+        if (!config.order.contains(PASSPHRASE) || config.shown.contains(PASSPHRASE)) return config.format();
+        List<String> order = new ArrayList<>(config.order);
+        order.remove(PASSPHRASE);
+        return new Config(order, config.shown).format();
     }
 
     /** Whether the value uses something apps before version 48 can't read (Close items or hidden markers). */
@@ -148,8 +207,14 @@ final class CardItems {
      * mission, "Close and mark as done" when the banner can be marked as done (last mission of a banner or plan).
      */
     static List<String> visible(Config config, boolean lastMission, boolean canMarkDone) {
+        return visible(config, lastMission, canMarkDone, false);
+    }
+
+    /** {@code passphrase}: this mission has a passphrase to offer, so 🔑 shows (where the user put it). */
+    static List<String> visible(Config config, boolean lastMission, boolean canMarkDone, boolean passphrase) {
         List<String> items = new ArrayList<>();
         for (String item : config.shownItems()) {
+            if (item.equals(PASSPHRASE) && !passphrase) continue;
             if (item.equals(NEXT) && lastMission) continue;
             if (item.equals(CLOSE) && !lastMission) continue;
             if (item.equals(DONE) && !canMarkDone) continue;
@@ -201,7 +266,20 @@ final class CardItems {
      * </ul>
      */
     static List<Line> arrange(Config config, String layout, boolean lastMission, boolean canMarkDone) {
-        List<String> visible = visible(config, lastMission, canMarkDone);
+        return arrange(config, layout, lastMission, canMarkDone, false);
+    }
+
+    /**
+     * Like {@link #arrange(Config, String, boolean, boolean)}; {@code passphrase}: 🔑 shows on this mission. Where it
+     * doesn't, the card looks as if it wasn't there at all.
+     */
+    static List<Line> arrange(Config config, String layout, boolean lastMission, boolean canMarkDone, boolean passphrase) {
+        if (!passphrase && config.order.contains(PASSPHRASE)) {
+            List<String> order = new ArrayList<>(config.order);
+            order.remove(PASSPHRASE);
+            config = new Config(order, config.shown);
+        }
+        List<String> visible = visible(config, lastMission, canMarkDone, passphrase);
         List<Line> lines = new ArrayList<>();
         if (LAYOUT_TALL.equals(layout)) {
             for (String item : visible) lines.add(new Line(Collections.singletonList(item), false));

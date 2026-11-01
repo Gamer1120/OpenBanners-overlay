@@ -49,7 +49,7 @@ video is not in the repo; upload it unlisted to YouTube and paste that link.
     always in view.
   • Mission controls: see which mission you are on and open the next mission in Ingress with one tap.
   • Steps are ticked off automatically when you get within range, with an optional notification.
-  • Optionally copy the mission number to the clipboard for passphrase missions.
+  • Passphrases: copy a mission's passphrase with the 🔑 button on the mission card. Choose the mission number, or crowd-sourced passphrases shared by other players on OpenBanners (optional, off by default).
   • Optionally show the whole banner: completed missions, the current one and the ones still ahead, each in its own colour.
   • Choose your own colours for the current mission, upcoming missions, completed steps and your position.
   • The map turns with your compass, or keep it north up if you prefer.
@@ -106,6 +106,8 @@ enter it by hand in Play Console → Policy → App content → Data safety:
    - Why is this user data collected? **App functionality** only.
    - Covers: the settings backup (overlay, mission card, route map and compass options) and the "mission done"
      marks the app writes to a Mission Day plan the user opened from an openbanners.org/planner link.
+   - versionCode 52 (passphrases from OpenBanners, optional): no change. The download sends only the public banner
+     ID and receives public data; nothing about the user leaves the device, so it isn't "collected".
 4. **Preview** shows "Data collected: App activity", "Data is encrypted in transit", "You can request that data
    be deleted", "No data shared with third parties". Submit; the change goes live without a new release.
 

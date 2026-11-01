@@ -8,7 +8,7 @@
 </head>
 <body>
 <h1>OpenBanners Overlay – Privacy policy</h1>
-<p>Last updated: 31 October 2026</p>
+<p>Last updated: 1 November 2026</p>
 
 <p>OpenBanners Overlay is an open-source Android companion app for doing Ingress mission banners
 (<a href="https://github.com/Gamer1120/OpenBanners-overlay">source code</a>). It has no accounts of its own, no ads and no analytics.
@@ -26,12 +26,17 @@ banner's public mission data. The request contains the banner or mission ID, not
 <a href="https://bannergress.com">privacy terms</a>; like any web server it can see your IP address.</li>
 <li><strong>OpenBanners</strong> (<code>openbanners.org</code>): when you open a Mission Day plan link, the app downloads that plan and
 marks missions done in it. The request contains the plan ID, not your location.</li>
+<li><strong>Passphrases from OpenBanners</strong> (optional, off by default): only if you choose
+<em>Crowd-sourced passphrases from OpenBanners</em> under Settings → Passphrases, the app downloads the shared passphrases of each
+banner you open from <code>openbanners.org</code>. The request contains only the banner ID: no account, no location and no other
+personal data. The downloaded passphrases are kept on your device so they also work offline. With the other choices
+(<em>Don't use passphrases</em>, the default, or <em>Mission number</em>) the app never contacts openbanners.org for passphrases.</li>
 <li><strong>Ingress</strong>: the Next button opens the next mission in the Ingress app through a <code>link.ingress.com</code> link.
 What happens there is governed by Niantic's privacy policy.</li>
 </ul>
 
 <h2>Settings backup on OpenBanners (optional)</h2>
-<p>Settings → <em>Back up to OpenBanners</em> saves the app's settings (overlay, mission card, route map and compass options) with your
+<p>Settings → <em>Back up to OpenBanners</em> saves the app's settings (overlay, mission card, route map, compass and passphrase options) with your
 Bannergress account on openbanners.org, replacing any earlier backup; <em>Restore from OpenBanners</em> reads it back and shows what would
 change before anything is changed. Your location, progress and permissions are not part of the backup.</p>
 <p>For this the app opens openbanners.org in your browser, where you sign in with Bannergress and tap Allow. The website then gives the app a
@@ -43,7 +48,8 @@ you can delete it, or download everything OpenBanners stores for your account, i
 <ul>
 <li><strong>Display over other apps</strong>: to show the route map and controls on top of Ingress.</li>
 <li><strong>Notifications</strong>: to show progress and when a mission step is in range.</li>
-<li><strong>Clipboard</strong> (optional, off by default): copies the current mission number for passphrase missions. It stays on your device.</li>
+<li><strong>Clipboard</strong> (optional, off by default): when you choose a passphrase source, the app copies a passphrase (or the
+mission number) to the clipboard when you tap 🔑 on the mission card, or automatically if you turned that on. It stays on your device.</li>
 </ul>
 
 <h2>Children</h2>

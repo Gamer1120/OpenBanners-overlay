@@ -51,6 +51,19 @@ public class BannerApi {
         Request request = new Request.Builder().url(bannerUrl(bannerId)).build();
         ResponseBody responseBody = client.newCall(request).execute().body();
         assert responseBody != null;
-        return objectMapper.readValue(responseBody.string(), Banner.class);
+        Banner banner = objectMapper.readValue(responseBody.string(), Banner.class);
+        tagMissions(banner);
+        return banner;
+    }
+
+    /** Remembers on each mission which banner it comes from and its number there (see {@link Mission#sourceIndex}). */
+    static void tagMissions(Banner banner) {
+        if (banner == null || banner.missions == null) return;
+        for (java.util.Map.Entry<Integer, Mission> entry : banner.missions.entrySet()) {
+            Mission mission = entry.getValue();
+            if (mission == null) continue;
+            mission.sourceBannerId = banner.id;
+            mission.sourceIndex = entry.getKey();
+        }
     }
 }

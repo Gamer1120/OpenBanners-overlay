@@ -5,7 +5,7 @@ Share a banner link from OpenBanners or Bannergress with the app and it shows a 
 • A route map at the top of the screen with the steps of your current mission (labelled 1a, 1b, …), the start of the next mission, and your own position. It zooms so your nearest open steps are always in view.
 • Mission controls: see which mission you are on and open the next mission in Ingress with one tap.
 • Steps are ticked off automatically when you get within range, with an optional notification.
-• Optionally copy the mission number to the clipboard for passphrase missions.
+• Passphrases: copy a mission's passphrase with the 🔑 button on the mission card. Choose the mission number, or crowd-sourced passphrases shared by other players on OpenBanners (optional, off by default).
 • Optionally show the whole banner: completed missions, the current one and the ones still ahead, each in its own colour.
 • Choose your own colours for the current mission, upcoming missions, completed steps and your position.
 • The map turns with your compass, or keep it north up if you prefer.

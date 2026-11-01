@@ -1,6 +1,8 @@
 package org.openbanners.overlay;
 
 import android.annotation.SuppressLint;
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
@@ -33,6 +35,7 @@ import com.google.common.collect.Iterables;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -53,6 +56,43 @@ class OverlayView extends FrameLayout {
     private final Button buttonClose;
     /** "Close and mark as done" on the last mission. */
     private final Button buttonDone;
+    /** 🔑: copies the current mission's passphrase, or lists them when it has several. */
+    private final Button buttonPassphrase;
+    /** Below the buttons: the passphrase list, a passphrase's text, or a short message. */
+    private final LinearLayout passphrasePanel;
+    private final Handler handler = new Handler(Looper.getMainLooper());
+    /** Settings → Passphrases. */
+    private String passphraseSource = Passphrases.SOURCE_NONE;
+    private boolean passphraseFallback;
+    private boolean passphraseAutoCopy;
+    /** The current mission's passphrases (empty: no 🔑). */
+    private Passphrases.ForMission passphrases = Passphrases.NONE;
+    /** 🔑 sits in a row: short labels. */
+    private boolean passphraseCompact;
+    /** The banner and mission shown, to notice a switch to another mission. */
+    private Banner shownBanner;
+    private int shownMission = Integer.MIN_VALUE;
+    /** Waiting for the passphrases of this mission to arrive before copying automatically. */
+    private boolean autoCopyPending;
+    /** What the panel shows: nothing, the list, one step's text, or a message. */
+    private static final int PANEL_NONE = 0, PANEL_LIST = 1, PANEL_TEXT = 2, PANEL_MESSAGE = 3;
+    private int panelMode = PANEL_NONE;
+    /** Step shown in the text panel. */
+    private int panelStep = -1;
+    private String panelMessage;
+    private final Runnable hideMessage = () -> {
+        if (panelMode == PANEL_MESSAGE) setPanel(PANEL_NONE, -1, null);
+    };
+    private boolean showingCopied;
+    private final Runnable restoreButtonLabel = () -> {
+        showingCopied = false;
+        updatePassphraseButton();
+    };
+    private final Runnable passphrasesArrived = () -> {
+        applyState(StateManager.getState());
+        if (autoCopyPending) autoCopy();
+        if (panelMode == PANEL_LIST || panelMode == PANEL_TEXT) renderPanel();
+    };
     /** OpenBanners site for "Close and mark as done". */
     private final String origin;
     private final LinearLayout cardContent;
@@ -86,6 +126,8 @@ class OverlayView extends FrameLayout {
         buttonPlus = findViewById(R.id.buttonPlus);
         buttonClose = findViewById(R.id.buttonClose);
         buttonDone = findViewById(R.id.buttonDone);
+        buttonPassphrase = findViewById(R.id.buttonPassphrase);
+        passphrasePanel = findViewById(R.id.passphrasePanel);
         this.origin = origin;
         cardContent = findViewById(R.id.cardContent);
         baseButtonTextPx = buttonNext.getTextSize();
@@ -98,6 +140,7 @@ class OverlayView extends FrameLayout {
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.RGB_888);
         params.gravity = Gravity.START | Gravity.TOP;
+        PassphraseSettings.migrate(PreferenceManager.getDefaultSharedPreferences(context));
         applyCardPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         setupListeners();
         applyState(StateManager.getState());
@@ -130,13 +173,25 @@ class OverlayView extends FrameLayout {
         cardLayout = preferences.getString(context.getString(R.string.card_layout), CardItems.LAYOUT_TWO_ROWS);
         cardSize = preferences.getString(context.getString(R.string.card_size), "1.0");
         cardItems = preferences.getString(context.getString(R.string.card_items), CardItems.DEFAULT);
+        Map<String, ?> stored = preferences.getAll();
+        String oldSource = passphraseSource;
+        passphraseSource = PassphraseSettings.source(stored);
+        passphraseFallback = PassphraseSettings.fallback(stored);
+        passphraseAutoCopy = PassphraseSettings.autoCopy(stored);
+        State state = StateManager.getState();
+        if (Passphrases.SOURCE_OPENBANNERS.equals(passphraseSource) && !passphraseSource.equals(oldSource) && state.banner != null) {
+            // Switched to OpenBanners while a banner is open: download its passphrases now.
+            PassphraseStore.load(context, state.banner, true);
+        }
+        updatePassphrases(state);
         rebuildCard();
+        updatePassphraseButton();
     }
 
     /** Builds the card for the settings and the mission phase (last mission or not); returns whether it changed. */
     private boolean rebuildCard() {
         String layout = cardLayout;
-        String config = layout + "|" + cardSize + "|" + cardItems + "|" + lastMission + "|" + canMarkDone;
+        String config = layout + "|" + cardSize + "|" + cardItems + "|" + lastMission + "|" + canMarkDone + "|" + passphrases.show();
         if (config.equals(appliedCardConfig)) return false;
         appliedCardConfig = config;
         float scale;
@@ -147,8 +202,8 @@ class OverlayView extends FrameLayout {
         }
         float dp = getResources().getDisplayMetrics().density;
 
-        Button[] buttons = {buttonMinus, buttonPlus, buttonNext, buttonClose, buttonDone};
-        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonClose, buttonDone}) {
+        Button[] buttons = {buttonMinus, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase};
+        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase, passphrasePanel}) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) parent.removeView(view);
         }
@@ -161,7 +216,9 @@ class OverlayView extends FrameLayout {
         textMission.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseCounterTextPx * scale);
         textMission.setGravity(Gravity.CENTER);
 
-        List<CardItems.Line> lines = CardItems.arrange(CardItems.parseConfig(cardItems), layout, lastMission, canMarkDone);
+        List<CardItems.Line> lines = CardItems.arrange(CardItems.parseConfig(cardItems), layout, lastMission, canMarkDone, passphrases.show());
+        passphraseCompact = false;
+        for (CardItems.Line line : lines) passphraseCompact |= line.row && line.items.contains(CardItems.PASSPHRASE);
         int fullWidth = Math.round(100 * dp * scale);
         // Width of the card's content, for full-width lines in the two-row and wide layouts ("Close and mark as done";
         // MATCH_PARENT in this wrap_content card would keep the height of a first, wider measure and cut off the
@@ -192,6 +249,12 @@ class OverlayView extends FrameLayout {
                 cardContent.addView(view, new LinearLayout.LayoutParams(width, ViewGroup.LayoutParams.WRAP_CONTENT));
             }
         }
+        // The panel takes the card's width (it never widens the card, so the route map next to it stays put).
+        panelWidth = CardItems.LAYOUT_TALL.equals(layout) || lines.size() == 1 && !lines.get(0).row ? fullWidth : contentWidth;
+        cardScale = scale;
+        cardContent.addView(passphrasePanel, new LinearLayout.LayoutParams(panelWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
+        if (panelMode != PANEL_NONE && !passphrases.show()) setPanel(PANEL_NONE, -1, null);
+        if (panelMode != PANEL_NONE) renderPanel();
         if (isAttachedToWindow()) {
             getContext().getSystemService(WindowManager.class).updateViewLayout(this, params);
         }
@@ -207,7 +270,8 @@ class OverlayView extends FrameLayout {
 
     /** Width of an item when it sits in a row: the original card's widths, scaled. */
     private int naturalWidth(View view, float dp, float scale) {
-        int widthDp = view == textMission ? 60 : view == buttonNext || view == buttonClose || view == buttonDone ? 90 : 40;
+        int widthDp = view == textMission ? 60 : view == buttonNext || view == buttonClose || view == buttonDone ? 90
+                : view == buttonPassphrase ? 52 : 40;
         return Math.round(widthDp * dp * scale);
     }
 
@@ -223,6 +287,8 @@ class OverlayView extends FrameLayout {
                 return buttonClose;
             case CardItems.DONE:
                 return buttonDone;
+            case CardItems.PASSPHRASE:
+                return buttonPassphrase;
             default:
                 return buttonNext;
         }
@@ -263,6 +329,16 @@ class OverlayView extends FrameLayout {
             }
             stopOverlay();
         });
+        buttonPassphrase.setOnClickListener(v -> onPassphraseTap());
+        buttonPassphrase.setOnLongClickListener(v -> {
+            onPassphraseLongPress();
+            return true;
+        });
+        passphrasePanel.setOnClickListener(v -> {
+            // Tap the shown text (or a message) to hide it; the list closes with 🔑.
+            if (panelMode == PANEL_TEXT || panelMode == PANEL_MESSAGE) setPanel(PANEL_NONE, -1, null);
+        });
+        PassphraseStore.addListener(passphrasesArrived);
         setOnTouchListener(new ViewMoveListener(this));
     }
 
@@ -303,6 +379,8 @@ class OverlayView extends FrameLayout {
 
     public void remove() {
         StateManager.removeListener(stateListener);
+        PassphraseStore.removeListener(passphrasesArrived);
+        handler.removeCallbacksAndMessages(null);
         getContext().getSystemService(WindowManager.class).removeView(this);
     }
 
@@ -386,6 +464,15 @@ class OverlayView extends FrameLayout {
     private void applyState(State state) {
         boolean wasLastMission = lastMission;
         boolean couldMarkDone = canMarkDone;
+        boolean hadPassphrase = passphrases.show();
+        if (state.banner != null && state.banner != shownBanner && Passphrases.SOURCE_OPENBANNERS.equals(passphraseSource)) {
+            // A banner (or plan) was loaded: download its passphrases, each banner of a plan once.
+            PassphraseStore.load(getContext(), state.banner, false);
+        }
+        boolean missionSwitched = state.banner != shownBanner || state.currentMission != shownMission;
+        shownBanner = state.banner;
+        shownMission = state.currentMission;
+        updatePassphrases(state);
         if (state.banner == null) {
             if (state.error) {
                 textMission.setText(unsupportedLink ? R.string.overlayUnsupportedLink : R.string.overlayError);
@@ -424,8 +511,258 @@ class OverlayView extends FrameLayout {
             buttonClose.setEnabled(!state.cooldown);
             buttonDone.setEnabled(!state.cooldown);
         }
-        if ((wasLastMission != lastMission || couldMarkDone != canMarkDone) && rebuildCard() && cardChangedListener != null) {
+        if (missionSwitched) {
+            // Everything passphrase is about the selected mission: a new one starts with the panel closed.
+            handler.removeCallbacks(hideMessage);
+            setPanel(PANEL_NONE, -1, null);
+            autoCopyPending = false;
+            if (passphraseAutoCopy && passphrases.single()) autoCopy();
+        }
+        if ((wasLastMission != lastMission || couldMarkDone != canMarkDone || hadPassphrase != passphrases.show())
+                && rebuildCard() && cardChangedListener != null) {
             cardChangedListener.run();
         }
+        updatePassphraseButton();
+    }
+
+    /** The selected mission, or null before the start. */
+    private static Mission currentMission(State state) {
+        if (state.banner == null || state.banner.missions == null || state.currentMission < 0) return null;
+        return state.banner.missions.values().stream().skip(state.currentMission).findFirst().orElse(null);
+    }
+
+    private void updatePassphrases(State state) {
+        Mission mission = currentMission(state);
+        if (mission == null) {
+            passphrases = Passphrases.NONE;
+            return;
+        }
+        passphrases = Passphrases.forMission(passphraseSource, passphraseFallback, mission, state.currentMission,
+                PassphraseStore.get(mission.sourceBannerId != null ? mission.sourceBannerId : state.banner.id));
+    }
+
+    /**
+     * Auto-copy on switching to a mission with one passphrase (Settings → Passphrases). If its banner's passphrases
+     * are still downloading, it waits for them (only while you stay on that mission).
+     */
+    private void autoCopy() {
+        autoCopyPending = false;
+        if (!passphraseAutoCopy || !passphrases.single()) return;
+        Mission mission = currentMission(StateManager.getState());
+        if (mission != null && Passphrases.SOURCE_OPENBANNERS.equals(passphraseSource)
+                && PassphraseStore.get(mission.sourceBannerId) == null && PassphraseStore.loading(mission.sourceBannerId)) {
+            autoCopyPending = true;
+            return;
+        }
+        Passphrases.Copy copy = passphrases.autoCopy();
+        if (copy == null) return;
+        copyToClipboard(copy.text);
+        flashCopied();
+    }
+
+    // --- 🔑 Passphrase -------------------------------------------------------------------------------------------
+
+    private int panelWidth;
+    private float cardScale = 1f;
+
+    private void updatePassphraseButton() {
+        if (!passphrases.show() || showingCopied) return;
+        String label;
+        if (passphrases.single()) {
+            boolean known = passphrases.steps.get(0).known();
+            label = known ? getContext().getString(passphraseCompact ? R.string.passphrase_button_short : R.string.passphrase_button)
+                    : getContext().getString(passphraseCompact ? R.string.passphrase_button_unknown_short : R.string.passphrase_button_unknown);
+        } else {
+            label = getContext().getString(passphraseCompact ? R.string.passphrase_button_several_short : R.string.passphrase_button_several,
+                    passphrases.steps.size());
+        }
+        buttonPassphrase.setText(label);
+        // Grey while nothing can be copied (no answer known and no mission-number fallback).
+        buttonPassphrase.setAlpha(passphrases.unknown() ? 0.5f : 1f);
+    }
+
+    /** The button shows "✓ Copied" for a moment. */
+    private void flashCopied() {
+        showingCopied = true;
+        buttonPassphrase.setText(passphraseCompact ? R.string.passphrase_copied_short : R.string.passphrase_copied);
+        buttonPassphrase.setAlpha(1f);
+        handler.removeCallbacks(restoreButtonLabel);
+        handler.postDelayed(restoreButtonLabel, 1_500);
+    }
+
+    private void copyToClipboard(String text) {
+        ClipboardManager clipboard = getContext().getSystemService(ClipboardManager.class);
+        if (clipboard == null) return;
+        clipboard.setPrimaryClip(ClipData.newPlainText(getContext().getString(R.string.passphrase_clip_label), text));
+    }
+
+    private void onPassphraseTap() {
+        if (!passphrases.show()) return;
+        if (!passphrases.single()) {
+            setPanel(panelMode == PANEL_LIST ? PANEL_NONE : PANEL_LIST, -1, null);
+            return;
+        }
+        Passphrases.Copy copy = passphrases.copy(passphrases.steps.get(0));
+        if (copy == null) {
+            showMessage(getContext().getString(R.string.passphrase_unknown));
+            return;
+        }
+        copyToClipboard(copy.text);
+        flashCopied();
+        if (copy.missionNumber) {
+            showMessage(getContext().getString(R.string.passphrase_copied_mission_number));
+        } else if (passphraseCompact) {
+            showMessage(getContext().getString(R.string.passphrase_copied));
+        } else if (panelMode == PANEL_MESSAGE) {
+            setPanel(PANEL_NONE, -1, null);
+        }
+    }
+
+    private void onPassphraseLongPress() {
+        if (!passphrases.show()) return;
+        if (passphrases.single()) {
+            setPanel(panelMode == PANEL_TEXT ? PANEL_NONE : PANEL_TEXT, 0, null);
+        } else {
+            setPanel(panelMode == PANEL_LIST ? PANEL_NONE : PANEL_LIST, -1, null);
+        }
+    }
+
+    /** A short message below the buttons for a few seconds. */
+    private void showMessage(String message) {
+        setPanel(PANEL_MESSAGE, -1, message);
+        handler.removeCallbacks(hideMessage);
+        handler.postDelayed(hideMessage, 2_500);
+    }
+
+    private void setPanel(int mode, int step, String message) {
+        panelMode = mode;
+        panelStep = step;
+        panelMessage = message;
+        renderPanel();
+    }
+
+    private void renderPanel() {
+        passphrasePanel.removeAllViews();
+        if (panelMode == PANEL_NONE || !passphrases.show() && panelMode != PANEL_MESSAGE) {
+            panelMode = PANEL_NONE;
+            passphrasePanel.setVisibility(View.GONE);
+            return;
+        }
+        passphrasePanel.setVisibility(View.VISIBLE);
+        float dp = getResources().getDisplayMetrics().density;
+        int pad = Math.round(4 * dp * cardScale);
+        passphrasePanel.setPadding(pad, pad, pad, pad);
+        if (panelMode == PANEL_MESSAGE) {
+            passphrasePanel.addView(text(panelMessage, 1f, false));
+        } else if (panelMode == PANEL_TEXT) {
+            if (panelStep < 0 || panelStep >= passphrases.steps.size()) {
+                setPanel(PANEL_NONE, -1, null);
+                return;
+            }
+            renderStepText(passphrases.steps.get(panelStep));
+        } else {
+            renderList();
+        }
+    }
+
+    /** The passphrase itself (large), and other answers with their ✓ counts. */
+    private void renderStepText(Passphrases.Step step) {
+        if (!passphrases.single()) passphrasePanel.addView(text(describe(step, false), 0.8f, true));
+        if (!step.known()) {
+            passphrasePanel.addView(text(getContext().getString(R.string.passphrase_unknown), 1f, true));
+            if (passphrases.fallback) {
+                passphrasePanel.addView(text(getContext().getString(R.string.passphrase_fallback_note, passphrases.missionNumber), 0.8f, true));
+            }
+            return;
+        }
+        passphrasePanel.addView(text(step.best(), 1.5f, false));
+        if (step.candidates.size() > 1) {
+            passphrasePanel.addView(text(getContext().getString(R.string.passphrase_alternatives), 0.8f, true));
+            for (Passphrases.Candidate candidate : step.candidates) {
+                passphrasePanel.addView(text(getContext().getString(R.string.passphrase_candidate, candidate.text, candidate.confirms), 0.9f, false));
+            }
+        }
+    }
+
+    /** One row per passphrase step: label · portal · [Copy]. */
+    private void renderList() {
+        float dp = getResources().getDisplayMetrics().density;
+        boolean anyUnknown = false;
+        for (int i = 0; i < passphrases.steps.size(); i++) {
+            Passphrases.Step step = passphrases.steps.get(i);
+            int index = i;
+            LinearLayout row = new LinearLayout(buttonNext.getContext());
+            row.setOrientation(LinearLayout.HORIZONTAL);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            anyUnknown |= !step.known();
+            TextView label = text(describe(step, !step.known()), 0.8f, !step.known());
+            label.setMaxLines(2);
+            label.setEllipsize(android.text.TextUtils.TruncateAt.END);
+            row.addView(label, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1));
+            if (step.known()) {
+                Button copy = smallButton(getContext().getString(R.string.passphrase_copy));
+                copy.setOnClickListener(v -> copyStep(step));
+                copy.setOnLongClickListener(v -> {
+                    setPanel(PANEL_TEXT, index, null);
+                    return true;
+                });
+                row.addView(copy, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, Math.round(36 * dp * cardScale)));
+            }
+            // Long-press a row: show its passphrase (and other answers).
+            row.setOnLongClickListener(v -> {
+                setPanel(PANEL_TEXT, index, null);
+                return true;
+            });
+            row.setMinimumHeight(Math.round(36 * dp * cardScale));
+            passphrasePanel.addView(row);
+        }
+        if (anyUnknown && passphrases.fallback) {
+            Button missionNumber = smallButton(getContext().getString(R.string.passphrase_copy_mission_number));
+            missionNumber.setOnClickListener(v -> {
+                copyToClipboard(passphrases.missionNumber);
+                flashCopied();
+                showMessage(getContext().getString(R.string.passphrase_copied_mission_number));
+            });
+            passphrasePanel.addView(missionNumber, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Math.round(40 * dp * cardScale)));
+        }
+    }
+
+    /** "5c · Portal name" (without the portal if it has no name), plus "· not known yet". */
+    private String describe(Passphrases.Step step, boolean notKnown) {
+        StringBuilder text = new StringBuilder(step.label);
+        if (step.portal != null && !step.portal.trim().isEmpty()) text.append(" · ").append(step.portal.trim());
+        if (notKnown) text.append(" · ").append(getContext().getString(R.string.passphrase_not_known_row));
+        return text.toString();
+    }
+
+    private void copyStep(Passphrases.Step step) {
+        Passphrases.Copy copy = passphrases.copy(step);
+        if (copy == null) return;
+        copyToClipboard(copy.text);
+        flashCopied();
+        showMessage(getContext().getString(R.string.passphrase_step_copied, step.label));
+    }
+
+    private TextView text(String value, float size, boolean grey) {
+        TextView view = new TextView(buttonNext.getContext());
+        view.setText(value);
+        view.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseCounterTextPx * cardScale * size * 0.85f);
+        view.setTextColor(textMission.getTextColors());
+        if (grey) view.setAlpha(0.6f);
+        return view;
+    }
+
+    private Button smallButton(String label) {
+        Button button = new Button(buttonNext.getContext(), null, android.R.attr.borderlessButtonStyle);
+        button.setText(label);
+        button.setAllCaps(false);
+        button.setTextSize(TypedValue.COMPLEX_UNIT_PX, baseButtonTextPx * cardScale * 0.9f);
+        button.setMinWidth(0);
+        button.setMinimumWidth(0);
+        button.setMinHeight(0);
+        button.setMinimumHeight(0);
+        int pad = Math.round(6 * getResources().getDisplayMetrics().density);
+        button.setPadding(pad, 0, pad, 0);
+        return button;
     }
 }

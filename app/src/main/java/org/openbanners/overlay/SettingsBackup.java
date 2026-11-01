@@ -80,7 +80,10 @@ final class SettingsBackup {
             new Setting("route_color_other", Kind.COLOR, "#FFFFFF"),
             new Setting("route_color_done", Kind.COLOR, "#969696"),
             new Setting("route_color_me", Kind.COLOR, "#00E5FF"),
-            new Setting("clipboard_enable", Kind.BOOLEAN, false),
+            new Setting(PassphraseSettings.SOURCE, Kind.CHOICE, Passphrases.SOURCE_NONE,
+                    Passphrases.SOURCE_NONE, Passphrases.SOURCE_MISSION_NUMBER, Passphrases.SOURCE_OPENBANNERS),
+            new Setting(PassphraseSettings.FALLBACK, Kind.BOOLEAN, false),
+            new Setting(PassphraseSettings.AUTO_COPY, Kind.BOOLEAN, false),
             new Setting("bannergress_links", Kind.BOOLEAN, false)));
 
     private SettingsBackup() {
@@ -99,11 +102,54 @@ final class SettingsBackup {
         return value != null && setting.accepts(value) ? setting.normalize(value) : setting.defaultValue;
     }
 
-    /** The backup's settings: every setting with its current value. */
-    static Map<String, Object> collect(Map<String, ?> stored) {
+    /**
+     * Card items with the 🔑 item, which apps before version 52 reject: in a backup, {@code card_items} is without it
+     * (so an older app restores the rest of the card) and this key has the full value.
+     */
+    static final String CARD_ITEMS_WITH_PASSPHRASE = "card_items_with_passphrase";
+
+    /** {@code stored} as this version reads it: the old clipboard switch turned into the passphrase settings. */
+    static Map<String, Object> upToDate(Map<String, ?> stored) {
+        Map<String, Object> result = new LinkedHashMap<>(stored);
+        for (Map.Entry<String, Object> change : PassphraseSettings.migration(stored).entrySet()) {
+            if (change.getValue() == null) {
+                result.remove(change.getKey());
+            } else {
+                result.put(change.getKey(), change.getValue());
+            }
+        }
+        return result;
+    }
+
+    /**
+     * The backup's settings: every setting with its current value. For apps before version 52 it also has the old
+     * clipboard switch (on when the mission number is copied automatically, as that switch did) and card_items
+     * without the 🔑 item.
+     */
+    static Map<String, Object> collect(Map<String, ?> rawStored) {
+        Map<String, ?> stored = upToDate(rawStored);
         Map<String, Object> settings = new LinkedHashMap<>();
         for (Setting setting : SETTINGS) settings.put(setting.key, effective(setting, stored));
+        Object cardItems = settings.get("card_items");
+        if (cardItems instanceof String && CardItems.mentionsPassphrase((String) cardItems)) {
+            settings.put("card_items", CardItems.withoutPassphrase((String) cardItems));
+            settings.put(CARD_ITEMS_WITH_PASSPHRASE, cardItems);
+        }
+        settings.put(PassphraseSettings.LEGACY_CLIPBOARD, Passphrases.SOURCE_MISSION_NUMBER.equals(settings.get(PassphraseSettings.SOURCE))
+                && Boolean.TRUE.equals(settings.get(PassphraseSettings.AUTO_COPY)));
         return settings;
+    }
+
+    /** A backup as this version reads it: from before version 52 (old clipboard switch), or with the full card items. */
+    static Map<String, Object> readBackup(Map<String, ?> backup) {
+        Map<String, Object> result = new LinkedHashMap<>(backup);
+        Object full = result.remove(CARD_ITEMS_WITH_PASSPHRASE);
+        if (full instanceof String && CardItems.isValid((String) full)) result.put("card_items", full);
+        if (result.containsKey(PassphraseSettings.SOURCE)) {
+            result.remove(PassphraseSettings.LEGACY_CLIPBOARD); // written for older apps only
+            return result;
+        }
+        return upToDate(result);
     }
 
     /** One setting a restore changes. */
@@ -129,7 +175,9 @@ final class SettingsBackup {
         final List<String> invalid = new ArrayList<>();
     }
 
-    static Plan plan(Map<String, ?> backup, Map<String, ?> stored) {
+    static Plan plan(Map<String, ?> rawBackup, Map<String, ?> rawStored) {
+        Map<String, ?> backup = readBackup(rawBackup);
+        Map<String, ?> stored = upToDate(rawStored);
         Plan plan = new Plan();
         for (String key : backup.keySet()) {
             if (find(key) == null) plan.unknown.add(key);

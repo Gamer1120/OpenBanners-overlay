@@ -113,6 +113,7 @@ public class SettingsActivity extends AppCompatActivity {
             ServiceNotification.createNotificationChannels(requireContext());
             // Before the switches are bound: a route map that's on without confirmation shows as off.
             RouteDisclaimer.enforce(requireContext(), PreferenceManager.getDefaultSharedPreferences(requireContext()));
+            PassphraseSettings.migrate(PreferenceManager.getDefaultSharedPreferences(requireContext()));
             setPreferencesFromResource(R.xml.root_preferences, rootKey);
             wrapTitles(getPreferenceScreen());
 
@@ -215,6 +216,7 @@ public class SettingsActivity extends AppCompatActivity {
             Preference cardItemsPreference = findPreference(getString(R.string.card_items));
             assert cardItemsPreference != null;
             updateCardItemsSummary(cardItemsPreference);
+            setUpPassphrases(cardItemsPreference);
             cardItemsPreference.setOnPreferenceClickListener(p -> {
                 showCardItemsDialog(p);
                 return true;
@@ -459,7 +461,9 @@ public class SettingsActivity extends AppCompatActivity {
                     editor.putString(entry.getKey(), String.valueOf(entry.getValue()));
                 }
             }
+            editor.remove(PassphraseSettings.LEGACY_CLIPBOARD);
             editor.commit();
+            PassphraseSettings.addCardItemIfNew(preferences);
             Toast.makeText(getContext(), R.string.restore_done, Toast.LENGTH_SHORT).show();
             // Like an imported layout: the route map needs the safety confirmation on this phone.
             if (RouteDisclaimer.enforce(requireContext(), preferences)) {
@@ -478,6 +482,7 @@ public class SettingsActivity extends AppCompatActivity {
         }
 
         private CharSequence settingTitle(SettingsBackup.Setting setting) {
+            if (PassphraseSettings.SOURCE.equals(setting.key)) return getString(R.string.preferences_passphrase_source);
             Preference preference = findPreference(setting.key);
             return preference != null && preference.getTitle() != null ? preference.getTitle() : setting.key;
         }
@@ -485,6 +490,10 @@ public class SettingsActivity extends AppCompatActivity {
         private String settingValue(SettingsBackup.Setting setting, Object value) {
             if (value instanceof Boolean) return getString((Boolean) value ? R.string.value_on : R.string.value_off);
             String text = String.valueOf(value);
+            if (PassphraseSettings.SOURCE.equals(setting.key)) {
+                return getString(Passphrases.SOURCE_MISSION_NUMBER.equals(text) ? R.string.passphrase_source_mission
+                        : Passphrases.SOURCE_OPENBANNERS.equals(text) ? R.string.passphrase_source_openbanners : R.string.passphrase_source_none);
+            }
             if (setting.kind == SettingsBackup.Kind.CARD_ITEMS) {
                 List<String> names = new ArrayList<>();
                 for (String item : CardItems.parse(text)) names.add(cardItemName(item));
@@ -610,8 +619,44 @@ public class SettingsActivity extends AppCompatActivity {
             }
         }
 
+        /** The three source options; their keys end in the stored value. */
+        private static final String[] PASSPHRASE_SOURCES = {Passphrases.SOURCE_NONE, Passphrases.SOURCE_MISSION_NUMBER, Passphrases.SOURCE_OPENBANNERS};
+
+        /**
+         * Settings → Passphrases: the source as radio buttons (stored as passphrase_source), the mission-number fallback
+         * (only with OpenBanners) and auto-copy (only with a source). Choosing a source the first time puts 🔑 on the card.
+         */
+        private void setUpPassphrases(Preference cardItemsPreference) {
+            android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            Runnable sync = () -> {
+                String source = PassphraseSettings.source(preferences.getAll());
+                for (String option : PASSPHRASE_SOURCES) {
+                    RadioPreference radio = findPreference("passphrase_source_" + option);
+                    if (radio != null) radio.setChecked(option.equals(source));
+                }
+                Preference fallback = findPreference(getString(R.string.passphrase_fallback));
+                Preference autoCopy = findPreference(getString(R.string.passphrase_autocopy));
+                if (fallback != null) fallback.setEnabled(Passphrases.SOURCE_OPENBANNERS.equals(source));
+                if (autoCopy != null) autoCopy.setEnabled(!Passphrases.SOURCE_NONE.equals(source));
+            };
+            for (String option : PASSPHRASE_SOURCES) {
+                RadioPreference radio = findPreference("passphrase_source_" + option);
+                if (radio == null) continue;
+                radio.setOnPreferenceChangeListener((p, newValue) -> {
+                    preferences.edit().putString(getString(R.string.passphrase_source), option).apply();
+                    PassphraseSettings.addCardItemIfNew(preferences);
+                    updateCardItemsSummary(cardItemsPreference);
+                    getListView().post(sync);
+                    return true;
+                });
+            }
+            sync.run();
+        }
+
         private String cardItemName(String item) {
             switch (item) {
+                case CardItems.PASSPHRASE:
+                    return getString(R.string.card_item_passphrase);
                 case CardItems.MINUS:
                     return getString(R.string.card_item_minus);
                 case CardItems.COUNTER:

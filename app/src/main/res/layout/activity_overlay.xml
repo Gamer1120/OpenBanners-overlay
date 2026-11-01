@@ -61,6 +61,24 @@
             android:layout_height="wrap_content"
             android:text="@string/overlayCloseMarkDone" />
 
+        <!-- 🔑 Passphrase: only on missions with a passphrase step, when a passphrase source is chosen. -->
+        <Button
+            android:id="@+id/buttonPassphrase"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:text="@string/passphrase_button" />
+
+        <!-- Below the buttons: the passphrase list, a passphrase's text, or "Copied". -->
+        <LinearLayout
+            android:id="@+id/passphrasePanel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:paddingBottom="4dp"
+            android:visibility="gone" />
+
     </LinearLayout>
 
 </androidx.cardview.widget.CardView>

@@ -39,6 +39,47 @@ public class CardItemsTest {
     }
 
     @Test
+    public void passphraseButtonGoesBeforeNextAndOnlyShowsOnPassphraseMissions() {
+        String value = CardItems.withPassphrase(CardItems.DEFAULT);
+        assertEquals("minus,counter,plus,passphrase,next,close,done", value);
+        assertEquals(value, CardItems.withPassphrase(value));
+        assertEquals("[row[minus, counter, plus, passphrase], full[next]]", CardItems.arrange(CardItems.parseConfig(value), CardItems.LAYOUT_TWO_ROWS, false, false, true).toString());
+        // Without a passphrase on this mission the card looks exactly like before.
+        assertEquals(lines(CardItems.DEFAULT, CardItems.LAYOUT_TWO_ROWS, false, false), CardItems.arrange(CardItems.parseConfig(value), CardItems.LAYOUT_TWO_ROWS, false, false, false).toString());
+        assertEquals(lines(CardItems.DEFAULT, CardItems.LAYOUT_TWO_ROWS, true, true), CardItems.arrange(CardItems.parseConfig(value), CardItems.LAYOUT_TWO_ROWS, true, true, false).toString());
+        // Put last by the user: full width below, Next joins the row; on other missions Next stays below.
+        String last = "minus,counter,plus,next,close,done,passphrase";
+        assertEquals("[row[minus, counter, plus, next], full[passphrase]]", CardItems.arrange(CardItems.parseConfig(last), CardItems.LAYOUT_TWO_ROWS, false, false, true).toString());
+        assertEquals("[row[minus, counter, plus], full[next]]", CardItems.arrange(CardItems.parseConfig(last), CardItems.LAYOUT_TWO_ROWS, false, false, false).toString());
+    }
+
+    @Test
+    public void removedPassphraseButtonStaysRemoved() {
+        String removed = "minus,counter,plus,-passphrase,next,close,done";
+        assertEquals(removed, CardItems.normalize(removed));
+        assertTrue(CardItems.mentionsPassphrase(removed));
+        assertFalse(CardItems.showsPassphrase(removed));
+        assertEquals(removed, CardItems.withPassphrase(removed));
+        assertEquals(CardItems.DEFAULT, CardItems.withoutHiddenPassphrase(removed));
+        assertEquals(CardItems.DEFAULT, CardItems.withoutPassphrase("minus,counter,plus,passphrase,next,close,done"));
+        assertFalse(CardItems.mentionsPassphrase(CardItems.DEFAULT));
+        assertTrue(CardItems.isValid(removed));
+    }
+
+    @Test
+    public void passphraseAloneDoesNotCountAsACard() {
+        assertEquals(CardItems.DEFAULT, CardItems.normalize("passphrase"));
+    }
+
+    @Test
+    public void layoutVersionForPassphraseButton() {
+        assertEquals(1, LayoutCodec.version("minus,counter,plus,next"));
+        assertEquals(2, LayoutCodec.version(CardItems.DEFAULT));
+        assertEquals(3, LayoutCodec.version(CardItems.withPassphrase(CardItems.DEFAULT)));
+        assertEquals(2, LayoutCodec.version("minus,counter,plus,-passphrase,next,close,done"));
+    }
+
+    @Test
     public void nothingSavedIsTheDefault() {
         assertEquals(CardItems.DEFAULT, CardItems.normalize(null));
         assertEquals(CardItems.DEFAULT, CardItems.normalize(""));
