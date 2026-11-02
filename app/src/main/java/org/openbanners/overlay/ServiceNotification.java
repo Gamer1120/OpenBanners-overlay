@@ -123,7 +123,7 @@ final class ServiceNotification {
             // SecurityException, ForegroundServiceStartNotAllowedException, ...: keep the overlay, say why.
             Log.w("ServiceNotification", "startForeground failed", e);
             foregroundFailed = true;
-            Toast.makeText(context.getApplicationContext(), R.string.foreground_failed, Toast.LENGTH_LONG).show();
+            Toast.makeText(context, R.string.foreground_failed, Toast.LENGTH_LONG).show();
         }
         try {
             context.getSystemService(NotificationManager.class).notify(DEFAULT_NOTIFICATION_ID, notification);

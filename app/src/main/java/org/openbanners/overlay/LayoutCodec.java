@@ -108,17 +108,17 @@ final class LayoutCodec {
      * exporter's overlay. Throws {@link IllegalArgumentException} with a readable message if the text isn't valid.
      */
     static void importLayout(Context context, SharedPreferences preferences, String text) {
-        if (text == null || !text.contains("{")) throw new IllegalArgumentException("No layout found in the text.");
+        if (text == null || !text.contains("{")) throw new IllegalArgumentException(context.getString(R.string.layout_error_not_found));
         JSONObject root;
         try {
             root = new JSONObject(text.substring(text.indexOf('{'), text.lastIndexOf('}') + 1));
         } catch (JSONException | StringIndexOutOfBoundsException e) {
-            throw new IllegalArgumentException("The layout text is incomplete or damaged.");
+            throw new IllegalArgumentException(context.getString(R.string.layout_error_damaged));
         }
-        if (!FORMAT.equals(root.optString("format"))) throw new IllegalArgumentException("This isn't an OpenBanners Overlay layout.");
-        if (root.optInt("version", 0) > VERSION) throw new IllegalArgumentException("This layout needs a newer version of the app.");
+        if (!FORMAT.equals(root.optString("format"))) throw new IllegalArgumentException(context.getString(R.string.layout_error_not_overlay));
+        if (root.optInt("version", 0) > VERSION) throw new IllegalArgumentException(context.getString(R.string.layout_error_newer));
         JSONObject settings = root.optJSONObject("settings");
-        if (settings == null) throw new IllegalArgumentException("The layout contains no settings.");
+        if (settings == null) throw new IllegalArgumentException(context.getString(R.string.layout_error_no_settings));
 
         SharedPreferences.Editor editor = preferences.edit();
         for (Setting setting : SETTINGS) {
@@ -131,12 +131,12 @@ final class LayoutCodec {
             if (setting == null) continue; // unknown (e.g. from a newer version): skip
             Object value = settings.opt(key);
             if (setting.isBoolean) {
-                if (!(value instanceof Boolean)) throw invalid(key);
+                if (!(value instanceof Boolean)) throw invalid(context, key);
                 editor.putBoolean(key, (Boolean) value);
             } else {
-                if (!(value instanceof String)) throw invalid(key);
+                if (!(value instanceof String)) throw invalid(context, key);
                 String string = (String) value;
-                if (!isValid(context, setting, string)) throw invalid(key);
+                if (!isValid(context, setting, string)) throw invalid(context, key);
                 editor.putString(key, setting.allowed == CARD_ITEMS ? CardItems.normalize(string) : string);
             }
         }
@@ -165,7 +165,7 @@ final class LayoutCodec {
         return Arrays.asList(context.getResources().getStringArray(setting.allowed)).contains(value);
     }
 
-    private static IllegalArgumentException invalid(String key) {
-        return new IllegalArgumentException("The layout has an invalid value for \"" + key + "\".");
+    private static IllegalArgumentException invalid(Context context, String key) {
+        return new IllegalArgumentException(context.getString(R.string.layout_error_invalid_value, key));
     }
 }

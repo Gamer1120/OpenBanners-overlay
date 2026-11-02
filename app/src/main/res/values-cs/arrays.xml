@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Žlutá</item>
+        <item>Oranžová</item>
+        <item>Červená</item>
+        <item>Růžová</item>
+        <item>Fialová</item>
+        <item>Modrá</item>
+        <item>Azurová</item>
+        <item>Zelená</item>
+        <item>Limetková</item>
+        <item>Bílá</item>
+        <item>Šedá</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Dva řádky</item>
+        <item>Jeden řádek (široká)</item>
+        <item>Jeden sloupec (vysoká)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Malá</item>
+        <item>Normální</item>
+        <item>Velká</item>
+        <item>Extra velká</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Sever nahoře</item>
+        <item>Podle kompasu</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Sever</item>
+        <item>Směr, kterým se díváš</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Nepřetržitě</item>
+        <item>Každých 0,5 sekundy</item>
+        <item>Každou sekundu</item>
+        <item>Každé 2 sekundy</item>
+        <item>Každých 5 sekund</item>
+    </string-array>
+</resources>

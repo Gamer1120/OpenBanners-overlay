@@ -8,6 +8,8 @@ import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.openbanners.overlay.api.UserMessageException;
+
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
@@ -141,9 +143,13 @@ final class OpenBannersAccount {
     }
 
     /** Error with a message for the user (the server's, when it gave one). */
-    static final class ApiException extends IOException {
+    static final class ApiException extends UserMessageException {
         ApiException(String message) {
             super(message);
+        }
+
+        ApiException(int messageRes, String english, Object... args) {
+            super(messageRes, english, args);
         }
     }
 
@@ -155,7 +161,7 @@ final class OpenBannersAccount {
         JsonNode result = call(new Request.Builder().url(API + "/overlay/token")
                 .post(RequestBody.create(objectMapper.writeValueAsString(body), JSON)));
         String token = result.path("token").asText(null);
-        if (token == null) throw new ApiException("OpenBanners didn't answer as expected.");
+        if (token == null) throw new ApiException(R.string.account_unexpected_answer, "OpenBanners didn't answer as expected.");
         return token;
     }
 
@@ -199,7 +205,10 @@ final class OpenBannersAccount {
             }
             if (!response.isSuccessful()) {
                 String message = json.path("message").asText("");
-                throw new ApiException(message.isEmpty() ? "OpenBanners answered with error " + response.code() + "." : message);
+                if (message.isEmpty()) {
+                    throw new ApiException(R.string.account_error_code, "OpenBanners answered with error " + response.code() + ".", response.code());
+                }
+                throw new ApiException(message);
             }
             return json;
         }

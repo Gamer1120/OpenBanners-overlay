@@ -123,6 +123,7 @@ public class SettingsActivity extends AppCompatActivity {
         @Override
         public void onResume() {
             super.onResume();
+            setUpLanguage(); // may have been changed in Android's app settings meanwhile
             updatePermissionSwitches();
             updateIngressOnlySummary();
             reconcileBannergressLinks();
@@ -184,7 +185,19 @@ public class SettingsActivity extends AppCompatActivity {
             preference.setSummary(missing ? R.string.preferences_ingress_only_no_access : R.string.preferences_ingress_only_summary);
         }
 
+        /** Settings → Language (see {@link AppLanguage}); AppCompat recreates this screen in the new language. */
+        private void setUpLanguage() {
+            ListPreference languagePreference = findPreference(AppLanguage.KEY);
+            if (languagePreference == null) return;
+            languagePreference.setValue(AppLanguage.current(requireContext()));
+            languagePreference.setOnPreferenceChangeListener((p, newValue) -> {
+                AppLanguage.set(requireContext(), (String) newValue);
+                return true;
+            });
+        }
+
         private void updatePreferences() {
+            setUpLanguage();
             SwitchPreferenceCompat locationEnablePreference = findPreference(getString(R.string.location_enable));
             assert locationEnablePreference != null;
             addPermissionPreference(locationEnablePreference, Manifest.permission.ACCESS_FINE_LOCATION, z -> z.locationEnabler);
@@ -386,8 +399,10 @@ public class SettingsActivity extends AppCompatActivity {
                     }
                 } catch (OpenBannersAccount.ApiException e) {
                     // openbanners.org answered: its message says what went wrong (e.g. an expired sign-in).
-                    String message = e.getMessage() == null ? "" : e.getMessage();
-                    onUi(progress, () -> showMessage(message));
+                    onUi(progress, () -> {
+                        String message = e.message(requireContext());
+                        showMessage(message == null ? "" : message);
+                    });
                 } catch (IOException e) {
                     String message = e.getMessage() == null ? "" : e.getMessage();
                     onUi(progress, () -> showMessage(getString(R.string.account_failed, message)));
@@ -437,8 +452,8 @@ public class SettingsActivity extends AppCompatActivity {
                 message.append("\n• ").append(settingTitle(change.setting)).append(": ")
                         .append(settingValue(change.setting, change.from)).append(" → ").append(settingValue(change.setting, change.to));
             }
-            if (!plan.unknown.isEmpty()) message.append("\n\n").append(getString(R.string.restore_skipped_newer, plan.unknown.size()));
-            if (!plan.invalid.isEmpty()) message.append("\n\n").append(getString(R.string.restore_invalid, plan.invalid.size()));
+            if (!plan.unknown.isEmpty()) message.append("\n\n").append(getResources().getQuantityString(R.plurals.restore_skipped_newer, plan.unknown.size(), plan.unknown.size()));
+            if (!plan.invalid.isEmpty()) message.append("\n\n").append(getResources().getQuantityString(R.plurals.restore_invalid, plan.invalid.size(), plan.invalid.size()));
             boolean routeMapOn = Boolean.TRUE.equals(plan.values.get(getString(R.string.route_strip_enable)));
             if (routeMapOn && !RouteDisclaimer.isAccepted(requireContext(), preferences)) {
                 message.append("\n\n").append(getString(R.string.restore_route_map_note));

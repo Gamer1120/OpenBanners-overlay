@@ -30,6 +30,7 @@ import org.openbanners.overlay.api.Banner;
 import org.openbanners.overlay.api.BannerApi;
 import org.openbanners.overlay.api.Mission;
 import org.openbanners.overlay.api.PlanApi;
+import org.openbanners.overlay.api.UserMessageException;
 import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
@@ -117,6 +118,11 @@ class OverlayView extends FrameLayout {
 
     /** {@code startMission}: 0-based mission to begin at when {@code autostart} ("Start with Overlay from here"). */
     public OverlayView(Context context, String data, boolean autostart, int startMission, String origin) {
+        this(context, data, autostart, startMission, origin, true);
+    }
+
+    /** {@code load}: load {@code data}; false for {@link #recreate}, which keeps the banner that is open. */
+    private OverlayView(Context context, String data, boolean autostart, int startMission, String origin, boolean load) {
         super(context);
         LayoutInflater inflater = context.getSystemService(LayoutInflater.class);
         inflater.inflate(R.layout.activity_overlay, this, true);
@@ -144,7 +150,23 @@ class OverlayView extends FrameLayout {
         applyCardPreferences(PreferenceManager.getDefaultSharedPreferences(context));
         setupListeners();
         applyState(StateManager.getState());
-        loadData(data, autostart, startMission, context);
+        if (load) loadData(data, autostart, startMission, context);
+    }
+
+    /**
+     * The same overlay built again with {@code context}, after Settings → Language changed: keeps the open banner,
+     * the progress and where the card was dragged to. Removes {@code old}.
+     */
+    static OverlayView recreate(Context context, OverlayView old) {
+        OverlayView overlayView = new OverlayView(context, null, false, 0, old.origin, false);
+        overlayView.unsupportedLink = old.unsupportedLink;
+        overlayView.params.x = old.params.x;
+        overlayView.params.y = old.params.y;
+        overlayView.setVisibility(old.getVisibility());
+        old.remove();
+        context.getSystemService(WindowManager.class).addView(overlayView, overlayView.params);
+        overlayView.applyState(StateManager.getState());
+        return overlayView;
     }
 
     public static OverlayView create(Context context, String data, boolean autostart, int startMission, String origin) {
@@ -373,7 +395,7 @@ class OverlayView extends FrameLayout {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             getContext().startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(getContext(), "Couldn't open " + url, Toast.LENGTH_SHORT).show();
+            Toast.makeText(getContext(), getContext().getString(R.string.open_link_failed, url), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -455,7 +477,7 @@ class OverlayView extends FrameLayout {
                 // Toasts need the main thread (this runs on the executor).
                 HandlerCompat.createAsync(Looper.getMainLooper()).post(() -> {
                     StateManager.updateState(state -> State.error());
-                    Toast.makeText(context, "Error: " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, context.getString(R.string.overlay_load_error, UserMessageException.messageOf(context, e)), Toast.LENGTH_SHORT).show();
                 });
             }
         });

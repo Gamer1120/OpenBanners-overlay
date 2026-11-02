@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>黄色</item>
+        <item>橙色</item>
+        <item>红色</item>
+        <item>粉色</item>
+        <item>紫色</item>
+        <item>蓝色</item>
+        <item>青色</item>
+        <item>绿色</item>
+        <item>黄绿色</item>
+        <item>白色</item>
+        <item>灰色</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>两行</item>
+        <item>一行（宽）</item>
+        <item>一列（高）</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>小</item>
+        <item>正常</item>
+        <item>大</item>
+        <item>特大</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>北向朝上</item>
+        <item>跟随指南针</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>北方</item>
+        <item>你面朝的方向</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>持续</item>
+        <item>每 0.5 秒</item>
+        <item>每秒</item>
+        <item>每 2 秒</item>
+        <item>每 5 秒</item>
+    </string-array>
+</resources>

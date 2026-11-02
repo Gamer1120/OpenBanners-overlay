@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Geel</item>
+        <item>Oranje</item>
+        <item>Rood</item>
+        <item>Roze</item>
+        <item>Paars</item>
+        <item>Blauw</item>
+        <item>Cyaan</item>
+        <item>Groen</item>
+        <item>Limoen</item>
+        <item>Wit</item>
+        <item>Grijs</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Twee rijen</item>
+        <item>Eén rij (breed)</item>
+        <item>Eén kolom (hoog)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Klein</item>
+        <item>Normaal</item>
+        <item>Groot</item>
+        <item>Extra groot</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Noorden boven</item>
+        <item>Kompas volgen</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Noorden</item>
+        <item>De richting waarin je kijkt</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Continu</item>
+        <item>Elke 0,5 seconde</item>
+        <item>Elke seconde</item>
+        <item>Elke 2 seconden</item>
+        <item>Elke 5 seconden</item>
+    </string-array>
+</resources>

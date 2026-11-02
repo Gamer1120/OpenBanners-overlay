@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Kuning</item>
+        <item>Oranye</item>
+        <item>Merah</item>
+        <item>Merah muda</item>
+        <item>Ungu</item>
+        <item>Biru</item>
+        <item>Sian</item>
+        <item>Hijau</item>
+        <item>Hijau limau</item>
+        <item>Putih</item>
+        <item>Abu-abu</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Dua baris</item>
+        <item>Satu baris (lebar)</item>
+        <item>Satu kolom (tinggi)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Kecil</item>
+        <item>Normal</item>
+        <item>Besar</item>
+        <item>Ekstra besar</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Utara di atas</item>
+        <item>Ikuti kompas</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Utara</item>
+        <item>Arah yang kamu hadapi</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Terus-menerus</item>
+        <item>Setiap 0,5 detik</item>
+        <item>Setiap detik</item>
+        <item>Setiap 2 detik</item>
+        <item>Setiap 5 detik</item>
+    </string-array>
+</resources>

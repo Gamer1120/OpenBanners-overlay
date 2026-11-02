@@ -40,7 +40,7 @@ public class BannergressLinkActivity extends Activity {
             }
         } catch (RuntimeException e) {
             // Never crash on a link someone tapped.
-            Toast.makeText(getApplicationContext(), R.string.links_no_browser, Toast.LENGTH_LONG).show();
+            Toast.makeText(AppLanguage.wrap(getApplicationContext()), R.string.links_no_browser, Toast.LENGTH_LONG).show();
         }
         finish();
     }
@@ -113,7 +113,7 @@ public class BannergressLinkActivity extends Activity {
             any.setSelector(Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER));
             context.startActivity(any);
         } catch (ActivityNotFoundException | SecurityException e) {
-            Toast.makeText(context.getApplicationContext(), R.string.links_no_browser, Toast.LENGTH_LONG).show();
+            Toast.makeText(AppLanguage.wrap(context.getApplicationContext()), R.string.links_no_browser, Toast.LENGTH_LONG).show();
         }
     }
 

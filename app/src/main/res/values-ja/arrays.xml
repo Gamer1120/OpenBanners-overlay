@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>黄</item>
+        <item>オレンジ</item>
+        <item>赤</item>
+        <item>ピンク</item>
+        <item>紫</item>
+        <item>青</item>
+        <item>シアン</item>
+        <item>緑</item>
+        <item>ライム</item>
+        <item>白</item>
+        <item>グレー</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>2 行</item>
+        <item>1 行（横長）</item>
+        <item>1 列（縦長）</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>小</item>
+        <item>標準</item>
+        <item>大</item>
+        <item>特大</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>北が上</item>
+        <item>コンパスに合わせる</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>北</item>
+        <item>自分が向いている方向</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>常時</item>
+        <item>0.5 秒ごと</item>
+        <item>1 秒ごと</item>
+        <item>2 秒ごと</item>
+        <item>5 秒ごと</item>
+    </string-array>
+</resources>

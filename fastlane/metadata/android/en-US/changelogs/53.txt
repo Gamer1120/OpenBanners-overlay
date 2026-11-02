@@ -1,0 +1,1 @@
+New: the app in your language. Settings → Language (at the top): System default, English, Nederlands, Deutsch, Français, Español, Italiano, Português, Polski, Čeština, Русский, Українська, 日本語, 简体中文, 繁體中文, 한국어 or Bahasa Indonesia, the same languages as openbanners.org. Also in Android 13+'s app language settings. The overlay switches language right away.

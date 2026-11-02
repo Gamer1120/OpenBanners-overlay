@@ -18,7 +18,7 @@ public class Ingress {
             intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             context.startActivity(intent);
         } catch (Exception e) {
-            Toast.makeText(context, MessageFormat.format("Failed to launch mission: {0}", e.getMessage()), Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, context.getString(R.string.mission_launch_failed, String.valueOf(e.getMessage())), Toast.LENGTH_SHORT).show();
         }
     }
 

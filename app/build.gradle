@@ -27,7 +27,7 @@ android {
         applicationId "org.openbanners.overlay"
         minSdk 26
         targetSdk 36
-        versionCode 52
+        versionCode 53
         versionName "${versionCode}"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -57,6 +57,13 @@ android {
         targetCompatibility JavaVersion.VERSION_1_8
     }
     namespace 'org.openbanners.overlay'
+
+    // Settings → Language can pick any language, not just the phone's: keep all translations in every Play download.
+    bundle {
+        language {
+            enableSplit = false
+        }
+    }
 
     // Google's encrypted dependency list: off in the APK (F-Droid rejects it), kept in the AAB for Play's SDK Index.
     dependenciesInfo {

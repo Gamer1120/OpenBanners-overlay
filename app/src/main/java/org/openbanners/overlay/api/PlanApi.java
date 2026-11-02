@@ -3,6 +3,8 @@ package org.openbanners.overlay.api;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
+import org.openbanners.overlay.R;
+
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -49,7 +51,9 @@ public class PlanApi {
         try (Response response = client.newCall(request).execute()) {
             ResponseBody body = response.body();
             if (!response.isSuccessful() || body == null) {
-                throw new IOException(response.code() == 404 ? "This plan doesn't exist" : "Couldn't load the plan");
+                throw response.code() == 404
+                        ? new UserMessageException(R.string.plan_not_found, "This plan doesn't exist")
+                        : new UserMessageException(R.string.plan_load_failed, "Couldn't load the plan");
             }
             return objectMapper.readValue(body.string(), Plan.class);
         }
@@ -76,7 +80,7 @@ public class PlanApi {
             }
         }
         if (missions.isEmpty()) {
-            throw new IOException("This plan has no missions yet");
+            throw new UserMessageException(R.string.plan_empty, "This plan has no missions yet");
         }
         Banner route = new Banner();
         route.title = plan.title;

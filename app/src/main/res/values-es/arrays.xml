@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Amarillo</item>
+        <item>Naranja</item>
+        <item>Rojo</item>
+        <item>Rosa</item>
+        <item>Morado</item>
+        <item>Azul</item>
+        <item>Cian</item>
+        <item>Verde</item>
+        <item>Lima</item>
+        <item>Blanco</item>
+        <item>Gris</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Dos filas</item>
+        <item>Una fila (ancha)</item>
+        <item>Una columna (alta)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Pequeño</item>
+        <item>Normal</item>
+        <item>Grande</item>
+        <item>Muy grande</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Norte arriba</item>
+        <item>Seguir la brújula</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Norte</item>
+        <item>La dirección hacia la que miras</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Continuamente</item>
+        <item>Cada 0,5 segundos</item>
+        <item>Cada segundo</item>
+        <item>Cada 2 segundos</item>
+        <item>Cada 5 segundos</item>
+    </string-array>
+</resources>

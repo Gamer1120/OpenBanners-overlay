@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Żółty</item>
+        <item>Pomarańczowy</item>
+        <item>Czerwony</item>
+        <item>Różowy</item>
+        <item>Fioletowy</item>
+        <item>Niebieski</item>
+        <item>Cyjan</item>
+        <item>Zielony</item>
+        <item>Limonkowy</item>
+        <item>Biały</item>
+        <item>Szary</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Dwa wiersze</item>
+        <item>Jeden wiersz (szeroki)</item>
+        <item>Jedna kolumna (wysoka)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Mały</item>
+        <item>Normalny</item>
+        <item>Duży</item>
+        <item>Bardzo duży</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Północ u góry</item>
+        <item>Zgodnie z kompasem</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Północ</item>
+        <item>Kierunek, w którym patrzysz</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Ciągle</item>
+        <item>Co 0,5 sekundy</item>
+        <item>Co sekundę</item>
+        <item>Co 2 sekundy</item>
+        <item>Co 5 sekund</item>
+    </string-array>
+</resources>

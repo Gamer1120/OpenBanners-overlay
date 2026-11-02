@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Жёлтый</item>
+        <item>Оранжевый</item>
+        <item>Красный</item>
+        <item>Розовый</item>
+        <item>Фиолетовый</item>
+        <item>Синий</item>
+        <item>Голубой</item>
+        <item>Зелёный</item>
+        <item>Лаймовый</item>
+        <item>Белый</item>
+        <item>Серый</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Две строки</item>
+        <item>Одна строка (широкая)</item>
+        <item>Один столбец (высокая)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Маленький</item>
+        <item>Обычный</item>
+        <item>Большой</item>
+        <item>Очень большой</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Север вверху</item>
+        <item>По компасу</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Север</item>
+        <item>Направление, куда ты смотришь</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Непрерывно</item>
+        <item>Каждые 0,5 секунды</item>
+        <item>Каждую секунду</item>
+        <item>Каждые 2 секунды</item>
+        <item>Каждые 5 секунд</item>
+    </string-array>
+</resources>

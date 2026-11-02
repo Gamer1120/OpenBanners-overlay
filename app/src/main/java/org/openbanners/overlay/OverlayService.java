@@ -6,7 +6,10 @@ import android.location.LocationRequest;
 
 import android.app.Service;
 import android.content.Intent;
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
+import android.content.res.Resources;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Handler;
@@ -25,7 +28,20 @@ public class OverlayService extends Service {
     /** Left edge the route strip was created with (the card's width). */
     private int routeStripLeft;
     // SharedPreferences only keeps a weak reference to change listeners.
-    private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = (sharedPreferences, key) -> applyPreferences(sharedPreferences);
+    private final SharedPreferences.OnSharedPreferenceChangeListener preferenceListener = (sharedPreferences, key) -> {
+        if (AppLanguage.KEY.equals(key)) updateLanguage();
+        applyPreferences(sharedPreferences);
+    };
+
+    /**
+     * Settings → Language on Android 12 and older (see {@link AppLanguage}): the context the overlay card is built
+     * with, and the resources for the service's own texts (notification, toasts). Android 13+ localizes the service
+     * itself; then this is the service and null.
+     */
+    private Context uiContext = this;
+    private Resources localizedResources;
+    /** Language the overlay card was built in; it's rebuilt when that changes. */
+    private String shownLanguage;
 
     private BiConsumer<State, State> stateNotificationListener;
 
@@ -45,6 +61,49 @@ public class OverlayService extends Service {
             handler.postDelayed(this, FOREGROUND_CHECK_MILLIS);
         }
     };
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        updateLanguage();
+    }
+
+    @Override
+    public Resources getResources() {
+        Resources resources = localizedResources;
+        return resources != null ? resources : super.getResources();
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfig) {
+        super.onConfigurationChanged(newConfig);
+        // Android 13+: Settings → Language (or the app's language in Android settings) arrives as a configuration change.
+        updateLanguage();
+    }
+
+    /** Picks up the app language and, if it changed, rebuilds the overlay card and the notification in it. */
+    private void updateLanguage() {
+        Context base = getBaseContext();
+        Context wrapped = AppLanguage.wrap(base);
+        localizedResources = wrapped == base ? null : wrapped.getResources();
+        uiContext = wrapped == base ? this : wrapped;
+        String language = getResources().getConfiguration().getLocales().get(0).toLanguageTag();
+        if (shownLanguage == null) {
+            shownLanguage = language;
+            return;
+        }
+        if (language.equals(shownLanguage)) return;
+        shownLanguage = language;
+        if (overlayView != null) {
+            overlayView = OverlayView.recreate(uiContext, overlayView);
+            setCardChangedListener();
+            if (routeStripView != null) {
+                routeStripView.remove();
+                routeStripView = null;
+            }
+            applyPreferences(PreferenceManager.getDefaultSharedPreferences(this));
+        }
+    }
 
     @Override
     public IBinder onBind(Intent intent) {
@@ -80,7 +139,7 @@ public class OverlayService extends Service {
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if (preferences.getBoolean(LOCATION_HINT_SHOWN, false)) return;
         preferences.edit().putBoolean(LOCATION_HINT_SHOWN, true).apply();
-        Toast.makeText(getApplicationContext(), R.string.location_off_hint, Toast.LENGTH_LONG).show();
+        Toast.makeText(uiContext, R.string.location_off_hint, Toast.LENGTH_LONG).show();
     }
 
     private void initPreferences() {
@@ -156,10 +215,14 @@ public class OverlayService extends Service {
 
     private void addOverlay(Intent intent) {
         removeOverlay();
-        overlayView = OverlayView.create(this, intent.getStringExtra(Intent.EXTRA_TEXT),
+        overlayView = OverlayView.create(uiContext, intent.getStringExtra(Intent.EXTRA_TEXT),
                 intent.getBooleanExtra(MainActivity.EXTRA_AUTOSTART, false),
                 intent.getIntExtra(MainActivity.EXTRA_START_MISSION, 0),
                 DeepLink.safeOrigin(intent.getStringExtra(MainActivity.EXTRA_ORIGIN)));
+        setCardChangedListener();
+    }
+
+    private void setCardChangedListener() {
         // On the last mission the card can change size (Close items instead of Start / Next): keep the strip next to it.
         overlayView.setCardChangedListener(() -> handler.post(() -> {
             if (overlayView != null) applyRouteStrip(PreferenceManager.getDefaultSharedPreferences(this));

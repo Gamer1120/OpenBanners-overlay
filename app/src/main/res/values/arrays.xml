@@ -1,5 +1,44 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!-- Settings → Language: the languages of openbanners.org, each in its own name (see AppLanguage.TAGS). -->
+    <string-array name="language_names" translatable="false">
+        <item>@string/language_system</item>
+        <item>English</item>
+        <item>Nederlands</item>
+        <item>Deutsch</item>
+        <item>Français</item>
+        <item>Español</item>
+        <item>Italiano</item>
+        <item>Português</item>
+        <item>Polski</item>
+        <item>Čeština</item>
+        <item>Русский</item>
+        <item>Українська</item>
+        <item>日本語</item>
+        <item>简体中文</item>
+        <item>繁體中文</item>
+        <item>한국어</item>
+        <item>Bahasa Indonesia</item>
+    </string-array>
+    <string-array name="language_values" translatable="false">
+        <item>system</item>
+        <item>en</item>
+        <item>nl</item>
+        <item>de</item>
+        <item>fr</item>
+        <item>es</item>
+        <item>it</item>
+        <item>pt</item>
+        <item>pl</item>
+        <item>cs</item>
+        <item>ru</item>
+        <item>uk</item>
+        <item>ja</item>
+        <item>zh-Hans</item>
+        <item>zh-Hant</item>
+        <item>ko</item>
+        <item>id</item>
+    </string-array>
     <string-array name="route_color_names">
         <item>Yellow</item>
         <item>Orange</item>
@@ -78,7 +117,7 @@
         <item>2000</item>
         <item>5000</item>
     </string-array>
-    <string-array name="route_compass_step_names">
+    <string-array name="route_compass_step_names" translatable="false">
         <item>5°</item>
         <item>10°</item>
         <item>15°</item>

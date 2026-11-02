@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="route_color_names">
+        <item>Жовтий</item>
+        <item>Помаранчевий</item>
+        <item>Червоний</item>
+        <item>Рожевий</item>
+        <item>Фіолетовий</item>
+        <item>Синій</item>
+        <item>Блакитний</item>
+        <item>Зелений</item>
+        <item>Лаймовий</item>
+        <item>Білий</item>
+        <item>Сірий</item>
+    </string-array>
+    <string-array name="card_layout_names">
+        <item>Два рядки</item>
+        <item>Один рядок (широко)</item>
+        <item>Один стовпець (високо)</item>
+    </string-array>
+    <string-array name="card_size_names">
+        <item>Малий</item>
+        <item>Звичайний</item>
+        <item>Великий</item>
+        <item>Дуже великий</item>
+    </string-array>
+    <string-array name="route_orientation_names">
+        <item>Північ угорі</item>
+        <item>За компасом</item>
+    </string-array>
+    <string-array name="route_compass_needle_names">
+        <item>Північ</item>
+        <item>Напрямок, куди ти дивишся</item>
+    </string-array>
+    <string-array name="route_compass_interval_names">
+        <item>Безперервно</item>
+        <item>Кожні 0,5 секунди</item>
+        <item>Щосекунди</item>
+        <item>Кожні 2 секунди</item>
+        <item>Кожні 5 секунд</item>
+    </string-array>
+</resources>
