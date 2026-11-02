@@ -1,6 +1,13 @@
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <Preference
+        app:key="introduction"
+        app:persistent="false"
+        app:selectable="false"
+        app:singleLineTitle="false"
+        app:title="@string/preferences_introduction" />
+
     <!-- Settings → Language: not stored here but with Android / AppCompat (see AppLanguage). -->
     <ListPreference
         app:defaultValue="system"
@@ -10,13 +17,6 @@
         app:persistent="false"
         app:title="@string/preferences_language"
         app:useSimpleSummaryProvider="true" />
-
-    <Preference
-        app:key="introduction"
-        app:persistent="false"
-        app:selectable="false"
-        app:singleLineTitle="false"
-        app:title="@string/preferences_introduction" />
 
     <PreferenceCategory app:title="@string/preferences_location">
 

@@ -1,0 +1,1 @@
+Settings → Language now sits right below the introduction at the top of the settings screen.
