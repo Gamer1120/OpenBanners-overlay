@@ -511,7 +511,7 @@ class OverlayView extends FrameLayout {
             int numberOfMissions = state.banner.missions.size();
 
             if (state.currentMission == -1) {
-                textMission.setText(String.format(Locale.ROOT, "—/%s", numberOfMissions));
+                textMission.setText(String.format(Locale.ROOT, "0/%s", numberOfMissions));
                 buttonNext.setText(R.string.overlayStart);
             } else {
                 textMission.setText(String.format(Locale.ROOT, "%s/%s", state.currentMission + 1, numberOfMissions));
@@ -522,7 +522,7 @@ class OverlayView extends FrameLayout {
                 }
             }
 
-            // +/- wrap around (- on the first mission goes to the last, + on the last to the first)
+            // - on the first mission goes to 0/x (Start), - on 0/x wraps to the last; + on the last wraps to the first
             boolean hasMissions = numberOfMissions > 0;
             buttonMinus.setEnabled(hasMissions);
             buttonPlus.setEnabled(hasMissions);

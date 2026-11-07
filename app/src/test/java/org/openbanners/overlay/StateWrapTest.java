@@ -21,7 +21,8 @@ import java.util.List;
 import java.util.TreeMap;
 
 /**
- * The +/- buttons wrap around (screach 10-25: at 1/23 he needed 20x + to reach 20/23 instead of 4x -). Wrapping is
+ * The +/- buttons wrap around (screach 10-25: at 1/23 he needed 20x + to reach 20/23 instead of a few -); - goes via
+ * 0/x (before the start, with a Start button) from mission 1 to the last. Wrapping is
  * a +/- press like any other, so catch-up mode stays on. The Next button doesn't wrap. In unit tests every Location
  * is at 0,0, so "in range" means a portal placed at 0,0.
  */
@@ -55,10 +56,27 @@ public class StateWrapTest {
     }
 
     @Test
-    public void minusOnTheFirstMissionGoesToTheLast() {
+    public void minusOnTheFirstMissionGoesToBeforeTheStartThenTheLast() {
         State state = State.initial().bannerStarted(banner("....", "....", "....")).previousMission();
+        assertEquals(-1, state.currentMission);
+        assertEquals(ImmutableSet.of(), state.location(HERE).currentMissionVisitedStepIndexes);
+        state = state.previousMission();
         assertEquals(2, state.currentMission);
         assertEquals(1, state.previousMission().currentMission);
+    }
+
+    @Test
+    public void plusAndStartBeforeTheStartGoToMissionOne() {
+        State zero = State.initial().bannerStarted(banner("..x.", "....")).previousMission();
+        assertEquals(-1, zero.currentMission);
+        State plus = zero.nextMission(false);
+        assertEquals(0, plus.currentMission);
+        assertTrue(plus.justNavigated);
+        // Start (the Next button at 0/x): mission 1 strictly in order from portal 1, like Start with Overlay
+        State start = zero.nextMission(true).location(HERE);
+        assertEquals(0, start.currentMission);
+        assertFalse(start.justNavigated);
+        assertEquals(ImmutableSet.of(), start.currentMissionVisitedStepIndexes);
     }
 
     @Test
@@ -76,11 +94,11 @@ public class StateWrapTest {
 
     @Test
     public void screachsCase() {
-        // 1/23 -> 20/23 in 4 presses of -
+        // 1/23 -> 20/23 in 5 presses of - (via 0/23)
         String[] missions = new String[23];
         java.util.Arrays.fill(missions, "....");
         State state = State.initial().bannerStarted(banner(missions));
-        for (int i = 0; i < 4; i++) {
+        for (int i = 0; i < 5; i++) {
             state = state.previousMission();
         }
         assertEquals(19, state.currentMission);
@@ -88,10 +106,10 @@ public class StateWrapTest {
 
     @Test
     public void catchUpStaysOnAfterWrappingBack() {
-        // started strictly in order, then - wraps to the last mission: catch-up marks where he is
+        // started strictly in order, then - (twice, via 0/x) wraps to the last mission: catch-up marks where he is
         State state = State.initial().bannerStarted(banner("....", "..x.")).location(HERE);
         assertFalse(state.justNavigated);
-        state = state.previousMission();
+        state = state.previousMission().previousMission();
         assertEquals(1, state.currentMission);
         assertTrue(state.justNavigated);
         assertEquals(ImmutableSet.of(0, 1, 2), state.currentMissionVisitedStepIndexes);
@@ -108,11 +126,12 @@ public class StateWrapTest {
     }
 
     @Test
-    public void singleMissionBannerStaysPut() {
+    public void singleMissionBanner() {
         State state = State.initial().bannerStarted(banner("..x."));
         State minus = state.previousMission();
-        assertEquals(0, minus.currentMission);
-        assertTrue(minus.justNavigated);
+        assertEquals(-1, minus.currentMission);
+        assertEquals(0, minus.previousMission().currentMission);
+        assertTrue(minus.previousMission().justNavigated);
         State plus = state.nextMission(false);
         assertEquals(0, plus.currentMission);
         assertTrue(plus.justNavigated);
