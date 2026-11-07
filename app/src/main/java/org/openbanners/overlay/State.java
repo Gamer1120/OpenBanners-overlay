@@ -77,7 +77,18 @@ public class State {
     }
 
     /**
-     * The - button: catch-up mode on. - on the first mission goes back to before the start (0/x, with a Start button;
+     * The mission counter on the overlay: "3/23", or "—/23" before the start (currentMission -1, where the Next
+     * button reads Start). Michael 11-07 preferred —/x over 0/x.
+     */
+    static String missionLabel(int currentMission, int numberOfMissions) {
+        if (currentMission < 0) {
+            return "—/" + numberOfMissions;
+        }
+        return (currentMission + 1) + "/" + numberOfMissions;
+    }
+
+    /**
+     * The - button: catch-up mode on. - on the first mission goes back to before the start (—/x, with a Start button;
      * Michael 11-07), and - before the start wraps around to the last mission (screach 10-25: at 1/23 he needed 20x +
      * to reach 20/23 instead of a few -).
      */

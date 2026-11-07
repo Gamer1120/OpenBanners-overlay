@@ -22,7 +22,7 @@ import java.util.TreeMap;
 
 /**
  * The +/- buttons wrap around (screach 10-25: at 1/23 he needed 20x + to reach 20/23 instead of a few -); - goes via
- * 0/x (before the start, with a Start button) from mission 1 to the last. Wrapping is
+ * —/x (before the start, with a Start button) from mission 1 to the last. Wrapping is
  * a +/- press like any other, so catch-up mode stays on. The Next button doesn't wrap. In unit tests every Location
  * is at 0,0, so "in range" means a portal placed at 0,0.
  */
@@ -72,7 +72,7 @@ public class StateWrapTest {
         State plus = zero.nextMission(false);
         assertEquals(0, plus.currentMission);
         assertTrue(plus.justNavigated);
-        // Start (the Next button at 0/x): mission 1 strictly in order from portal 1, like Start with Overlay
+        // Start (the Next button at —/x): mission 1 strictly in order from portal 1, like Start with Overlay
         State start = zero.nextMission(true).location(HERE);
         assertEquals(0, start.currentMission);
         assertFalse(start.justNavigated);
@@ -94,7 +94,7 @@ public class StateWrapTest {
 
     @Test
     public void screachsCase() {
-        // 1/23 -> 20/23 in 5 presses of - (via 0/23)
+        // 1/23 -> 20/23 in 5 presses of - (via —/23)
         String[] missions = new String[23];
         java.util.Arrays.fill(missions, "....");
         State state = State.initial().bannerStarted(banner(missions));
@@ -106,7 +106,7 @@ public class StateWrapTest {
 
     @Test
     public void catchUpStaysOnAfterWrappingBack() {
-        // started strictly in order, then - (twice, via 0/x) wraps to the last mission: catch-up marks where he is
+        // started strictly in order, then - (twice, via —/x) wraps to the last mission: catch-up marks where he is
         State state = State.initial().bannerStarted(banner("....", "..x.")).location(HERE);
         assertFalse(state.justNavigated);
         state = state.previousMission().previousMission();
@@ -144,5 +144,12 @@ public class StateWrapTest {
         State state = State.initial().bannerLoaded(banner("....", "...."), 1).nextMission(true);
         assertEquals(2, state.currentMission);
         assertFalse(state.justNavigated);
+    }
+
+    @Test
+    public void counterShowsDashBeforeTheStart() {
+        assertEquals("—/6", State.missionLabel(-1, 6));
+        assertEquals("1/6", State.missionLabel(0, 6));
+        assertEquals("6/6", State.missionLabel(5, 6));
     }
 }

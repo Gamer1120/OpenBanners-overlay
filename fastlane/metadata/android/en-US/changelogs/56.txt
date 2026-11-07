@@ -1,0 +1,1 @@
+Overlay: before the start the counter shows —/x again instead of 0/x (Start button and −/+ work as in version 55).

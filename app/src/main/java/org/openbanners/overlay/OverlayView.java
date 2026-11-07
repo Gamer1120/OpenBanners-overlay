@@ -35,7 +35,6 @@ import com.google.common.collect.Iterables;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ExecutorService;
@@ -510,11 +509,10 @@ class OverlayView extends FrameLayout {
         } else {
             int numberOfMissions = state.banner.missions.size();
 
+            textMission.setText(State.missionLabel(state.currentMission, numberOfMissions));
             if (state.currentMission == -1) {
-                textMission.setText(String.format(Locale.ROOT, "0/%s", numberOfMissions));
                 buttonNext.setText(R.string.overlayStart);
             } else {
-                textMission.setText(String.format(Locale.ROOT, "%s/%s", state.currentMission + 1, numberOfMissions));
                 if (state.currentMission + 1 == numberOfMissions) {
                     buttonNext.setText(R.string.overlayClose);
                 } else {
@@ -522,7 +520,7 @@ class OverlayView extends FrameLayout {
                 }
             }
 
-            // - on the first mission goes to 0/x (Start), - on 0/x wraps to the last; + on the last wraps to the first
+            // - on the first mission goes to —/x (Start), - on —/x wraps to the last; + on the last wraps to the first
             boolean hasMissions = numberOfMissions > 0;
             buttonMinus.setEnabled(hasMissions);
             buttonPlus.setEnabled(hasMissions);
