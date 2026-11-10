@@ -2,8 +2,9 @@ name: Release
 
 # Push a tag like v14 to build a signed APK (sideloading) and AAB (Google Play upload) and publish them as a GitHub release.
 # If the PLAY_SERVICE_ACCOUNT_JSON secret is set, the AAB is also uploaded to Google Play. Tag pushes go to the
-# production track with status "completed" (full rollout). To upload to another track (or as a draft), run the
-# workflow manually on a tag (Actions → Release → Run workflow, "Use workflow from" = the tag) and pick the inputs.
+# beta track (open testing) with status "completed". Production is reached by hand: run the workflow manually on a
+# tag (Actions → Release → Run workflow, "Use workflow from" = the tag) with play_track=production. The same way
+# uploads to another track or as a draft (play_status=draft).
 # Release notes come from fastlane/.../changelogs/<versionCode>.txt.
 on:
   push:
@@ -13,8 +14,8 @@ on:
       play_track:
         description: 'Google Play track'
         type: choice
-        options: [production, beta, alpha, internal]
-        default: production
+        options: [beta, production, alpha, internal]
+        default: beta
       play_status:
         description: 'Release status ("draft" leaves it for rollout in Play Console)'
         type: choice
@@ -93,6 +94,6 @@ jobs:
           serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
           packageName: org.openbanners.overlay
           releaseFiles: OpenBanners-Overlay-${{ github.ref_name }}.aab
-          track: ${{ inputs.play_track || 'production' }}
+          track: ${{ inputs.play_track || 'beta' }}
           status: ${{ inputs.play_status || 'completed' }}
           whatsNewDirectory: ${{ steps.play.outputs.whatsnew }}

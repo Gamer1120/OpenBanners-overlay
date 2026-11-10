@@ -12,8 +12,10 @@ Checklist and ready-to-paste answers for the Play Console. Application id: `org.
 
 The release workflow uploads the AAB of every `vN` tag to Google Play once the repository secret
 `PLAY_SERVICE_ACCOUNT_JSON` (a service account JSON key with release access to this app in Play Console) exists.
-Track: repository variable `PLAY_TRACK` (default `alpha`, the closed testing track). Status: `PLAY_RELEASE_STATUS`
-(default `completed`; `draft` to approve each release in Play Console). Release notes: `changelogs/<versionCode>.txt`.
+Tag pushes go to the **beta** track (open testing) with status `completed`. Production is reached by hand: Actions →
+Release → Run workflow, "Use workflow from" = the tag, `play_track=production`. The same inputs allow another track
+(`alpha`, `internal`) or `play_status=draft` (approve the release in Play Console yourself). Release notes:
+`changelogs/<versionCode>.txt`. (Planned: tags go to alpha + beta and a nightly job promotes to production.)
 The very first AAB has to be uploaded by hand in Play Console; the API can only add later versions.
 
 ## App signing
@@ -26,7 +28,8 @@ signed with the same key and can update each other. The key is kept outside the 
 
 ## Testing requirement (new personal developer accounts)
 
-Closed test with at least 12 opted-in testers for 14 consecutive days before applying for production.
+Closed test with at least 12 opted-in testers for 14 consecutive days before applying for production. Done:
+production access was granted on 2026-11-10 (versionCode 57 was the first production release).
 
 ## Store listing
 
