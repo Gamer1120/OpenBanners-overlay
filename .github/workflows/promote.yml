@@ -1,0 +1,60 @@
+name: Promote to production
+
+# Nightly promotion of the newest tested beta (open testing) release to Google Play production, using the bundle
+# that is already on Play (no rebuild). Full description: docs/google-play.md, "Nightly production promotion".
+#
+# - Scheduled: hourly 22:15-04:15 UTC; only acts 00:00-05:59 Europe/Amsterdam (the rest are DST spares/retries).
+#   Promotes the newest vN with: N > production, committed before 00:00 Amsterdam today, published on beta,
+#   bundle in Play's library, no hold-vN tag. At most one scheduled production update per Amsterdam day.
+# - Pause: repo variable PLAY_PROMOTION_PAUSED=true makes scheduled runs no-ops.
+# - Hold: push a tag hold-vN to never promote version N.
+# - Run workflow, mode=dry-run: print the decision, commit nothing.
+# - Run workflow, mode=promote-now: promote the newest beta version right now (ignores cutoff and pause, respects
+#   holds); with a version it promotes exactly that version (also when held).
+on:
+  schedule:
+    - cron: '15 22,23,0,1,2,3,4 * * *'
+  workflow_dispatch:
+    inputs:
+      mode:
+        description: 'dry-run = show the decision only; promote-now = promote to production now'
+        type: choice
+        options: [dry-run, promote-now]
+        default: dry-run
+      version:
+        description: 'Optional versionCode (e.g. 59): promote exactly this one (overrides cutoff and hold)'
+        type: string
+        default: ''
+
+permissions:
+  contents: read
+
+concurrency:
+  group: play-edits  # shared with the Release workflow's Google Play job
+  cancel-in-progress: false
+
+jobs:
+  promote:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0  # all commits and tags (vN, hold-vN)
+
+      - name: Unit tests
+        run: python3 -m unittest discover -s scripts -p 'test_*.py'
+
+      - name: Decide and promote
+        env:
+          PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          PLAY_PROMOTION_PAUSED: ${{ vars.PLAY_PROMOTION_PAUSED }}
+          MODE: ${{ inputs.mode || 'scheduled' }}
+          VERSION: ${{ inputs.version }}
+        run: |
+          test -n "$PLAY_SERVICE_ACCOUNT_JSON" || { echo "::error::PLAY_SERVICE_ACCOUNT_JSON secret missing"; exit 1; }
+          git fetch --force --tags origin
+          if [ -n "$VERSION" ]; then
+            python3 scripts/play_promote.py --mode "$MODE" --version "$VERSION"
+          else
+            python3 scripts/play_promote.py --mode "$MODE"
+          fi

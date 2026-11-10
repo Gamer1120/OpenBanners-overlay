@@ -1,26 +1,34 @@
 name: Release
 
 # Push a tag like v14 to build a signed APK (sideloading) and AAB (Google Play upload) and publish them as a GitHub release.
-# If the PLAY_SERVICE_ACCOUNT_JSON secret is set, the AAB is also uploaded to Google Play. Tag pushes go to the
-# beta track (open testing) with status "completed". Production is reached by hand: run the workflow manually on a
-# tag (Actions → Release → Run workflow, "Use workflow from" = the tag) with play_track=production. The same way
-# uploads to another track or as a draft (play_status=draft).
-# Release notes come from fastlane/.../changelogs/<versionCode>.txt.
+# If the PLAY_SERVICE_ACCOUNT_JSON secret is set, the AAB is then uploaded to Google Play: tag pushes go to the beta
+# track (open testing) with status "completed". Production is never reached from here: the nightly "Promote to
+# production" workflow (promote.yml) moves the same, already uploaded bundle to production (see docs/google-play.md).
+# Running this workflow by hand on a tag (Actions → Release → Run workflow, "Use workflow from" = the tag) rebuilds
+# it and uploads to another testing track or as a draft. Release notes come from fastlane/.../changelogs/<versionCode>.txt.
+#
+# The upload commits with changesInReviewBehavior=ERROR_IF_IN_REVIEW: if something is in review on Play (for
+# example last night's production promotion) the "Google Play" job fails and nothing is cancelled. Re-run that
+# failed job once the review is done, or run the workflow on the tag with cancel_review=true to cancel on purpose.
 on:
   push:
     tags: ['v*']
   workflow_dispatch:
     inputs:
       play_track:
-        description: 'Google Play track'
+        description: 'Google Play testing track (production only via the Promote to production workflow)'
         type: choice
-        options: [beta, production, alpha, internal]
+        options: [beta, alpha, internal]
         default: beta
       play_status:
         description: 'Release status ("draft" leaves it for rollout in Play Console)'
         type: choice
         options: [completed, draft]
         default: completed
+      cancel_review:
+        description: 'Cancel changes that are in review on Google Play (e.g. a production release) and resubmit'
+        type: boolean
+        default: false
 
 permissions:
   contents: write
@@ -66,34 +74,33 @@ jobs:
             OpenBanners-Overlay-${{ github.ref_name }}.apk
             OpenBanners-Overlay-${{ github.ref_name }}.aab
 
-      - name: Prepare Google Play release notes
-        id: play
+  google-play:
+    # Separate job so it can share the 'play-edits' concurrency group with the nightly promotion (no two
+    # workflows commit a Play edit at the same moment) without holding up the build.
+    needs: release
+    if: startsWith(github.ref, 'refs/tags/')
+    runs-on: ubuntu-latest
+    concurrency:
+      group: play-edits
+      cancel-in-progress: false
+    steps:
+      - uses: actions/checkout@v5
+
+      - name: Upload to Google Play
         env:
           PLAY_SERVICE_ACCOUNT_JSON: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
+          GH_TOKEN: ${{ github.token }}
+          TRACK: ${{ inputs.play_track || 'beta' }}
+          STATUS: ${{ inputs.play_status || 'completed' }}
+          CANCEL_REVIEW: ${{ inputs.cancel_review && 'true' || 'false' }}
         run: |
           if [ -z "$PLAY_SERVICE_ACCOUNT_JSON" ]; then
             echo "PLAY_SERVICE_ACCOUNT_JSON not set: skipping the Google Play upload."
-            echo "upload=false" >> "$GITHUB_OUTPUT"
             exit 0
           fi
-          echo "upload=true" >> "$GITHUB_OUTPUT"
-          version_code=$(grep -oE 'versionCode [0-9]+' app/build.gradle | grep -oE '[0-9]+')
-          mkdir -p "$RUNNER_TEMP/whatsnew"
-          notes="fastlane/metadata/android/en-US/changelogs/${version_code}.txt"
-          if [ -f "$notes" ]; then
-            head -c 500 "$notes" > "$RUNNER_TEMP/whatsnew/whatsnew-en-US"
-          else
-            echo "Version ${version_code}" > "$RUNNER_TEMP/whatsnew/whatsnew-en-US"
-          fi
-          echo "whatsnew=$RUNNER_TEMP/whatsnew" >> "$GITHUB_OUTPUT"
-
-      - name: Upload to Google Play
-        if: steps.play.outputs.upload == 'true' && startsWith(github.ref, 'refs/tags/')
-        uses: r0adkll/upload-google-play@v1
-        with:
-          serviceAccountJsonPlainText: ${{ secrets.PLAY_SERVICE_ACCOUNT_JSON }}
-          packageName: org.openbanners.overlay
-          releaseFiles: OpenBanners-Overlay-${{ github.ref_name }}.aab
-          track: ${{ inputs.play_track || 'beta' }}
-          status: ${{ inputs.play_status || 'completed' }}
-          whatsNewDirectory: ${{ steps.play.outputs.whatsnew }}
+          # The exact AAB that was just published on the GitHub release.
+          gh release download "$GITHUB_REF_NAME" -R "$GITHUB_REPOSITORY" -p "OpenBanners-Overlay-$GITHUB_REF_NAME.aab" -D "$RUNNER_TEMP"
+          extra=""
+          if [ "$CANCEL_REVIEW" = "true" ]; then extra="--cancel-review"; fi
+          python3 scripts/play_upload.py --aab "$RUNNER_TEMP/OpenBanners-Overlay-$GITHUB_REF_NAME.aab" \
+            --track "$TRACK" --status "$STATUS" $extra
