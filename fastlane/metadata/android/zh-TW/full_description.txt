@@ -1,0 +1,20 @@
+OpenBanners Overlay 協助你在 Ingress Prime 中完成任務拼圖。
+
+在 openbanners.org 的拼圖頁面上輕觸「以 Overlay 開始」，或將 OpenBanners 或 Bannergress 的拼圖連結分享給這個應用程式。它會在 Ingress 上方顯示一個小型疊加層：
+
+• 螢幕頂端的路線地圖，顯示目前任務的步驟（標示為 1a、1b……）、下一個任務的起點，以及你自己的位置。地圖會自動縮放，讓離你最近的未完成步驟一直在畫面中。
+• 任務控制：查看你正在進行哪一個任務，輕觸一下就能在 Ingress 中開啟下一個任務。
+• 進入範圍時會自動勾選步驟，也可選擇發送通知。
+• 通關密語：用任務卡片上的 🔑 按鈕複製任務的通關密語。可以選擇任務編號，或其他玩家在 OpenBanners 上分享的群眾提供通關密語（選用，預設關閉）。
+• 可選擇顯示整個拼圖：已完成的任務、目前任務和後續任務，各以不同顏色顯示。
+• 自訂目前任務、後續任務、已完成步驟和你的位置的顏色。
+• 地圖會隨指南針旋轉，也可以維持北方朝上。
+• 依你的喜好安排任務卡片：選擇按鈕及其順序，並將卡片設為寬版、長版、較小或較大。
+• 與朋友分享你的版面配置，或匯入他們的版面配置。
+• 可選擇將設定備份到 OpenBanners，並在另一支手機上還原（使用 Bannergress 登入）。
+• 支援 16 種語言，與 openbanners.org 相同。
+
+疊加層會讓觸控直接傳到 Ingress，你可以照常遊戲。
+
+免費開放原始碼（MIT）：https://github.com/Gamer1120/OpenBanners-overlay
+以 The Bannergress Team 開發的 Banner Overlay 為基礎。與 Bannergress 或 Niantic 無關，亦未獲其背書。Ingress 是 Niantic 的商標。

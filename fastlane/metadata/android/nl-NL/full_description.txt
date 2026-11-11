@@ -1,0 +1,20 @@
+OpenBanners Overlay helpt je bij het lopen van missiebanners in Ingress Prime.
+
+Tik op openbanners.org bij een banner op "Starten met Overlay", of deel een bannerlink van OpenBanners of Bannergress met de app. Die toont een kleine overlay bovenop Ingress:
+
+• Een routekaart bovenaan het scherm met de stappen van je huidige missie (aangeduid als 1a, 1b, …), het begin van de volgende missie en je eigen positie. De kaart zoomt zo dat je dichtstbijzijnde open stappen altijd in beeld zijn.
+• Missiebediening: zie bij welke missie je bent en open de volgende missie in Ingress met één tik.
+• Stappen worden automatisch afgevinkt als je binnen bereik komt, met een optionele melding.
+• Passphrases: kopieer de passphrase van een missie met de 🔑-knop op de missiekaart. Kies het missienummer, of passphrases van de community die andere spelers op OpenBanners hebben gedeeld (optioneel, standaard uit).
+• Toon desgewenst de hele banner: voltooide missies, de huidige en de missies die nog komen, elk in een eigen kleur.
+• Kies je eigen kleuren voor de huidige missie, komende missies, voltooide stappen en je positie.
+• De kaart draait mee met je kompas, of houd hem met het noorden boven als je dat liever hebt.
+• Richt de missiekaart in zoals jij wilt: kies de knoppen en hun volgorde, en maak de kaart breed, hoog, kleiner of groter.
+• Deel je indeling met vrienden, of importeer die van hen.
+• Maak desgewenst een back-up van je instellingen bij OpenBanners en zet ze terug op een andere telefoon (inloggen met Bannergress).
+• Beschikbaar in 16 talen, dezelfde als openbanners.org.
+
+De overlay laat aanrakingen door naar Ingress, zodat je gewoon verder kunt spelen.
+
+Gratis en open source (MIT): https://github.com/Gamer1120/OpenBanners-overlay
+Gebaseerd op Banner Overlay van The Bannergress Team. Niet verbonden aan of goedgekeurd door Bannergress of Niantic. Ingress is een handelsmerk van Niantic.

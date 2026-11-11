@@ -1,0 +1,20 @@
+OpenBanners Overlay t’aide à faire les bannières de missions dans Ingress Prime.
+
+Touche « Commencer avec l’overlay » sur une bannière sur openbanners.org, ou partage un lien de bannière OpenBanners ou Bannergress avec l’app. Elle affiche un petit overlay par-dessus Ingress :
+
+• Une carte du parcours en haut de l’écran avec les étapes de ta mission en cours (numérotées 1a, 1b, …), le départ de la mission suivante et ta propre position. Elle zoome pour que tes étapes ouvertes les plus proches restent toujours visibles.
+• Commandes de mission : vois à quelle mission tu en es et ouvre la mission suivante dans Ingress d’un simple toucher.
+• Les étapes sont cochées automatiquement quand tu arrives à portée, avec une notification si tu le souhaites.
+• Passphrases : copie la passphrase d’une mission avec le bouton 🔑 de la carte de mission. Choisis le numéro de mission, ou les passphrases partagées par d’autres joueurs sur OpenBanners (optionnel, désactivé par défaut).
+• Si tu veux, affiche toute la bannière : missions terminées, mission en cours et missions à venir, chacune dans sa propre couleur.
+• Choisis tes propres couleurs pour la mission en cours, les missions à venir, les étapes terminées et ta position.
+• La carte tourne avec ta boussole, ou reste orientée nord en haut si tu préfères.
+• Arrange la carte de mission à ta façon : choisis ses boutons et leur ordre, et rends-la large, haute, plus petite ou plus grande.
+• Partage ta disposition avec tes amis, ou importe la leur.
+• Si tu veux, sauvegarde tes paramètres sur OpenBanners et restaure-les sur un autre téléphone (connexion avec Bannergress).
+• Disponible en 16 langues, les mêmes que sur openbanners.org.
+
+L’overlay laisse passer les touchers vers Ingress, pour que tu puisses continuer à jouer normalement.
+
+Gratuit et open source (MIT) : https://github.com/Gamer1120/OpenBanners-overlay
+Basé sur Banner Overlay de The Bannergress Team. Non affilié à Bannergress ni à Niantic, ni approuvé par eux. Ingress est une marque de Niantic.

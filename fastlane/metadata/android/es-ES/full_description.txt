@@ -1,0 +1,20 @@
+OpenBanners Overlay te ayuda a completar banners de misiones en Ingress Prime.
+
+Toca «Empezar con Overlay» en un banner de openbanners.org, o comparte con la app un enlace a un banner de OpenBanners o Bannergress. La app muestra un pequeño overlay sobre Ingress:
+
+• Un mapa de la ruta en la parte superior de la pantalla con los pasos de tu misión actual (marcados 1a, 1b, …), el inicio de la siguiente misión y tu propia posición. Hace zoom para que tus pasos pendientes más cercanos estén siempre a la vista.
+• Controles de misión: mira en qué misión estás y abre la siguiente misión en Ingress con un solo toque.
+• Los pasos se marcan automáticamente cuando llegas a su alcance, con una notificación opcional.
+• Contraseñas: copia la contraseña de una misión con el botón 🔑 de la tarjeta de misión. Elige el número de misión o contraseñas colaborativas compartidas por otros jugadores en OpenBanners (opcional, desactivado por defecto).
+• Si quieres, muestra el banner completo: las misiones completadas, la actual y las que quedan, cada una con su propio color.
+• Elige tus propios colores para la misión actual, las próximas misiones, los pasos completados y tu posición.
+• El mapa gira con tu brújula, o mantenlo con el norte arriba si lo prefieres.
+• Organiza la tarjeta de misión a tu manera: elige sus botones y su orden, y hazla ancha, alta, más pequeña o más grande.
+• Comparte tu diseño con tus amigos o importa el suyo.
+• Si quieres, guarda una copia de seguridad de tus ajustes en OpenBanners y restáuralos en otro teléfono (inicio de sesión con Bannergress).
+• Disponible en 16 idiomas, los mismos que openbanners.org.
+
+El overlay deja pasar los toques a Ingress, así que puedes seguir jugando como siempre.
+
+Gratis y de código abierto (MIT): https://github.com/Gamer1120/OpenBanners-overlay
+Basada en Banner Overlay de The Bannergress Team. Sin afiliación con Bannergress ni Niantic, ni respaldada por ellos. Ingress es una marca comercial de Niantic.

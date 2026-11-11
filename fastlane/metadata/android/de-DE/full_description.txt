@@ -1,0 +1,20 @@
+OpenBanners Overlay hilft dir beim Ablaufen von Missionsbannern in Ingress Prime.
+
+Tippe auf openbanners.org bei einem Banner auf „Mit Overlay starten“ oder teile einen Banner-Link von OpenBanners oder Bannergress mit der App. Sie zeigt ein kleines Overlay über Ingress:
+
+• Eine Routenkarte oben am Bildschirm mit den Schritten deiner aktuellen Mission (beschriftet mit 1a, 1b, …), dem Start der nächsten Mission und deiner eigenen Position. Sie zoomt so, dass deine nächstgelegenen offenen Schritte immer zu sehen sind.
+• Missionssteuerung: Sieh, bei welcher Mission du bist, und öffne die nächste Mission mit einem Tipp in Ingress.
+• Schritte werden automatisch abgehakt, sobald du in Reichweite bist, auf Wunsch mit Benachrichtigung.
+• Passphrasen: Kopiere die Passphrase einer Mission mit der 🔑-Schaltfläche auf der Missionskarte. Wähle die Missionsnummer oder Passphrasen aus der Community, die andere Spieler auf OpenBanners geteilt haben (optional, standardmäßig aus).
+• Auf Wunsch das ganze Banner anzeigen: erledigte Missionen, die aktuelle und die noch kommenden, jede in ihrer eigenen Farbe.
+• Wähle eigene Farben für die aktuelle Mission, kommende Missionen, erledigte Schritte und deine Position.
+• Die Karte dreht sich mit deinem Kompass oder bleibt auf Wunsch genordet.
+• Gestalte die Missionskarte nach deinem Geschmack: Wähle ihre Schaltflächen und deren Reihenfolge und mach sie breit, hoch, kleiner oder größer.
+• Teile deine Anordnung mit Freunden oder importiere ihre.
+• Sichere deine Einstellungen auf Wunsch bei OpenBanners und stelle sie auf einem anderen Handy wieder her (Anmeldung mit Bannergress).
+• Verfügbar in 16 Sprachen, denselben wie openbanners.org.
+
+Das Overlay lässt Berührungen zu Ingress durch, sodass du ganz normal weiterspielen kannst.
+
+Kostenlos und Open Source (MIT): https://github.com/Gamer1120/OpenBanners-overlay
+Basiert auf Banner Overlay von The Bannergress Team. Nicht mit Bannergress oder Niantic verbunden und nicht von ihnen unterstützt. Ingress ist eine Marke von Niantic.

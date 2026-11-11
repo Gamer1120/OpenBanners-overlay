@@ -39,7 +39,7 @@ workflow can't upload to production any more; production is only reached by the 
   by a blank line. Play allows 500 characters per language: the oldest changelogs are dropped first, or the oldest
   one that still partly fits is cut with "…". Changelogs of held versions are left out (write anything a held
   version brought into the next version's changelog). Every language folder under `fastlane/metadata/android/` is
-  handled the same way; today only `en-US` exists.
+  handled the same way; today only `en-US` has changelogs.
 - **Idempotent:** if production already has N or newer, the run is a no-op. Because all runs of one night share the
   same cutoff, production gets at most one scheduled update per Amsterdam day.
 - Every run writes what it saw and did to the job summary (Actions → the run → Summary).
@@ -107,38 +107,44 @@ production access was granted on 2026-11-10 (versionCode 57 was the first produc
 
 ## Store listing
 
-Graphics and text are also in `fastlane/metadata/android/en-US/` (icon 512×512, feature graphic
-1024×500, 4 phone screenshots 1080×1920, 4 seven-inch tablet screenshots 1200×1920 and 4 ten-inch tablet screenshots 1600×2560, title/short/full description). The location declaration demo
-video is not in the repo; upload it unlisted to YouTube and paste that link.
+Graphics are in `fastlane/metadata/android/en-US/images/` (icon 512×512, feature graphic 1024×500, 4 phone
+screenshots 1080×1920, 4 seven-inch tablet screenshots 1200×1920 and 4 ten-inch tablet screenshots 1600×2560). The
+location declaration demo video is not in the repo; upload it unlisted to YouTube and paste that link.
 
-- **App name:** OpenBanners Overlay
-- **Short description (max 80):** Route map overlay and mission tracker for Ingress mission banners.
+- **App name:** OpenBanners Overlay (the same in every language)
 - **Category:** Tools (alternative: Maps & Navigation)
 - **Privacy policy:** https://openbanners.org/overlay/privacy
-- **Full description:**
+- **Texts:** `fastlane/metadata/android/<language>/{title,short_description,full_description}.txt` are the only
+  source; they are not copied here. Languages (folder = Play language code): en-US (default), nl-NL, de-DE, fr-FR,
+  es-ES, it-IT, pt-BR (the app's Portuguese is Brazilian), pl-PL, cs-CZ, ru-RU, uk, ja-JP, zh-CN, zh-TW, ko-KR, id:
+  the app's 16 languages, the same as openbanners.org. F-Droid reads the same folders. Limits: title 30, short
+  description 80, full description 4000 characters.
+- Translations reuse the app's own strings for UI terms (Settings, mission card, route map, passphrases…) and
+  openbanners.org's translation of its "Start with Overlay" button. Keep URLs, OpenBanners, Bannergress, Ingress
+  and Niantic untranslated and the disclaimer's meaning exact. When the English text changes, update every
+  language.
 
-  OpenBanners Overlay is a companion app for doing mission banners in Ingress Prime.
+### Uploading the listing texts
 
-  Share a banner link from OpenBanners or Bannergress with the app and it shows a small overlay on top of
-  Ingress:
-  • A route map at the top of the screen with the steps of your current mission (labelled 1a, 1b, …),
-    the start of the next mission, and your own position. It zooms so your nearest open steps are
-    always in view.
-  • Mission controls: see which mission you are on and open the next mission in Ingress with one tap.
-  • Steps are ticked off automatically when you get within range, with an optional notification.
-  • Passphrases: copy a mission's passphrase with the 🔑 button on the mission card. Choose the mission number, or crowd-sourced passphrases shared by other players on OpenBanners (optional, off by default).
-  • Optionally show the whole banner: completed missions, the current one and the ones still ahead, each in its own colour.
-  • Choose your own colours for the current mission, upcoming missions, completed steps and your position.
-  • The map turns with your compass, or keep it north up if you prefer.
-  • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
-  • Share your layout with friends, or import theirs.
-  • Optionally back up your settings to OpenBanners and restore them on another phone (sign in with Bannergress).
+The Release and promotion workflows only send bundles and release notes; nothing uploads listing texts
+automatically, and committing an edit never changes listings it didn't touch. Upload by hand after changing the
+texts:
 
-  The overlay lets touches pass through to Ingress, so you can keep playing as usual.
+```
+python3 scripts/play_listing.py --check     # read-only: which languages differ from the repo
+python3 scripts/play_listing.py --dry-run   # puts all texts into a throwaway edit, Play validates, edit deleted
+python3 scripts/play_listing.py             # commit; Play reviews the listing change before it goes live
+```
 
-  Free and open source (MIT): https://github.com/Gamer1120/OpenBanners-overlay
-  Based on Banner Overlay by The Bannergress Team. Not affiliated with or endorsed by Bannergress or
-  Niantic. Ingress is a trademark of Niantic.
+Only languages that differ are sent; languages on Play without a folder are left alone; graphics and the promo
+video are kept. The commit uses `ERROR_IF_IN_REVIEW`: if anything is in review (e.g. a beta release) it stops
+with exit code 2 without cancelling anything; run it again once that review is done.
+
+The service account needs the app permission **"Edit store listing, pricing & distribution"** (Play Console →
+Users and permissions → the service account → App permissions). Without it, Play accepts the texts into an edit
+but refuses `edits.validate`/`edits.commit` with HTTP 403; the script then exits with code 3 (seen
+2026-11-11: the account could only release). The listing can also be pasted by hand in Play Console → Grow →
+Store presence → Main store listing (Manage translations for the other languages).
 
 Keep Ingress/Niantic artwork and logos out of the icon, feature graphic and screenshots' framing; screenshots
 of the overlay in use are fine.

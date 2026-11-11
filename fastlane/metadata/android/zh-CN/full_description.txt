@@ -1,0 +1,20 @@
+OpenBanners Overlay 帮助你在 Ingress Prime 中完成任务横幅。
+
+在 openbanners.org 的横幅页面上点按“使用 Overlay 开始”，或将 OpenBanners 或 Bannergress 的横幅链接分享给本应用。它会在 Ingress 上方显示一个小悬浮窗：
+
+• 屏幕顶部的路线地图，显示当前任务的步骤（标为 1a、1b……）、下一个任务的起点以及你自己的位置。地图会自动缩放，让离你最近的未完成步骤始终在视野内。
+• 任务控制：查看你正在进行哪个任务，一键在 Ingress 中打开下一个任务。
+• 进入范围后，步骤会自动勾选，并可选择发送通知。
+• 口令：用任务卡片上的 🔑 按钮复制任务口令。可以选择任务编号，或其他玩家在 OpenBanners 上分享的众包口令（可选，默认关闭）。
+• 可选择显示整个横幅：已完成的任务、当前任务和后续任务，各用不同的颜色。
+• 自定义当前任务、后续任务、已完成步骤和你的位置的颜色。
+• 地图随指南针旋转，也可以保持北向朝上。
+• 按你的喜好布置任务卡片：选择按钮及其顺序，并把卡片设为宽、高、更小或更大。
+• 与朋友分享你的布局，或导入他们的布局。
+• 可选择将设置备份到 OpenBanners，并在另一部手机上恢复（使用 Bannergress 登录）。
+• 支持 16 种语言，与 openbanners.org 相同。
+
+悬浮窗允许触摸操作直接传递给 Ingress，你可以照常游戏。
+
+免费开源（MIT）：https://github.com/Gamer1120/OpenBanners-overlay
+基于 The Bannergress Team 开发的 Banner Overlay。与 Bannergress 或 Niantic 无关联，也未获得其认可。Ingress 是 Niantic 的商标。

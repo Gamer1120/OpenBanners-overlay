@@ -1,6 +1,6 @@
-OpenBanners Overlay is a companion app for doing mission banners in Ingress Prime.
+OpenBanners Overlay helps you do mission banners in Ingress Prime.
 
-Share a banner link from OpenBanners or Bannergress with the app and it shows a small overlay on top of Ingress:
+Tap "Start with Overlay" on a banner on openbanners.org, or share a banner link from OpenBanners or Bannergress with the app. It shows a small overlay on top of Ingress:
 
 • A route map at the top of the screen with the steps of your current mission (labelled 1a, 1b, …), the start of the next mission, and your own position. It zooms so your nearest open steps are always in view.
 • Mission controls: see which mission you are on and open the next mission in Ingress with one tap.
@@ -12,6 +12,7 @@ Share a banner link from OpenBanners or Bannergress with the app and it shows a 
 • Arrange the mission card your way: choose and reorder its buttons, and make it wide, tall, smaller or larger.
 • Share your layout with friends, or import theirs.
 • Optionally back up your settings to OpenBanners and restore them on another phone (sign in with Bannergress).
+• Available in 16 languages, the same as openbanners.org.
 
 The overlay lets touches pass through to Ingress, so you can keep playing as usual.
 

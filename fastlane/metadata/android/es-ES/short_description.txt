@@ -1,0 +1,1 @@
+Mapa de la ruta en overlay y seguimiento de misiones para banners de Ingress.

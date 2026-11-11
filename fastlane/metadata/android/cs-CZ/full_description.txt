@@ -1,0 +1,20 @@
+OpenBanners Overlay ti pomáhá procházet bannery misí v Ingress Prime.
+
+Na openbanners.org klepni u banneru na „Začít s Overlay“, nebo s aplikací sdílej odkaz na banner z OpenBanners nebo Bannergressu. Aplikace zobrazí nad Ingressem malý overlay:
+
+• Mapa trasy v horní části obrazovky s kroky aktuální mise (označenými 1a, 1b, …), začátkem další mise a tvou polohou. Přiblížení se nastaví tak, aby nejbližší otevřené kroky byly vždy vidět.
+• Ovládání misí: uvidíš, na které misi jsi, a další misi otevřeš v Ingressu jedním klepnutím.
+• Kroky se automaticky odškrtnou, když se dostaneš do dosahu, volitelně s oznámením.
+• Hesla: zkopíruj heslo mise tlačítkem 🔑 na kartě mise. Vyber číslo mise nebo hesla, která na OpenBanners sdílejí ostatní hráči (volitelné, ve výchozím stavu vypnuté).
+• Volitelně zobraz celý banner: dokončené mise, aktuální misi i ty, které tě ještě čekají, každou vlastní barvou.
+• Vyber si vlastní barvy pro aktuální misi, nadcházející mise, dokončené kroky a svou pozici.
+• Mapa se otáčí podle kompasu, nebo ji nech severem nahoru, pokud chceš.
+• Uspořádej kartu mise po svém: vyber její tlačítka a jejich pořadí a nastav ji širokou, vysokou, menší nebo větší.
+• Sdílej své rozložení s přáteli nebo importuj jejich.
+• Volitelně zálohuj nastavení na OpenBanners a obnov je v jiném telefonu (přihlášení přes Bannergress).
+• K dispozici v 16 jazycích, stejných jako na openbanners.org.
+
+Overlay propouští dotyky do Ingressu, takže můžeš hrát jako obvykle.
+
+Zdarma a open source (MIT): https://github.com/Gamer1120/OpenBanners-overlay
+Vychází z Banner Overlay od The Bannergress Team. Není spojeno s Bannergressem ani Niantic, ani jimi podporováno. Ingress je ochranná známka společnosti Niantic.
