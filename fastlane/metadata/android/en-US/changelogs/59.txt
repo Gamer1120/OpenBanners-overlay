@@ -1,0 +1,1 @@
+New setting "Navigate to next waypoint" (Settings → Navigation, off by default): when the next waypoint is farther than a set distance (default 1 km), a Navigate button opens Google Maps directions to it.
