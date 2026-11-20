@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Copyrightvermeldingen en opensourcelicenties</string>
     <string name="preferences_privacy">Privacybeleid</string>
     <string name="preferences_source">Broncode</string>
+    <string name="preferences_version">Versie</string>
     <string name="preferences_ingress_only">Alleen boven Ingress tonen</string>
     <string name="preferences_ingress_only_summary">Verberg de overlay als er een andere app op de voorgrond staat. Een link delen opent Ingress. Vereist Gebruikstoegang.</string>
     <string name="preferences_ingress_only_no_access">Gebruikstoegang staat uit, dus de overlay is altijd zichtbaar. Zet dit uit en weer aan om toegang te geven.</string>

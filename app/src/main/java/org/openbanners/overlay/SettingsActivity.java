@@ -285,6 +285,9 @@ public class SettingsActivity extends AppCompatActivity {
                 return true;
             });
 
+            Preference versionPreference = findPreference("version");
+            if (versionPreference != null) versionPreference.setSummary(AppVersion.label(requireContext()));
+
             Preference exportPreference = findPreference(getString(R.string.layout_export));
             Preference importPreference = findPreference(getString(R.string.layout_import));
             assert exportPreference != null && importPreference != null;

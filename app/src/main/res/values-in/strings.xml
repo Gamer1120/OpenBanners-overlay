@@ -129,6 +129,7 @@
     <string name="preferences_licenses_summary">Pemberitahuan hak cipta dan lisensi open source</string>
     <string name="preferences_privacy">Kebijakan privasi</string>
     <string name="preferences_source">Kode sumber</string>
+    <string name="preferences_version">Versi</string>
     <string name="preferences_ingress_only">Hanya tampil di atas Ingress</string>
     <string name="preferences_ingress_only_summary">Sembunyikan overlay saat aplikasi lain sedang di depan. Membagikan link akan membuka Ingress. Memerlukan Akses penggunaan.</string>
     <string name="preferences_ingress_only_no_access">Akses penggunaan nonaktif, jadi overlay selalu tampil. Matikan lalu nyalakan lagi opsi ini untuk memberikannya.</string>

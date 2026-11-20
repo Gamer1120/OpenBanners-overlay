@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Upozornění na autorská práva a open-source licence</string>
     <string name="preferences_privacy">Zásady ochrany soukromí</string>
     <string name="preferences_source">Zdrojový kód</string>
+    <string name="preferences_version">Verze</string>
     <string name="preferences_ingress_only">Zobrazovat jen nad Ingressem</string>
     <string name="preferences_ingress_only_summary">Skryje overlay, když je v popředí jiná aplikace. Sdílení odkazu otevře Ingress. Vyžaduje Přístup k údajům o využití.</string>
     <string name="preferences_ingress_only_no_access">Přístup k údajům o využití je vypnutý, takže overlay je vidět vždy. Pro jeho udělení tuto volbu vypni a znovu zapni.</string>

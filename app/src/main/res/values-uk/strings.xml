@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Повідомлення про авторські права та ліцензії відкритого коду</string>
     <string name="preferences_privacy">Політика конфіденційності</string>
     <string name="preferences_source">Вихідний код</string>
+    <string name="preferences_version">Версія</string>
     <string name="preferences_ingress_only">Показувати лише поверх Ingress</string>
     <string name="preferences_ingress_only_summary">Приховувати оверлей, коли на екрані інший застосунок. Поширення посилання відкриває Ingress. Потрібен «Доступ до історії використання».</string>
     <string name="preferences_ingress_only_no_access">«Доступ до історії використання» вимкнено, тому оверлей показується завжди. Вимкни й знову ввімкни цей параметр, щоб надати доступ.</string>

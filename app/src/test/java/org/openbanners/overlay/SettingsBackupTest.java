@@ -97,7 +97,8 @@ public class SettingsBackupTest {
             "layout_export", "layout_import", "openbanners_backup", "openbanners_restore", // actions
             "notification_progress", "notification_step_in_range", // open Android's notification settings
             "bannergress_links_status", // shows the state of bannergress_links
-            "licenses", "privacy", "source"); // links
+            "licenses", "privacy", "source", // links
+            "version"); // shows the installed version
 
     /** The three radio buttons that together are passphrase_source. */
     private static final List<String> PASSPHRASE_SOURCE_BUTTONS = Arrays.asList(

@@ -129,6 +129,7 @@
     <string name="preferences_licenses_summary">版權聲明和開放原始碼授權</string>
     <string name="preferences_privacy">隱私權政策</string>
     <string name="preferences_source">原始碼</string>
+    <string name="preferences_version">版本</string>
     <string name="preferences_ingress_only">僅在 Ingress 上顯示</string>
     <string name="preferences_ingress_only_summary">其他應用程式在前景時隱藏疊加層。分享連結會開啟 Ingress。需要「使用狀況存取權」。</string>
     <string name="preferences_ingress_only_no_access">「使用狀況存取權」已關閉，因此疊加層會一直顯示。請將此選項關閉後再開啟以授予權限。</string>

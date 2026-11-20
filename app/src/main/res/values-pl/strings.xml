@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Informacje o prawach autorskich i licencje open source</string>
     <string name="preferences_privacy">Polityka prywatności</string>
     <string name="preferences_source">Kod źródłowy</string>
+    <string name="preferences_version">Wersja</string>
     <string name="preferences_ingress_only">Pokazuj tylko nad Ingress</string>
     <string name="preferences_ingress_only_summary">Ukrywa nakładkę, gdy na wierzchu jest inna aplikacja. Udostępnienie linku otwiera Ingress. Wymaga uprawnienia Dostęp do danych o użyciu.</string>
     <string name="preferences_ingress_only_no_access">Dostęp do danych o użyciu jest wyłączony, więc nakładka jest zawsze widoczna. Wyłącz i ponownie włącz tę opcję, aby go przyznać.</string>

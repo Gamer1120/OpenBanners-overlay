@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Уведомления об авторских правах и лицензии open source</string>
     <string name="preferences_privacy">Политика конфиденциальности</string>
     <string name="preferences_source">Исходный код</string>
+    <string name="preferences_version">Версия</string>
     <string name="preferences_ingress_only">Показывать только поверх Ingress</string>
     <string name="preferences_ingress_only_summary">Скрывает оверлей, когда на экране другое приложение. Если поделиться ссылкой, откроется Ingress. Нужен доступ к истории использования.</string>
     <string name="preferences_ingress_only_no_access">Доступ к истории использования выключен, поэтому оверлей виден всегда. Выключи и снова включи этот параметр, чтобы его предоставить.</string>

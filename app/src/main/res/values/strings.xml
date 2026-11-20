@@ -141,6 +141,7 @@
     <string name="preferences_licenses_summary">Copyright notices and open-source licences</string>
     <string name="preferences_privacy">Privacy policy</string>
     <string name="preferences_source">Source code</string>
+    <string name="preferences_version">Version</string>
     <string name="preferences_ingress" translatable="false">Ingress</string>
     <string name="preferences_ingress_only">Only show over Ingress</string>
     <string name="preferences_ingress_only_summary">Hide the overlay while another app is in front. Sharing a link opens Ingress. Needs Usage access.</string>

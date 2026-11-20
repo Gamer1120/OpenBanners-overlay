@@ -1,0 +1,1 @@
+Language is now included in the OpenBanners backup. Settings → About shows the version and whether it's the Google Play or the GitHub/F-Droid build. These two can't update each other: switching means reinstalling, which resets your settings, so back up to OpenBanners first.

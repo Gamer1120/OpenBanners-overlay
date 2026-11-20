@@ -128,6 +128,7 @@
     <string name="preferences_licenses_summary">Avisos de copyright y licencias de código abierto</string>
     <string name="preferences_privacy">Política de privacidad</string>
     <string name="preferences_source">Código fuente</string>
+    <string name="preferences_version">Versión</string>
     <string name="preferences_ingress_only">Mostrar solo sobre Ingress</string>
     <string name="preferences_ingress_only_summary">Oculta el overlay mientras otra app está en primer plano. Al compartir un enlace se abre Ingress. Requiere Acceso a datos de uso.</string>
     <string name="preferences_ingress_only_no_access">El Acceso a datos de uso está desactivado, así que el overlay se muestra siempre. Desactiva y vuelve a activar esta opción para concederlo.</string>

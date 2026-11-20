@@ -129,6 +129,7 @@
     <string name="preferences_licenses_summary">版权声明和开源许可</string>
     <string name="preferences_privacy">隐私政策</string>
     <string name="preferences_source">源代码</string>
+    <string name="preferences_version">版本</string>
     <string name="preferences_ingress_only">仅在 Ingress 上显示</string>
     <string name="preferences_ingress_only_summary">其他应用在前台时隐藏悬浮窗。分享链接会打开 Ingress。需要“使用情况访问权限”。</string>
     <string name="preferences_ingress_only_no_access">“使用情况访问权限”已关闭，因此悬浮窗会始终显示。请将此项关闭后再打开以授予权限。</string>

@@ -287,6 +287,13 @@
 
     <PreferenceCategory app:title="@string/preferences_about">
 
+        <!-- Summary set in SettingsActivity (AppVersion): version and Google Play or GitHub / F-Droid build. -->
+        <Preference
+            app:key="version"
+            app:persistent="false"
+            app:selectable="false"
+            app:title="@string/preferences_version" />
+
         <Preference
             app:key="licenses"
             app:persistent="false"

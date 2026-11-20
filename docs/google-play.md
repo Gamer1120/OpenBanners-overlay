@@ -94,11 +94,17 @@ Actions → Release → Run workflow, "Use workflow from" = the tag: rebuilds an
 
 ## App signing
 
-Use **Play App Signing with the existing OpenBanners key** ("Use existing app signing key from Java
-keystore" → PEPK tool), not a Google-generated key. Then Play installs and GitHub/sideloaded APKs are
-signed with the same key and can update each other. The key is kept outside the repo
-(`~/.config/openbanners-signing/`). Certificate SHA-256:
+The plan was Play App Signing with the existing OpenBanners key, but **Play signs with a Google-generated key**
+(checked 2026-11-20 on Play's generated APK for v59, `generatedApks` API: certificate `CN=Android, O=Google Inc.`,
+SHA-256 `8F:44:96:03:83:88:A0:15:73:97:E7:0C:EB:23:03:0E:EF:1E:78:C2:DC:D0:F2:39:58:F0:45:6E:37:DD:9B:BB`).
+The GitHub and F-Droid APKs are signed with the OpenBanners key (kept outside the repo,
+`~/.config/openbanners-signing/`), SHA-256
 `35:ED:71:71:43:9E:A0:0B:47:E5:56:00:5D:C6:DA:FC:EF:71:FD:F5:38:43:BC:F1:EA:5A:33:19:CF:2F:7D:58`.
+
+So **Play installs and GitHub/F-Droid installs can't update each other.** Android refuses the other one ("conflicts
+with an existing package"); switching means uninstalling, which erases the app's settings (Android's own backup may
+bring back an older copy on a Play reinstall). Before switching: Settings → OpenBanners backup → Back up, and restore
+afterwards. Settings → About → Version shows which build is installed (`AppVersion`, by certificate).
 
 ## Testing requirement (new personal developer accounts)
 

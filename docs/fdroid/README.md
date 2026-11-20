@@ -6,8 +6,9 @@
 ## Reproducible builds
 
 F-Droid builds the tagged commit itself, checks that its unsigned APK is byte-identical to the APK on the GitHub
-release (`Binaries:`), and then publishes **our** signed APK (cert sha256 in `AllowedAPKSigningKeys`). So F-Droid,
-GitHub and Google Play installs can update each other.
+release (`Binaries:`), and then publishes **our** signed APK (cert sha256 in `AllowedAPKSigningKeys`). So F-Droid and
+GitHub installs can update each other. Google Play installs can't: Play signs with its own key (see
+`docs/google-play.md`, "App signing").
 
 What keeps the build reproducible:
 - `dependenciesInfo { includeInApk = false }` in `app/build.gradle`: the APK has no Google dependency-info signing
