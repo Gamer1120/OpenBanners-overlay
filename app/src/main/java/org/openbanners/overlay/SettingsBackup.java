@@ -13,14 +13,17 @@ import java.util.regex.Pattern;
  * Which settings "Back up to OpenBanners" saves and how a backup is restored (Settings → OpenBanners backup). Pure
  * Java so it can be unit-tested; {@link SettingsActivity} does the SharedPreferences and the dialogs.
  * <p>
- * Every user preference is backed up with its current value (or its default), so a backup is complete. Not backed
- * up: permission switches (location, notifications: Android decides), the route map safety confirmation (asked again
+ * Every user preference is backed up with its current value (or its default), so a backup is complete, the app
+ * language included ({@link AppLanguage}: the caller passes {@link AppLanguage#current} as its value, and a restore
+ * applies it with {@link AppLanguage#set}). Not backed up: permission switches (location, notifications: Android decides), the route map safety confirmation (asked again
  * on the restoring phone), one-time hints, overlay progress, and the OpenBanners sign-in state.
  * <p>
  * Restoring copes with other app versions: keys this version doesn't know are skipped, settings missing from the
- * backup (an older app) get their default, and a value this version doesn't accept keeps the default too.
+ * backup (an older app) get their default (the language keeps the current one: backups before version 60 don't have
+ * it), and a value this version doesn't accept keeps the default too.
  * Adding a preference to the app? Add it to {@link #SETTINGS} (SettingsBackupTest checks the keys against
- * constants.xml and arrays.xml).
+ * constants.xml, arrays.xml and root_preferences.xml, and fails on a preference that is in neither SETTINGS nor its
+ * list of what isn't backed up).
  */
 final class SettingsBackup {
     /** Version of the backup body sent to openbanners.org (server/overlay-backup.mjs). */
@@ -34,11 +37,18 @@ final class SettingsBackup {
         final Object defaultValue;
         /** Allowed values for {@link Kind#CHOICE}. */
         final List<String> choices;
+        /** Missing from a backup: keep the current value instead of the default (a setting older backups lack). */
+        final boolean keepCurrentWhenMissing;
 
         Setting(String key, Kind kind, Object defaultValue, String... choices) {
+            this(key, kind, defaultValue, false, choices);
+        }
+
+        Setting(String key, Kind kind, Object defaultValue, boolean keepCurrentWhenMissing, String... choices) {
             this.key = key;
             this.kind = kind;
             this.defaultValue = defaultValue;
+            this.keepCurrentWhenMissing = keepCurrentWhenMissing;
             this.choices = Collections.unmodifiableList(Arrays.asList(choices));
         }
 
@@ -64,6 +74,7 @@ final class SettingsBackup {
 
     /** In the order the Settings screen shows them. Defaults match root_preferences.xml. */
     static final List<Setting> SETTINGS = Collections.unmodifiableList(Arrays.asList(
+            new Setting(AppLanguage.KEY, Kind.CHOICE, AppLanguage.SYSTEM, true, languageChoices()),
             new Setting("ingress_only", Kind.BOOLEAN, false),
             new Setting("card_items", Kind.CARD_ITEMS, CardItems.DEFAULT),
             new Setting("card_layout", Kind.CHOICE, "two_rows", "two_rows", "wide", "tall"),
@@ -89,6 +100,14 @@ final class SettingsBackup {
             new Setting("bannergress_links", Kind.BOOLEAN, false)));
 
     private SettingsBackup() {
+    }
+
+    /** Settings → Language's values: follow the phone, or one of the offered languages. */
+    private static String[] languageChoices() {
+        String[] choices = new String[AppLanguage.TAGS.length + 1];
+        choices[0] = AppLanguage.SYSTEM;
+        System.arraycopy(AppLanguage.TAGS, 0, choices, 1, AppLanguage.TAGS.length);
+        return choices;
     }
 
     static Setting find(String key) {
@@ -187,9 +206,11 @@ final class SettingsBackup {
         Collections.sort(plan.unknown);
         for (Setting setting : SETTINGS) {
             Object value = backup.get(setting.key);
+            Object current = effective(setting, stored);
             Object target;
             if (value == null) {
-                target = setting.defaultValue; // missing: an older app, or never set
+                // missing: an older app, or never set
+                target = setting.keepCurrentWhenMissing ? current : setting.defaultValue;
             } else if (setting.accepts(value)) {
                 target = setting.normalize(value);
             } else {
@@ -197,7 +218,6 @@ final class SettingsBackup {
                 target = setting.defaultValue;
             }
             plan.values.put(setting.key, target);
-            Object current = effective(setting, stored);
             if (!Objects.equals(current, target)) plan.changes.add(new Change(setting, current, target));
         }
         return plan;

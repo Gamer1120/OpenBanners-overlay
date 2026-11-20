@@ -20,7 +20,8 @@ import java.util.Locale;
  * Android 13+ keeps the choice per app (also settable in Android's app settings, see xml/locales_config) and applies
  * it to the whole app, the overlay service included. On older versions AppCompat applies it to its activities
  * (autoStoreLocales in the manifest) and {@link #wrap} to everything else (overlay, notification, other activities);
- * the tag is also kept in the preferences under {@link #KEY} for that. Not part of layouts or backups.
+ * the tag is also kept in the preferences under {@link #KEY} for that. Part of the OpenBanners backup
+ * ({@link SettingsBackup}, with {@link #current} as the value; a restore calls {@link #set}), not of layouts.
  */
 final class AppLanguage {
     /** Follow the phone's language. */

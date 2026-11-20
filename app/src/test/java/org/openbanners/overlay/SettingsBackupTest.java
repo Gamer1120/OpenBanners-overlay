@@ -42,7 +42,10 @@ public class SettingsBackupTest {
         String arrays = res("values/arrays.xml");
         String screen = res("xml/root_preferences.xml");
         for (SettingsBackup.Setting setting : SettingsBackup.SETTINGS) {
-            assertTrue(setting.key, constants.contains("<string name=\"" + setting.key + "\" translatable=\"false\">" + setting.key + "</string>"));
+            if (setting.key.equals(AppLanguage.KEY)) {
+                // A literal key on the screen (not a constants.xml string): checked below with its values.
+                assertTrue(screen.contains("app:key=\"" + AppLanguage.KEY + "\""));
+            } else assertTrue(setting.key, constants.contains("<string name=\"" + setting.key + "\" translatable=\"false\">" + setting.key + "</string>"));
             if (setting.kind == SettingsBackup.Kind.CARD_ITEMS) {
                 assertEquals(CardItems.DEFAULT, setting.defaultValue);
                 continue;
@@ -53,7 +56,7 @@ public class SettingsBackupTest {
                 for (String choice : setting.choices) assertTrue(choice, screen.contains("app:key=\"passphrase_source_" + choice + "\""));
                 continue;
             }
-            Matcher element = Pattern.compile("<([\\w.]+)\\s(?:(?!/>|<).)*?app:key=\"@string/" + setting.key + "\"(?:(?!<).)*?/>", Pattern.DOTALL).matcher(screen);
+            Matcher element = Pattern.compile("<([\\w.]+)\\s(?:(?!/>|<).)*?app:key=\"(?:@string/)?" + setting.key + "\"(?:(?!<).)*?/>", Pattern.DOTALL).matcher(screen);
             assertTrue("on the Settings screen: " + setting.key, element.find());
             String xml = element.group();
             Matcher def = Pattern.compile("app:defaultValue=\"([^\"]*)\"").matcher(xml);
@@ -71,23 +74,108 @@ public class SettingsBackupTest {
         }
     }
 
-    /** Every user preference on the Settings screen is in the backup, except the ones that mustn't be. */
+    /** Settings → Language: every value the list offers ("system" included) and nothing else. */
     @Test
-    public void everyPersistedPreferenceIsBackedUp() throws Exception {
+    public void languageIsBackedUpWithTheListsValues() throws Exception {
+        SettingsBackup.Setting language = SettingsBackup.find(AppLanguage.KEY);
+        assertNotNull(language);
+        assertEquals(SettingsBackup.Kind.CHOICE, language.kind);
+        assertEquals(AppLanguage.SYSTEM, language.defaultValue);
+        List<String> values = array(res("values/arrays.xml"), "language_values");
+        assertEquals(values, language.choices);
+        assertEquals("system", values.get(0));
+        assertEquals(Arrays.asList(AppLanguage.TAGS), values.subList(1, values.size()));
+    }
+
+    /**
+     * Preferences on the Settings screen that aren't in the backup, on purpose. A new preference must go either in
+     * SettingsBackup.SETTINGS or here, so none is left out of backups by accident (as the language was until 60).
+     */
+    private static final List<String> NOT_BACKED_UP = Arrays.asList(
+            "location_enable", "notifications_enable", // permissions: Android decides
+            "introduction", // text
+            "layout_export", "layout_import", "openbanners_backup", "openbanners_restore", // actions
+            "notification_progress", "notification_step_in_range", // open Android's notification settings
+            "bannergress_links_status", // shows the state of bannergress_links
+            "licenses", "privacy", "source"); // links
+
+    /** The three radio buttons that together are passphrase_source. */
+    private static final List<String> PASSPHRASE_SOURCE_BUTTONS = Arrays.asList(
+            "passphrase_source_none", "passphrase_source_mission", "passphrase_source_openbanners");
+
+    /** Every key on the Settings screen is either backed up or on the list of what isn't. */
+    @Test
+    public void everyPreferenceIsBackedUpOrExplicitlyNot() throws Exception {
         String screen = res("xml/root_preferences.xml");
-        List<String> notBackedUp = Arrays.asList("location_enable", "notifications_enable"); // permissions: Android decides
-        Matcher keys = Pattern.compile("<((?:[\\w.]*)(?:SwitchPreferenceCompat|SwitchPreference|ListPreference|CheckBoxPreference))\\b[^>]*?app:key=\"@string/(\\w+)\"", Pattern.DOTALL).matcher(screen);
-        int count = 0;
+        Matcher keys = Pattern.compile("app:key=\"(?:@string/)?([\\w.]+)\"").matcher(screen);
+        List<String> onScreen = new ArrayList<>();
         while (keys.find()) {
-            String key = keys.group(2);
-            if (notBackedUp.contains(key)) continue;
-            assertNotNull("add " + key + " to SettingsBackup.SETTINGS", SettingsBackup.find(key));
-            count++;
+            String key = keys.group(1);
+            onScreen.add(key);
+            if (NOT_BACKED_UP.contains(key)) continue;
+            if (PASSPHRASE_SOURCE_BUTTONS.contains(key)) {
+                assertNotNull(SettingsBackup.find(PassphraseSettings.SOURCE));
+                continue;
+            }
+            assertNotNull("add " + key + " to SettingsBackup.SETTINGS, or to NOT_BACKED_UP if it mustn't be backed up",
+                    SettingsBackup.find(key));
         }
-        // + card_items (a plain Preference with its own dialog) and passphrase_source (radio buttons)
-        assertEquals(SettingsBackup.SETTINGS.size() - 2, count);
-        assertNotNull(SettingsBackup.find("card_items"));
-        assertNotNull(SettingsBackup.find(PassphraseSettings.SOURCE));
+        assertTrue(onScreen.size() > 20); // the pattern still finds the keys
+        for (String key : NOT_BACKED_UP) assertTrue("no longer on the Settings screen: " + key, onScreen.contains(key));
+        for (SettingsBackup.Setting setting : SettingsBackup.SETTINGS) {
+            assertTrue("not on the Settings screen: " + setting.key, onScreen.contains(setting.key)
+                    || (setting.key.equals(PassphraseSettings.SOURCE) && onScreen.containsAll(PASSPHRASE_SOURCE_BUTTONS)));
+            assertFalse(setting.key, NOT_BACKED_UP.contains(setting.key));
+        }
+    }
+
+    @Test
+    public void languageIsBackedUpAndRestored() {
+        Map<String, Object> phone = new HashMap<>();
+        phone.put(AppLanguage.KEY, "zh-Hant"); // SettingsActivity puts AppLanguage.current here
+        Map<String, Object> backup = SettingsBackup.collect(phone);
+        assertEquals("zh-Hant", backup.get(AppLanguage.KEY));
+        assertEquals("system", SettingsBackup.collect(new HashMap<>()).get(AppLanguage.KEY));
+
+        Map<String, Object> other = new HashMap<>();
+        other.put(AppLanguage.KEY, "nl");
+        SettingsBackup.Plan plan = SettingsBackup.plan(backup, other);
+        assertEquals("zh-Hant", plan.values.get(AppLanguage.KEY));
+        assertEquals(1, plan.changes.size());
+        assertEquals(AppLanguage.KEY, plan.changes.get(0).setting.key);
+        assertEquals("nl", plan.changes.get(0).from);
+        assertEquals("zh-Hant", plan.changes.get(0).to);
+
+        // Back to following the phone.
+        Map<String, Object> system = new HashMap<>();
+        system.put(AppLanguage.KEY, "system");
+        assertEquals("system", SettingsBackup.plan(system, other).values.get(AppLanguage.KEY));
+    }
+
+    /** Backups from before 60 have no language: restoring one keeps the language the phone has now. */
+    @Test
+    public void backupWithoutLanguageKeepsTheCurrentOne() {
+        Map<String, Object> current = new HashMap<>();
+        current.put(AppLanguage.KEY, "de");
+        Map<String, Object> old = SettingsBackup.collect(current);
+        old.remove(AppLanguage.KEY);
+        SettingsBackup.Plan plan = SettingsBackup.plan(old, current);
+        assertEquals("de", plan.values.get(AppLanguage.KEY));
+        assertTrue(plan.changes.isEmpty());
+        assertTrue(plan.invalid.isEmpty());
+        assertTrue(plan.unknown.isEmpty());
+    }
+
+    /** A language this version doesn't offer (a newer app's) follows the phone, like other invalid values. */
+    @Test
+    public void unknownLanguageFollowsThePhone() {
+        Map<String, Object> current = new HashMap<>();
+        current.put(AppLanguage.KEY, "de");
+        Map<String, Object> backup = new HashMap<>();
+        backup.put(AppLanguage.KEY, "tr");
+        SettingsBackup.Plan plan = SettingsBackup.plan(backup, current);
+        assertEquals("system", plan.values.get(AppLanguage.KEY));
+        assertEquals(Arrays.asList(AppLanguage.KEY), plan.invalid);
     }
 
     @Test
@@ -105,6 +193,7 @@ public class SettingsBackupTest {
         assertEquals(true, backup.get("route_strip_enable"));
         assertEquals("1.0", backup.get("card_size"));
         assertEquals(true, backup.get("route_show_whole_banner"));
+        assertEquals("system", backup.get(AppLanguage.KEY));
         assertFalse(backup.containsKey("location_hint_shown"));
         assertFalse(backup.containsKey("route_disclaimer_accepted_version"));
     }

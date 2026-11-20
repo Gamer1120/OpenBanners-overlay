@@ -381,7 +381,7 @@ public class SettingsActivity extends AppCompatActivity {
                 return;
             }
             boolean backup = OpenBannersAccount.ACTION_BACKUP.equals(pending.action);
-            Map<String, ?> stored = PreferenceManager.getDefaultSharedPreferences(requireContext()).getAll();
+            Map<String, ?> stored = storedSettings();
             int appVersion = appVersion();
             AlertDialog progress = new AlertDialog.Builder(requireContext())
                     .setMessage(R.string.account_working)
@@ -442,7 +442,7 @@ public class SettingsActivity extends AppCompatActivity {
                 return showMessage(R.string.restore_none);
             }
             android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
-            SettingsBackup.Plan plan = SettingsBackup.plan(backup.settings, preferences.getAll());
+            SettingsBackup.Plan plan = SettingsBackup.plan(backup.settings, storedSettings());
             if (plan.changes.isEmpty()) {
                 return showMessage(R.string.restore_same);
             }
@@ -466,10 +466,23 @@ public class SettingsActivity extends AppCompatActivity {
                     .show();
         }
 
+        /**
+         * The preferences as the backup sees them, with the language Android actually uses (on Android 13+ it can be
+         * changed in Android's app settings, so the stored tag may be stale).
+         */
+        private Map<String, Object> storedSettings() {
+            Map<String, Object> stored = new java.util.HashMap<>(PreferenceManager.getDefaultSharedPreferences(requireContext()).getAll());
+            stored.put(AppLanguage.KEY, AppLanguage.current(requireContext()));
+            return stored;
+        }
+
         private void applyRestore(SettingsBackup.Plan plan) {
             android.content.SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(requireContext());
+            String language = (String) plan.values.get(AppLanguage.KEY);
+            boolean languageChanges = language != null && !language.equals(AppLanguage.current(requireContext()));
             android.content.SharedPreferences.Editor editor = preferences.edit();
             for (Map.Entry<String, Object> entry : plan.values.entrySet()) {
+                if (AppLanguage.KEY.equals(entry.getKey())) continue; // applied below, like Settings → Language
                 if (entry.getValue() instanceof Boolean) {
                     editor.putBoolean(entry.getKey(), (Boolean) entry.getValue());
                 } else {
@@ -485,7 +498,13 @@ public class SettingsActivity extends AppCompatActivity {
                 requireActivity().getIntent().putExtra(EXTRA_SHOW_ROUTE_DISCLAIMER, true);
             }
             StateManager.updateState(state -> state);
-            requireActivity().recreate(); // show the restored values (onResume also re-applies the Links switch)
+            if (languageChanges) {
+                // As Settings → Language does: Android / AppCompat switch the whole app and recreate this screen,
+                // which then shows the restored values too.
+                AppLanguage.set(requireContext(), language);
+            } else {
+                requireActivity().recreate(); // show the restored values (onResume also re-applies the Links switch)
+            }
         }
 
         private String backupDate(String iso) {
