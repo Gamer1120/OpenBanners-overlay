@@ -39,4 +39,11 @@
         <item>每 2 秒</item>
         <item>每 5 秒</item>
     </string-array>
+    <string-array name="navigate_distance_names">
+        <item>500 公尺</item>
+        <item>1 公里</item>
+        <item>2 公里</item>
+        <item>5 公里</item>
+        <item>10 公里</item>
+    </string-array>
 </resources>

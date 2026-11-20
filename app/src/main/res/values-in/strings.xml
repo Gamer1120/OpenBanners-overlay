@@ -65,6 +65,11 @@
     <string name="preferences_card_items">Tombol dan urutan</string>
     <string name="preferences_card_layout">Tata letak</string>
     <string name="preferences_card_size">Ukuran</string>
+    <string name="preferences_navigation">Navigasi</string>
+    <string name="preferences_navigate_next">Navigasi ke waypoint berikutnya</string>
+    <string name="preferences_navigate_next_summary">Menampilkan tombol Navigasi di kartu misi selama waypoint berikutnya masih jauh. Tombol ini membuka rute di Google Maps, seperti Navigasi di openbanners.org. Memerlukan lokasi.</string>
+    <string name="preferences_navigate_next_distance">Tampilkan tombol mulai dari</string>
+    <string name="overlay_navigate">Navigasi · %1$.1f km</string>
     <string name="card_item_minus">− (misi sebelumnya)</string>
     <string name="card_item_counter">Penghitung misi</string>
     <string name="card_item_plus">+ (misi berikutnya)</string>

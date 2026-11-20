@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Botões e ordem</string>
     <string name="preferences_card_layout">Layout</string>
     <string name="preferences_card_size">Tamanho</string>
+    <string name="preferences_navigation">Navegação</string>
+    <string name="preferences_navigate_next">Navegar até o próximo waypoint</string>
+    <string name="preferences_navigate_next_summary">Mostra um botão Navegar no cartão da missão enquanto o próximo waypoint estiver longe. Ele abre a rota no Google Maps, como Navegar no openbanners.org. Requer a localização.</string>
+    <string name="preferences_navigate_next_distance">Mostrar o botão a partir de</string>
+    <string name="overlay_navigate">Navegar · %1$.1f km</string>
     <string name="card_item_minus">− (missão anterior)</string>
     <string name="card_item_counter">Contador de missões</string>
     <string name="card_item_plus">+ (próxima missão)</string>

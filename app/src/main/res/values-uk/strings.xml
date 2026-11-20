@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Кнопки та порядок</string>
     <string name="preferences_card_layout">Макет</string>
     <string name="preferences_card_size">Розмір</string>
+    <string name="preferences_navigation">Навігація</string>
+    <string name="preferences_navigate_next">Маршрут до наступної точки</string>
+    <string name="preferences_navigate_next_summary">Показує на картці місії кнопку «Маршрут», поки наступна точка далеко. Вона відкриває маршрут у Google Картах, як «Прокласти шлях» на openbanners.org. Потрібна геолокація.</string>
+    <string name="preferences_navigate_next_distance">Показувати кнопку від</string>
+    <string name="overlay_navigate">Маршрут · %1$.1f км</string>
     <string name="card_item_minus">− (попередня місія)</string>
     <string name="card_item_counter">Лічильник місій</string>
     <string name="card_item_plus">+ (наступна місія)</string>

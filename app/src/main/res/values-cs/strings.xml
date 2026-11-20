@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Tlačítka a pořadí</string>
     <string name="preferences_card_layout">Rozložení</string>
     <string name="preferences_card_size">Velikost</string>
+    <string name="preferences_navigation">Navigace</string>
+    <string name="preferences_navigate_next">Navigovat k dalšímu waypointu</string>
+    <string name="preferences_navigate_next_summary">Zobrazí na kartě mise tlačítko Navigovat, dokud je další waypoint daleko. Otevře trasu v Mapách Google, stejně jako Navigovat na openbanners.org. Vyžaduje polohu.</string>
+    <string name="preferences_navigate_next_distance">Zobrazit tlačítko od</string>
+    <string name="overlay_navigate">Navigovat · %1$.1f km</string>
     <string name="card_item_minus">− (předchozí mise)</string>
     <string name="card_item_counter">Počítadlo misí</string>
     <string name="card_item_plus">+ (další mise)</string>

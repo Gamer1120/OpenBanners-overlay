@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Boutons et ordre</string>
     <string name="preferences_card_layout">Disposition</string>
     <string name="preferences_card_size">Taille</string>
+    <string name="preferences_navigation">Navigation</string>
+    <string name="preferences_navigate_next">Naviguer vers le prochain point de passage</string>
+    <string name="preferences_navigate_next_summary">Affiche un bouton Naviguer sur la carte de mission tant que le prochain point de passage est loin. Il ouvre l’itinéraire dans Google Maps, comme Naviguer sur openbanners.org. Nécessite la position.</string>
+    <string name="preferences_navigate_next_distance">Afficher le bouton à partir de</string>
+    <string name="overlay_navigate">Naviguer · %1$.1f km</string>
     <string name="card_item_minus">− (mission précédente)</string>
     <string name="card_item_counter">Compteur de missions</string>
     <string name="card_item_plus">+ (mission suivante)</string>

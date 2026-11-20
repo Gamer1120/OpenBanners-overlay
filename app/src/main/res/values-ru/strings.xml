@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Кнопки и порядок</string>
     <string name="preferences_card_layout">Расположение</string>
     <string name="preferences_card_size">Размер</string>
+    <string name="preferences_navigation">Навигация</string>
+    <string name="preferences_navigate_next">Маршрут к следующей точке</string>
+    <string name="preferences_navigate_next_summary">Показывает на карточке миссии кнопку «Маршрут», пока следующая точка далеко. Она открывает маршрут в Google Картах, как «Маршрут» на openbanners.org. Нужно местоположение.</string>
+    <string name="preferences_navigate_next_distance">Показывать кнопку от</string>
+    <string name="overlay_navigate">Маршрут · %1$.1f км</string>
     <string name="card_item_minus">− (предыдущая миссия)</string>
     <string name="card_item_counter">Счётчик миссий</string>
     <string name="card_item_plus">+ (следующая миссия)</string>

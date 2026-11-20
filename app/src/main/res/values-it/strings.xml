@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Pulsanti e ordine</string>
     <string name="preferences_card_layout">Layout</string>
     <string name="preferences_card_size">Dimensione</string>
+    <string name="preferences_navigation">Navigazione</string>
+    <string name="preferences_navigate_next">Naviga al prossimo waypoint</string>
+    <string name="preferences_navigate_next_summary">Mostra un pulsante Naviga sulla scheda missione finché il prossimo waypoint è lontano. Apre le indicazioni in Google Maps, come Naviga su openbanners.org. Richiede la posizione.</string>
+    <string name="preferences_navigate_next_distance">Mostra il pulsante da</string>
+    <string name="overlay_navigate">Naviga · %1$.1f km</string>
     <string name="card_item_minus">− (missione precedente)</string>
     <string name="card_item_counter">Contatore missioni</string>
     <string name="card_item_plus">+ (missione successiva)</string>

@@ -64,6 +64,11 @@
     <string name="preferences_card_items">버튼 및 순서</string>
     <string name="preferences_card_layout">레이아웃</string>
     <string name="preferences_card_size">크기</string>
+    <string name="preferences_navigation">길 안내</string>
+    <string name="preferences_navigate_next">다음 웨이포인트로 길 안내</string>
+    <string name="preferences_navigate_next_summary">다음 웨이포인트가 멀리 있는 동안 미션 카드에 길 안내 버튼을 표시합니다. openbanners.org의 길 안내처럼 Google 지도 경로를 엽니다. 위치가 필요합니다.</string>
+    <string name="preferences_navigate_next_distance">버튼 표시 거리</string>
+    <string name="overlay_navigate">길 안내 · %1$.1f km</string>
     <string name="card_item_minus">− (이전 미션)</string>
     <string name="card_item_counter">미션 카운터</string>
     <string name="card_item_plus">+ (다음 미션)</string>

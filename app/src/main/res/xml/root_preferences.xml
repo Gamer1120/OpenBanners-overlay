@@ -63,6 +63,27 @@
 
     </PreferenceCategory>
 
+    <!-- A Navigate button on the mission card (NextWaypoint): Google Maps directions to the next waypoint while it's
+         farther away than the chosen distance. -->
+    <PreferenceCategory app:title="@string/preferences_navigation">
+
+        <SwitchPreferenceCompat
+            app:defaultValue="false"
+            app:key="@string/navigate_next_enable"
+            app:summary="@string/preferences_navigate_next_summary"
+            app:title="@string/preferences_navigate_next" />
+
+        <ListPreference
+            app:defaultValue="1000"
+            app:dependency="@string/navigate_next_enable"
+            app:entries="@array/navigate_distance_names"
+            app:entryValues="@array/navigate_distance_values"
+            app:key="@string/navigate_next_min_distance"
+            app:title="@string/preferences_navigate_next_distance"
+            app:useSimpleSummaryProvider="true" />
+
+    </PreferenceCategory>
+
     <PreferenceCategory app:title="@string/preferences_route_strip">
 
         <SwitchPreferenceCompat

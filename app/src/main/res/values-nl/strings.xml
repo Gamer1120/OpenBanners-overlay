@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Knoppen en volgorde</string>
     <string name="preferences_card_layout">Indeling</string>
     <string name="preferences_card_size">Grootte</string>
+    <string name="preferences_navigation">Navigatie</string>
+    <string name="preferences_navigate_next">Navigeren naar volgend waypoint</string>
+    <string name="preferences_navigate_next_summary">Toont een Navigeren-knop op de missiekaart zolang het volgende waypoint ver weg is. Die opent een routebeschrijving in Google Maps, zoals Navigeren op openbanners.org. Vereist locatie.</string>
+    <string name="preferences_navigate_next_distance">Knop tonen vanaf</string>
+    <string name="overlay_navigate">Navigeren · %1$.1f km</string>
     <string name="card_item_minus">− (vorige missie)</string>
     <string name="card_item_counter">Missieteller</string>
     <string name="card_item_plus">+ (volgende missie)</string>

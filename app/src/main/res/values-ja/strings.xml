@@ -64,6 +64,11 @@
     <string name="preferences_card_items">ボタンと並び順</string>
     <string name="preferences_card_layout">レイアウト</string>
     <string name="preferences_card_size">サイズ</string>
+    <string name="preferences_navigation">ナビ</string>
+    <string name="preferences_navigate_next">次のウェイポイントへナビ</string>
+    <string name="preferences_navigate_next_summary">次のウェイポイントが遠いあいだ、ミッションカードに「ナビ」ボタンを表示します。openbanners.org の「ナビ」と同じく Google マップの経路案内を開きます。位置情報が必要です。</string>
+    <string name="preferences_navigate_next_distance">ボタンを表示する距離</string>
+    <string name="overlay_navigate">ナビ · %1$.1f km</string>
     <string name="card_item_minus">−（前のミッション）</string>
     <string name="card_item_counter">ミッションカウンター</string>
     <string name="card_item_plus">+（次のミッション）</string>

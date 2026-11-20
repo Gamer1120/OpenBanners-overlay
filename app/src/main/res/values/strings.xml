@@ -75,6 +75,11 @@
     <string name="preferences_card_items">Buttons and order</string>
     <string name="preferences_card_layout">Layout</string>
     <string name="preferences_card_size">Size</string>
+    <string name="preferences_navigation">Navigation</string>
+    <string name="preferences_navigate_next">Navigate to next waypoint</string>
+    <string name="preferences_navigate_next_summary">Shows a Navigate button on the mission card while the next waypoint is far away. It opens Google Maps directions, like Navigate on openbanners.org. Needs location.</string>
+    <string name="preferences_navigate_next_distance">Show the button from</string>
+    <string name="overlay_navigate">Navigate · %1$.1f km</string>
     <string name="card_item_minus">− (previous mission)</string>
     <string name="card_item_counter">Mission counter</string>
     <string name="card_item_plus">+ (next mission)</string>

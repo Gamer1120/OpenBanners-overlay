@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Przyciski i kolejność</string>
     <string name="preferences_card_layout">Układ</string>
     <string name="preferences_card_size">Rozmiar</string>
+    <string name="preferences_navigation">Nawigacja</string>
+    <string name="preferences_navigate_next">Nawiguj do następnego waypointu</string>
+    <string name="preferences_navigate_next_summary">Pokazuje przycisk Nawiguj na karcie misji, dopóki następny waypoint jest daleko. Otwiera trasę w Mapach Google, tak jak Nawiguj na openbanners.org. Wymaga lokalizacji.</string>
+    <string name="preferences_navigate_next_distance">Pokazuj przycisk od</string>
+    <string name="overlay_navigate">Nawiguj · %1$.1f km</string>
     <string name="card_item_minus">− (poprzednia misja)</string>
     <string name="card_item_counter">Licznik misji</string>
     <string name="card_item_plus">+ (następna misja)</string>

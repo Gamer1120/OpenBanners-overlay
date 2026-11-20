@@ -36,6 +36,11 @@ out), optionally falling back to the mission number. Optional auto-copy when swi
 passphrase. Nothing depends on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
 switch (migrated: on → mission number + auto-copy). Logic and tests: `Passphrases`, `PassphraseSettings`.
 
+Navigate to next waypoint (Settings → Navigation, off by default): a Navigate button on the mission card while the
+next waypoint is farther away than the chosen distance (500 m–10 km, default 1 km; needs location). It opens
+`https://www.google.com/maps/dir/?api=1&destination=<lat>,<lng>`, the same link as openbanners.org's Navigate buttons,
+in the Maps app (or the browser). Logic and tests: `NextWaypoint`.
+
 Not affiliated with Bannergress or Niantic. Application id `org.openbanners.overlay`; own icon.
 Licence notices shipped in the app: `app/src/main/res/raw/licenses.txt` (Settings → Licences).
 Targets Android 16 (API 36). Privacy policy: https://openbanners.org/overlay/privacy (source: `docs/privacy.html`).

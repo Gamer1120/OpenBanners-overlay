@@ -65,6 +65,11 @@
     <string name="preferences_card_items">按钮和顺序</string>
     <string name="preferences_card_layout">布局</string>
     <string name="preferences_card_size">大小</string>
+    <string name="preferences_navigation">导航</string>
+    <string name="preferences_navigate_next">导航到下一个航点</string>
+    <string name="preferences_navigate_next_summary">下一个航点较远时，在任务卡片上显示“导航”按钮。它会像 openbanners.org 上的“导航”一样打开 Google 地图路线。需要位置信息。</string>
+    <string name="preferences_navigate_next_distance">按钮显示距离</string>
+    <string name="overlay_navigate">导航 · %1$.1f 公里</string>
     <string name="card_item_minus">−（上一个任务）</string>
     <string name="card_item_counter">任务计数</string>
     <string name="card_item_plus">+（下一个任务）</string>

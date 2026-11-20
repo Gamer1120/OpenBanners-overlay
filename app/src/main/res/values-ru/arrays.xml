@@ -39,4 +39,11 @@
         <item>Каждые 2 секунды</item>
         <item>Каждые 5 секунд</item>
     </string-array>
+    <string-array name="navigate_distance_names">
+        <item>500 м</item>
+        <item>1 км</item>
+        <item>2 км</item>
+        <item>5 км</item>
+        <item>10 км</item>
+    </string-array>
 </resources>

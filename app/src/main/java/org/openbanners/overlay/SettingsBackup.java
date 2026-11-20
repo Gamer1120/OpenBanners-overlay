@@ -68,6 +68,8 @@ final class SettingsBackup {
             new Setting("card_items", Kind.CARD_ITEMS, CardItems.DEFAULT),
             new Setting("card_layout", Kind.CHOICE, "two_rows", "two_rows", "wide", "tall"),
             new Setting("card_size", Kind.CHOICE, "1.0", "0.75", "1.0", "1.25", "1.5"),
+            new Setting("navigate_next_enable", Kind.BOOLEAN, NextWaypoint.DEFAULT_ENABLED),
+            new Setting("navigate_next_min_distance", Kind.CHOICE, NextWaypoint.DEFAULT_MIN_METERS, "500", "1000", "2000", "5000", "10000"),
             new Setting("route_strip_enable", Kind.BOOLEAN, false),
             new Setting("route_show_whole_banner", Kind.BOOLEAN, true),
             new Setting("route_hack_range", Kind.BOOLEAN, false),

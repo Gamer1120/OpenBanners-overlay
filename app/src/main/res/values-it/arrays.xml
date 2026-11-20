@@ -39,4 +39,11 @@
         <item>Ogni 2 secondi</item>
         <item>Ogni 5 secondi</item>
     </string-array>
+    <string-array name="navigate_distance_names">
+        <item>500 m</item>
+        <item>1 km</item>
+        <item>2 km</item>
+        <item>5 km</item>
+        <item>10 km</item>
+    </string-array>
 </resources>

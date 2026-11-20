@@ -65,6 +65,11 @@
     <string name="preferences_card_items">按鈕和順序</string>
     <string name="preferences_card_layout">版面配置</string>
     <string name="preferences_card_size">大小</string>
+    <string name="preferences_navigation">導航</string>
+    <string name="preferences_navigate_next">導航至下一個任務點</string>
+    <string name="preferences_navigate_next_summary">下一個任務點較遠時，在任務卡片上顯示「導航」按鈕。它會像 openbanners.org 上的「導航」一樣開啟 Google 地圖路線。需要位置資訊。</string>
+    <string name="preferences_navigate_next_distance">按鈕顯示距離</string>
+    <string name="overlay_navigate">導航 · %1$.1f 公里</string>
     <string name="card_item_minus">−（上一個任務）</string>
     <string name="card_item_counter">任務計數</string>
     <string name="card_item_plus">+（下一個任務）</string>

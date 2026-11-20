@@ -64,6 +64,11 @@
     <string name="preferences_card_items">Schaltflächen und Reihenfolge</string>
     <string name="preferences_card_layout">Anordnung</string>
     <string name="preferences_card_size">Größe</string>
+    <string name="preferences_navigation">Navigation</string>
+    <string name="preferences_navigate_next">Zum nächsten Wegpunkt navigieren</string>
+    <string name="preferences_navigate_next_summary">Zeigt auf der Missionskarte eine Navigieren-Schaltfläche, solange der nächste Wegpunkt weit entfernt ist. Sie öffnet eine Google-Maps-Route, wie Navigieren auf openbanners.org. Benötigt den Standort.</string>
+    <string name="preferences_navigate_next_distance">Schaltfläche anzeigen ab</string>
+    <string name="overlay_navigate">Navigieren · %1$.1f km</string>
     <string name="card_item_minus">− (vorherige Mission)</string>
     <string name="card_item_counter">Missionszähler</string>
     <string name="card_item_plus">+ (nächste Mission)</string>

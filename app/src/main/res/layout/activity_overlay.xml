@@ -70,6 +70,15 @@
             android:paddingEnd="2dp"
             android:text="@string/passphrase_button" />
 
+        <!-- Navigate to the next waypoint (Google Maps): only while it's far away, when turned on in Settings. -->
+        <Button
+            android:id="@+id/buttonNavigate"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingStart="2dp"
+            android:paddingEnd="2dp"
+            android:visibility="gone" />
+
         <!-- Below the buttons: the passphrase list, a passphrase's text, or "Copied". -->
         <LinearLayout
             android:id="@+id/passphrasePanel"

@@ -58,6 +58,13 @@ class OverlayView extends FrameLayout {
     private final Button buttonDone;
     /** 🔑: copies the current mission's passphrase, or lists them when it has several. */
     private final Button buttonPassphrase;
+    /** Navigate: Google Maps directions to the next waypoint while it's far away (Settings → Navigation). */
+    private final Button buttonNavigate;
+    /** Settings → Navigation: "Navigate to next waypoint" and from which distance the button shows. */
+    private boolean navigateEnabled = NextWaypoint.DEFAULT_ENABLED;
+    private double navigateMinMeters = NextWaypoint.minMeters(NextWaypoint.DEFAULT_MIN_METERS);
+    /** The waypoint the Navigate button leads to while it's shown. */
+    private NextWaypoint.Target navigateTarget;
     /** Below the buttons: the passphrase list, a passphrase's text, or a short message. */
     private final LinearLayout passphrasePanel;
     private final Handler handler = new Handler(Looper.getMainLooper());
@@ -132,6 +139,7 @@ class OverlayView extends FrameLayout {
         buttonClose = findViewById(R.id.buttonClose);
         buttonDone = findViewById(R.id.buttonDone);
         buttonPassphrase = findViewById(R.id.buttonPassphrase);
+        buttonNavigate = findViewById(R.id.buttonNavigate);
         passphrasePanel = findViewById(R.id.passphrasePanel);
         this.origin = origin;
         cardContent = findViewById(R.id.cardContent);
@@ -199,6 +207,8 @@ class OverlayView extends FrameLayout {
         passphraseSource = PassphraseSettings.source(stored);
         passphraseFallback = PassphraseSettings.fallback(stored);
         passphraseAutoCopy = PassphraseSettings.autoCopy(stored);
+        navigateEnabled = preferences.getBoolean(context.getString(R.string.navigate_next_enable), NextWaypoint.DEFAULT_ENABLED);
+        navigateMinMeters = NextWaypoint.minMeters(preferences.getString(context.getString(R.string.navigate_next_min_distance), NextWaypoint.DEFAULT_MIN_METERS));
         State state = StateManager.getState();
         if (Passphrases.SOURCE_OPENBANNERS.equals(passphraseSource) && !passphraseSource.equals(oldSource) && state.banner != null) {
             // Switched to OpenBanners while a banner is open: download its passphrases now.
@@ -207,6 +217,7 @@ class OverlayView extends FrameLayout {
         updatePassphrases(state);
         rebuildCard();
         updatePassphraseButton();
+        updateNavigateButton(state);
     }
 
     /** Builds the card for the settings and the mission phase (last mission or not); returns whether it changed. */
@@ -223,8 +234,8 @@ class OverlayView extends FrameLayout {
         }
         float dp = getResources().getDisplayMetrics().density;
 
-        Button[] buttons = {buttonMinus, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase};
-        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase, passphrasePanel}) {
+        Button[] buttons = {buttonMinus, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase, buttonNavigate};
+        for (View view : new View[]{buttonMinus, textMission, buttonPlus, buttonNext, buttonClose, buttonDone, buttonPassphrase, buttonNavigate, passphrasePanel}) {
             ViewGroup parent = (ViewGroup) view.getParent();
             if (parent != null) parent.removeView(view);
         }
@@ -273,6 +284,8 @@ class OverlayView extends FrameLayout {
         // The panel takes the card's width (it never widens the card, so the route map next to it stays put).
         panelWidth = CardItems.LAYOUT_TALL.equals(layout) || lines.size() == 1 && !lines.get(0).row ? fullWidth : contentWidth;
         cardScale = scale;
+        // Navigate sits below the buttons, as wide as the card (it never widens it); hidden unless it's offered.
+        cardContent.addView(buttonNavigate, new LinearLayout.LayoutParams(panelWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
         cardContent.addView(passphrasePanel, new LinearLayout.LayoutParams(panelWidth, ViewGroup.LayoutParams.WRAP_CONTENT));
         if (panelMode != PANEL_NONE && !passphrases.show()) setPanel(PANEL_NONE, -1, null);
         if (panelMode != PANEL_NONE) renderPanel();
@@ -349,6 +362,10 @@ class OverlayView extends FrameLayout {
                 openInBrowser(DeepLink.markDoneUrl(origin, banner.id));
             }
             stopOverlay();
+        });
+        // Like Navigate on openbanners.org: Google Maps directions to the waypoint (the Maps app if it's installed).
+        buttonNavigate.setOnClickListener(v -> {
+            if (navigateTarget != null) openInBrowser(NextWaypoint.directionsUrl(navigateTarget.latitude, navigateTarget.longitude));
         });
         buttonPassphrase.setOnClickListener(v -> onPassphraseTap());
         buttonPassphrase.setOnLongClickListener(v -> {
@@ -543,6 +560,28 @@ class OverlayView extends FrameLayout {
             cardChangedListener.run();
         }
         updatePassphraseButton();
+        updateNavigateButton(state);
+    }
+
+    /**
+     * Shows Navigate while "Navigate to next waypoint" is on and the next waypoint is farther away than the chosen
+     * distance (needs your location). Only its visibility and label change, so the card keeps its width.
+     */
+    private void updateNavigateButton(State state) {
+        boolean shown = buttonNavigate.getVisibility() == View.VISIBLE;
+        NextWaypoint.Target target = null;
+        if (navigateEnabled && state.banner != null && state.currentLocation != null) {
+            target = NextWaypoint.find(state.banner, state.currentMission, state.currentMissionVisitedStepIndexes,
+                    state.justNavigated, state.currentLocation.getLatitude(), state.currentLocation.getLongitude());
+        }
+        if (target == null || !NextWaypoint.offer(target.meters, navigateMinMeters, shown)) {
+            navigateTarget = null;
+            if (shown) buttonNavigate.setVisibility(View.GONE);
+            return;
+        }
+        navigateTarget = target;
+        buttonNavigate.setText(getContext().getString(R.string.overlay_navigate, target.meters / 1_000));
+        if (!shown) buttonNavigate.setVisibility(View.VISIBLE);
     }
 
     /** The selected mission, or null before the start. */
