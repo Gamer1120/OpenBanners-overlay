@@ -1,0 +1,1 @@
+Passphrase auto-copy now also works for missions with several passphrases: it copies the first one. If that one isn't known yet, the mission number is copied when "Use the mission number when no passphrase is known" is on.
