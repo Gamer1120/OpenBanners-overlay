@@ -47,7 +47,7 @@
     <string name="passphrase_source_openbanners">Passphrases partagées par la communauté sur OpenBanners</string>
     <string name="passphrase_source_openbanners_summary">Passphrases partagées par d’autres joueurs. Télécharge les passphrases de cette bannière depuis openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Utiliser le numéro de mission si aucune passphrase n’est connue</string>
-    <string name="preferences_passphrase_autocopy">Copier automatiquement quand je passe à une mission avec une seule passphrase</string>
+    <string name="preferences_passphrase_autocopy">Copier automatiquement quand je passe à une mission (la première passphrase s’il y en a plusieurs)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Copiée</string>
     <string name="passphrase_copied_mission_number">✓ Copié (numéro de mission)</string>

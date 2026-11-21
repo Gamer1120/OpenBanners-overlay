@@ -47,7 +47,7 @@
     <string name="passphrase_source_openbanners">Contraseñas colaborativas de OpenBanners</string>
     <string name="passphrase_source_openbanners_summary">Contraseñas compartidas por otros jugadores. Descarga las contraseñas de este banner desde openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Usar el número de misión cuando no se conoce ninguna contraseña</string>
-    <string name="preferences_passphrase_autocopy">Copiar automáticamente al pasar a una misión con una sola contraseña</string>
+    <string name="preferences_passphrase_autocopy">Copiar automáticamente al pasar a una misión (la primera contraseña si tiene varias)</string>
     <string name="passphrase_button">🔑 Contraseña</string>
     <string name="passphrase_copied">✓ Copiada</string>
     <string name="passphrase_copied_mission_number">✓ Copiado (número de misión)</string>

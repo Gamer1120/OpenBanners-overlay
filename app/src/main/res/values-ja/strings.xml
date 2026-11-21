@@ -47,7 +47,7 @@
     <string name="passphrase_source_openbanners">OpenBanners のみんなで集めたパスフレーズ</string>
     <string name="passphrase_source_openbanners_summary">ほかのプレイヤーが共有したパスフレーズです。このバナーのパスフレーズを openbanners.org からダウンロードします。</string>
     <string name="preferences_passphrase_fallback">パスフレーズが不明なときはミッション番号を使う</string>
-    <string name="preferences_passphrase_autocopy">パスフレーズが 1 つのミッションに切り替えたら自動でコピーする</string>
+    <string name="preferences_passphrase_autocopy">ミッションに切り替えたら自動でコピーする（複数ある場合は最初のパスフレーズ）</string>
     <string name="passphrase_button">🔑 パスフレーズ</string>
     <string name="passphrase_copied">✓ コピーしました</string>
     <string name="passphrase_copied_mission_number">✓ コピーしました（ミッション番号）</string>

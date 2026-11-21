@@ -32,8 +32,9 @@ Passphrases (Settings → Passphrases, off by default): a 🔑 button on the mis
 passphrase, or lists them when it has several (step labels as on the route map). Source: the mission number, or
 crowd-sourced answers from openbanners.org (`GET /_openbanners/passphrases/v1/banners/{id}`, public, only live answers,
 matched to steps by portal id; downloaded only with that source, cached for offline use; hidden when the author opted
-out), optionally falling back to the mission number. Optional auto-copy when switching to a mission with exactly one
-passphrase. Nothing depends on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
+out), optionally falling back to the mission number. Optional auto-copy when switching to a mission: its passphrase, or
+the first one when it has several (an unknown first one counts as unknown: the mission number with the fallback, else
+nothing). Nothing depends on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
 switch (migrated: on → mission number + auto-copy). Logic and tests: `Passphrases`, `PassphraseSettings`.
 
 Navigate to next waypoint (Settings → Navigation, off by default): a Navigate button on the mission card while the

@@ -553,7 +553,7 @@ class OverlayView extends FrameLayout {
             handler.removeCallbacks(hideMessage);
             setPanel(PANEL_NONE, -1, null);
             autoCopyPending = false;
-            if (passphraseAutoCopy && passphrases.single()) autoCopy();
+            if (passphraseAutoCopy && passphrases.show()) autoCopy();
         }
         if ((wasLastMission != lastMission || couldMarkDone != canMarkDone || hadPassphrase != passphrases.show())
                 && rebuildCard() && cardChangedListener != null) {
@@ -601,19 +601,19 @@ class OverlayView extends FrameLayout {
     }
 
     /**
-     * Auto-copy on switching to a mission with one passphrase (Settings → Passphrases). If its banner's passphrases
-     * are still downloading, it waits for them (only while you stay on that mission).
+     * Auto-copy on switching to a mission with a passphrase (Settings → Passphrases): the first one if it has several.
+     * If its banner's passphrases are still downloading, it waits for them (only while you stay on that mission).
      */
     private void autoCopy() {
         autoCopyPending = false;
-        if (!passphraseAutoCopy || !passphrases.single()) return;
+        if (!passphraseAutoCopy || !passphrases.show()) return;
         Mission mission = currentMission(StateManager.getState());
         if (mission != null && Passphrases.SOURCE_OPENBANNERS.equals(passphraseSource)
                 && PassphraseStore.get(mission.sourceBannerId) == null && PassphraseStore.loading(mission.sourceBannerId)) {
             autoCopyPending = true;
             return;
         }
-        Passphrases.Copy copy = passphrases.autoCopy();
+        Passphrases.Copy copy = passphrases.autoCopy(passphraseAutoCopy);
         if (copy == null) return;
         copyToClipboard(copy.text);
         flashCopied();

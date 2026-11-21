@@ -48,7 +48,7 @@
     <string name="passphrase_source_openbanners">來自 OpenBanners 的群眾提供通關密語</string>
     <string name="passphrase_source_openbanners_summary">由其他玩家分享的通關密語。從 openbanners.org 下載此拼圖的通關密語。</string>
     <string name="preferences_passphrase_fallback">沒有已知的通關密語時使用任務編號</string>
-    <string name="preferences_passphrase_autocopy">切換到只有一個通關密語的任務時自動複製</string>
+    <string name="preferences_passphrase_autocopy">切換到任務時自動複製（有多個通關密語時複製第一個）</string>
     <string name="passphrase_button">🔑 通關密語</string>
     <string name="passphrase_copied">✓ 已複製</string>
     <string name="passphrase_copied_mission_number">✓ 已複製（任務編號）</string>

@@ -47,7 +47,7 @@
     <string name="passphrase_source_openbanners">Senhas colaborativas do OpenBanners</string>
     <string name="passphrase_source_openbanners_summary">Senhas compartilhadas por outros jogadores. Baixa as senhas deste banner do openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Usar o número da missão quando nenhuma senha for conhecida</string>
-    <string name="preferences_passphrase_autocopy">Copiar automaticamente quando eu mudar para uma missão com uma única senha</string>
+    <string name="preferences_passphrase_autocopy">Copiar automaticamente quando eu mudar para uma missão (a primeira senha, se houver várias)</string>
     <string name="passphrase_button">🔑 Senha</string>
     <string name="passphrase_copied">✓ Copiada</string>
     <string name="passphrase_copied_mission_number">✓ Copiado (número da missão)</string>

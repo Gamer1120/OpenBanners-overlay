@@ -47,7 +47,7 @@
     <string name="passphrase_source_openbanners">Кодовые фразы от сообщества OpenBanners</string>
     <string name="passphrase_source_openbanners_summary">Кодовые фразы, которыми поделились другие игроки. Загружает кодовые фразы этого баннера с openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Использовать номер миссии, если кодовая фраза неизвестна</string>
-    <string name="preferences_passphrase_autocopy">Копировать автоматически при переходе к миссии с одной кодовой фразой</string>
+    <string name="preferences_passphrase_autocopy">Копировать автоматически при переходе к миссии (первую кодовую фразу, если их несколько)</string>
     <string name="passphrase_button">🔑 Фраза</string>
     <string name="passphrase_copied">✓ Скопировано</string>
     <string name="passphrase_copied_mission_number">✓ Скопировано (номер миссии)</string>

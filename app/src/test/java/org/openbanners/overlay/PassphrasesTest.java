@@ -132,7 +132,7 @@ public class PassphrasesTest {
         Passphrases.Copy copy = result.copy(result.steps.get(0));
         assertEquals("Hagyma", copy.text);
         assertFalse(copy.missionNumber);
-        assertEquals("Hagyma", result.autoCopy().text);
+        assertEquals("Hagyma", result.autoCopy(true).text);
     }
 
     @Test
@@ -145,7 +145,7 @@ public class PassphrasesTest {
         assertFalse(result.steps.get(0).known());
         assertTrue(result.unknown());
         assertNull(result.copy(result.steps.get(0)));
-        assertNull(result.autoCopy());
+        assertNull(result.autoCopy(true));
     }
 
     @Test
@@ -155,7 +155,7 @@ public class PassphrasesTest {
         Passphrases.Copy copy = result.copy(result.steps.get(0));
         assertEquals("5", copy.text);
         assertTrue(copy.missionNumber);
-        assertEquals("5", result.autoCopy().text);
+        assertEquals("5", result.autoCopy(true).text);
     }
 
     @Test
@@ -166,7 +166,7 @@ public class PassphrasesTest {
     }
 
     @Test
-    public void severalPassphrasesAreListedAndNeverAutoCopied() {
+    public void severalPassphrasesAreListedAndTheFirstIsAutoCopied() {
         Passphrases.ForMission result = openBanners(twoPassphraseMission(), true, answers(answer("m5", 4, 3, "p3", "Dió", 0)));
         assertFalse(result.single());
         assertEquals(2, result.steps.size());
@@ -175,7 +175,9 @@ public class PassphrasesTest {
         assertFalse(result.steps.get(0).known());
         assertEquals("Dió", result.steps.get(1).best());
         assertTrue(result.copy(result.steps.get(0)).missionNumber);
-        assertNull(result.autoCopy());
+        // The first passphrase (5b) is not known: the mission number, not the known 5d answer.
+        assertEquals("5", result.autoCopy(true).text);
+        assertTrue(result.autoCopy(true).missionNumber);
     }
 
     @Test
@@ -195,10 +197,10 @@ public class PassphrasesTest {
         assertEquals("2b", result.steps.get(0).label);
         assertEquals("5", result.copy(result.steps.get(0)).text);
         assertFalse(result.copy(result.steps.get(0)).missionNumber);
-        assertEquals("5", result.autoCopy().text);
+        assertEquals("5", result.autoCopy(true).text);
         // Without a known source banner the position counts.
         mission.sourceIndex = -1;
-        assertEquals("2", Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, mission, 1, null).autoCopy().text);
+        assertEquals("2", Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, mission, 1, null).autoCopy(true).text);
     }
 
     @Test
@@ -206,7 +208,70 @@ public class PassphrasesTest {
         Passphrases.ForMission result = Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, twoPassphraseMission(), 4, null);
         assertEquals(2, result.steps.size());
         assertEquals("5", result.steps.get(1).best());
-        assertNull(result.autoCopy());
+        assertEquals("5", result.autoCopy(true).text);
+        assertFalse(result.autoCopy(true).missionNumber);
+        assertNull(result.autoCopy(false));
+    }
+
+    // --- Auto-copy on switching to a mission: every case (OpenBanners source) ----------------------------------------
+
+    /** What auto-copy copies on switching to {@code mission}, or null for nothing. */
+    private static String autoCopied(Mission mission, boolean autoCopy, boolean fallback, PassphraseApi.BannerAnswers answers) {
+        Passphrases.Copy copy = openBanners(mission, fallback, answers).autoCopy(autoCopy);
+        return copy == null ? null : copy.text;
+    }
+
+    @Test
+    public void autoCopyOneKnownPassphrase() {
+        PassphraseApi.BannerAnswers known = answers(answer("m5", 4, 1, "p1", "Hagyma", 2));
+        assertEquals("Hagyma", autoCopied(singlePassphraseMission(), true, false, known));
+        assertEquals("Hagyma", autoCopied(singlePassphraseMission(), true, true, known));
+        assertNull(autoCopied(singlePassphraseMission(), false, false, known));
+        assertNull(autoCopied(singlePassphraseMission(), false, true, known));
+    }
+
+    @Test
+    public void autoCopySeveralPassphrasesCopiesTheFirst() {
+        PassphraseApi.BannerAnswers both = answers(answer("m5", 4, 3, "p3", "Dió", 5), answer("m5", 4, 1, "p1", "Alma", 1));
+        assertEquals("Alma", autoCopied(twoPassphraseMission(), true, false, both));
+        assertEquals("Alma", autoCopied(twoPassphraseMission(), true, true, both));
+        assertFalse(openBanners(twoPassphraseMission(), true, both).autoCopy(true).missionNumber);
+        assertNull(autoCopied(twoPassphraseMission(), false, false, both));
+        assertNull(autoCopied(twoPassphraseMission(), false, true, both));
+    }
+
+    @Test
+    public void autoCopySeveralPassphrasesFirstUnknownCountsAsUnknown() {
+        PassphraseApi.BannerAnswers secondOnly = answers(answer("m5", 4, 3, "p3", "Dió", 5));
+        assertEquals("5", autoCopied(twoPassphraseMission(), true, true, secondOnly));
+        assertNull(autoCopied(twoPassphraseMission(), true, false, secondOnly));
+        assertNull(autoCopied(twoPassphraseMission(), false, true, secondOnly));
+        assertNull(autoCopied(twoPassphraseMission(), false, false, secondOnly));
+    }
+
+    @Test
+    public void autoCopyUnknownPassphraseCopiesTheMissionNumberWithTheFallback() {
+        for (PassphraseApi.BannerAnswers none : new PassphraseApi.BannerAnswers[] {answers(), null}) {
+            for (Mission mission : new Mission[] {singlePassphraseMission(), twoPassphraseMission()}) {
+                Passphrases.Copy copy = openBanners(mission, true, none).autoCopy(true);
+                assertEquals("5", copy.text); // same text as the 🔑 button / "Copy mission number"
+                assertTrue(copy.missionNumber);
+                assertEquals(openBanners(mission, true, none).missionNumber, copy.text);
+                assertNull(autoCopied(mission, true, false, none));
+                assertNull(autoCopied(mission, false, true, none));
+                assertNull(autoCopied(mission, false, false, none));
+            }
+        }
+    }
+
+    @Test
+    public void autoCopyNothingWithoutPassphraseOrSource() {
+        Mission noPassphrase = mission(step(Objective.hack, "p0", "Fountain"));
+        assertNull(openBanners(noPassphrase, true, answers()).autoCopy(true));
+        assertNull(Passphrases.forMission(Passphrases.SOURCE_NONE, true, twoPassphraseMission(), 4, answers()).autoCopy(true));
+        PassphraseApi.BannerAnswers blocked = answers(answer("m5", 4, 1, "p1", "Alma", 3));
+        blocked.blocked = "author";
+        assertNull(openBanners(twoPassphraseMission(), true, blocked).autoCopy(true));
     }
 
     @Test

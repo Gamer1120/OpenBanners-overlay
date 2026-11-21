@@ -115,11 +115,13 @@ final class Passphrases {
         }
 
         /**
-         * Copied automatically when you switch to this mission (if that's on): only for a mission with exactly one
-         * passphrase, never for several (which one would you want?).
+         * Copied automatically when you switch to this mission, if {@code enabled} (Settings → Passphrases): what tapping
+         * copies for the mission's first passphrase step (the one listed first). With several passphrases that is the
+         * first one, also when only a later one is known: an unknown first passphrase counts as unknown, so it gets the
+         * mission number with the fallback and nothing without it.
          */
-        Copy autoCopy() {
-            return single() ? copy(steps.get(0)) : null;
+        Copy autoCopy(boolean enabled) {
+            return enabled && !steps.isEmpty() ? copy(steps.get(0)) : null;
         }
     }
 
