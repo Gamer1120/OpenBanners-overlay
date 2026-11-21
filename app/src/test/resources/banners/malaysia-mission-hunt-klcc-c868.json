@@ -1,0 +1,1911 @@
+{
+ "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+ "formattedAddress": "Kuala Lumpur, Federal Territory of Kuala Lumpur, Malaysia",
+ "id": "malaysia-mission-hunt-klcc-c868",
+ "lengthMeters": 6160,
+ "missions": {
+  "0": {
+   "averageDurationMilliseconds": 1009977,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "aaf2c009880044c5b507467b9e7962e8.1c",
+   "latestUpdateStatus": "2025-09-18T08:45:44.101881Z",
+   "lengthMeters": 159,
+   "picture": "https://lh3.googleusercontent.com/q7lHrO9O57egIg99LH-aG-vtVBDc0VJC2QzxaogVd0X99tfQ7iQp-TIq89FSJOzO3FfodbDiRK2fsMkJeClA",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "affeaa6184494d0fb81f63eb57782971.16",
+      "latitude": 3.158995,
+      "longitude": 101.710573,
+      "picture": "https://lh3.googleusercontent.com/q7msJKhaAiV3n6gQ1pTUetb4GyNYnnae2ZgCBEh9Vvvhbu3BtYgUgGJf17krArfVnn202pQFP7I-nNyWPFWoTve4KPwY-rJ6NzR1U-TjIhU",
+      "title": "Visit KL KLCC Shopping Heaven",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "f5ba7647fc554152b0f8d4abe910c877.16",
+      "latitude": 3.15913,
+      "longitude": 101.710719,
+      "picture": "https://lh3.googleusercontent.com/Hhn60SQ0HyqI-pmJeU_FIF8lF4lx97nhU14Fl16qDPQel1Z0RNyFC1erwOWyFk8v96KYBTRdJmoX9I8R9igkzZZOz_bdLo7GWlVcF-hwe4CV",
+      "title": "Many of Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "36ea6d9cf20742abae0bad0f0f5375b6.16",
+      "latitude": 3.159019,
+      "longitude": 101.71081,
+      "picture": "https://lh3.googleusercontent.com/dj8tx44YaqvZaekh74y0VJxTjczzHpNYAXeIIZpbeWQl-CppnJJhVDqR25vEXI85injhiwSf36rXaxbk0imBSpM1hRplU6WUsNwyVkvpIQDR",
+      "title": "Twin Fountain KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e4d6b5926f4749a3af34cb84a15ba9ad.16",
+      "latitude": 3.159019,
+      "longitude": 101.71103,
+      "picture": "https://lh3.googleusercontent.com/RZa5Ao2tPdM4YAay_Si7H658uERRUbn66xj1azaMWOeFR0i_jjZVU2hJW5XddB_L2uzDUW1ijMr4PId3pn36DXBmkxXEc2s_CXGOXcYdFwexYA",
+      "title": "Air Pancut Taman KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "15b7a819a0654919acc7a74697807029.12",
+      "latitude": 3.15865,
+      "longitude": 101.71117,
+      "picture": "https://lh3.googleusercontent.com/OTkK367bnS8jIh0HR1eH-WDtCgFBs6TZeKxN5j5CM4qMmtXeW4-4RQoI0LZwfeTPh_cYM-KIOo8gr45yrnsGddmK6gNCicycARNrGnAgY8bDOw",
+      "title": "Pond facing Petronas Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b262045cdf4644848696c2908424341d.16",
+      "latitude": 3.158439,
+      "longitude": 101.71074,
+      "picture": "https://lh3.googleusercontent.com/5gLYTGLrNl2a-eJ0iWO98FWSxJrDWCtS3p5ApfFT-7537GMUkDYru6XfWfpVDYuBwXYjp5rY0mJTn1Z5DMVm_28IdxGa5LX5GkQgkMDVcmRG",
+      "title": "Single Fountain 2 at KLCC",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 01",
+   "type": "anyOrder"
+  },
+  "1": {
+   "averageDurationMilliseconds": 502567,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "d21754f8e69343dca28d27c370abfd4a.1c",
+   "latestUpdateStatus": "2025-10-13T09:45:10.563070Z",
+   "lengthMeters": 364,
+   "picture": "https://lh3.googleusercontent.com/bAtCm7E9wxCG-5upWiOBbhUsoRtRAfTIrY-cxnKT3T-C7cfSO5CCXeeOlLArhKJJ-O2XSc8OYyAumQY_ymM",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "b262045cdf4644848696c2908424341d.16",
+      "latitude": 3.158439,
+      "longitude": 101.71074,
+      "picture": "https://lh3.googleusercontent.com/5gLYTGLrNl2a-eJ0iWO98FWSxJrDWCtS3p5ApfFT-7537GMUkDYru6XfWfpVDYuBwXYjp5rY0mJTn1Z5DMVm_28IdxGa5LX5GkQgkMDVcmRG",
+      "title": "Single Fountain 2 at KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "97e589f5b05745fda616acd20a071e74.16",
+      "latitude": 3.158144,
+      "longitude": 101.711852,
+      "picture": "https://lh3.googleusercontent.com/s9k-4KCUHzwAhYGWS1Ga31faegRl3WntMqbXtXqGgMmYfknRDiXrZhpWRVkSBoO1MAgi1aVov9zTObNhhmM5D-JvVHca7BGdFcM7Ka03UPY",
+      "title": "Mercedes AMG Petronas F1 Car Display",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "15b7a819a0654919acc7a74697807029.12",
+      "latitude": 3.15865,
+      "longitude": 101.71117,
+      "picture": "https://lh3.googleusercontent.com/OTkK367bnS8jIh0HR1eH-WDtCgFBs6TZeKxN5j5CM4qMmtXeW4-4RQoI0LZwfeTPh_cYM-KIOo8gr45yrnsGddmK6gNCicycARNrGnAgY8bDOw",
+      "title": "Pond facing Petronas Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e4f175f7950d486f98954a329f5e0a90.11",
+      "latitude": 3.15795,
+      "longitude": 101.711149,
+      "picture": "https://lh3.googleusercontent.com/R-g8kOXiscdQgfHvjQHZdR4GZokGGXHPeuv8uSMRqdZxdwjw2CGbFyKpkPkyUJkKkiyulgkEM5XHzew2VxI-7TH9eB0XwvhLx14svpifRLUf",
+      "title": "Kinetik I, Tower 1 Lobby, PETR",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "0ecb515b7f864ed68395228c51873910.16",
+      "latitude": 3.158067,
+      "longitude": 101.711368,
+      "picture": "https://lh3.googleusercontent.com/du0Qhcj89Gs61PlfQ3vZ4ZuxB4U1355SPGILPTKFL5o_bfeWcKwQYUHANLSTNmvxdQt05sRgxVzG9SeAtKi7ertqVNPW0AC_ti07jW203VPt",
+      "title": "Tamadun Sculpture",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "32ea8004f2f547289b157795d88d5c2b.16",
+      "latitude": 3.158315,
+      "longitude": 101.711594,
+      "picture": "https://lh3.googleusercontent.com/5AyKH37T5BySMt0OFP97TEL9cg5A59CxK-o6Iwo8ufSQj4sGe0QbLu356q9NfUcS8vJO8az-XIwIDg6QWJOb6j6Ztv9QwqDSBLmWOAiB55J0EQ",
+      "title": "Musician Fame",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 02",
+   "type": "anyOrder"
+  },
+  "2": {
+   "averageDurationMilliseconds": 496681,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "3e605a82c1904b8e82d4fb77573af3b6.1c",
+   "latestUpdateStatus": "2025-11-20T10:29:48.852057Z",
+   "lengthMeters": 163,
+   "picture": "https://lh3.googleusercontent.com/EvzsdgZ89A_ngjuGoCd8cLKHm07gkTd5hbChAvJOF6E2e42vHntDsu6rQW1H9Z9NwdLR9TD-8yV1cNWTvJRT",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "32ea8004f2f547289b157795d88d5c2b.16",
+      "latitude": 3.158315,
+      "longitude": 101.711594,
+      "picture": "https://lh3.googleusercontent.com/5AyKH37T5BySMt0OFP97TEL9cg5A59CxK-o6Iwo8ufSQj4sGe0QbLu356q9NfUcS8vJO8az-XIwIDg6QWJOb6j6Ztv9QwqDSBLmWOAiB55J0EQ",
+      "title": "Musician Fame",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "eca3803f88b44aa99d3af2b331834766.11",
+      "latitude": 3.158461,
+      "longitude": 101.711736,
+      "picture": "https://lh3.googleusercontent.com/aiXlmqs0O8-6jc67aGGo06xL7FtMqRL-xV8ovGgpoQv8YLJuUqeYPezXOoEjOZ4GAU64_Ieu9xJkIkAGlnPuBEGy723aMqa2H2xY5yN-_bie",
+      "title": "Kinetik II Tower 2 Lobby",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "0ecb515b7f864ed68395228c51873910.16",
+      "latitude": 3.158067,
+      "longitude": 101.711368,
+      "picture": "https://lh3.googleusercontent.com/du0Qhcj89Gs61PlfQ3vZ4ZuxB4U1355SPGILPTKFL5o_bfeWcKwQYUHANLSTNmvxdQt05sRgxVzG9SeAtKi7ertqVNPW0AC_ti07jW203VPt",
+      "title": "Tamadun Sculpture",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "2739f44986a042f8b838dcf5416936dd.16",
+      "latitude": 3.157956,
+      "longitude": 101.71175,
+      "picture": "https://lh3.googleusercontent.com/wC1dcq_ZJ_c4GJynMuALvDmsXE0zYBKje3ViXDkwgw6X0ErHcDM6MVyXayt8nXwamEuhxKXto3bwFtgLeRdWhohgt__d-xdeYVEmwnLlHs1L",
+      "title": "Gong Tembaga",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "fc5fe46ce92c414fb66a8c54ed046336.12",
+      "latitude": 3.15805,
+      "longitude": 101.712065,
+      "picture": "https://lh3.googleusercontent.com/4cPniMJXaOajwlaNU1mTrxuYrKdyxEeQn61ymx7965AxML0rIOk-ZWdLzTT7-0xEWYPwfQfEpBR08DVWiUYHvszl3RPoLXUMczqQejaNJxmr8Q",
+      "title": "Petronas Twin Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "dbe5d2cf9ad141cc917ba9e122f8cd3d.16",
+      "latitude": 3.158042,
+      "longitude": 101.712308,
+      "title": "Moo Cow",
+      "type": "unavailable"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 03",
+   "type": "anyOrder"
+  },
+  "3": {
+   "averageDurationMilliseconds": 380606,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "90415711f3df49f5a6d958038acaa6a6.1c",
+   "latestUpdateStatus": "2025-12-08T12:39:22.111811Z",
+   "lengthMeters": 142,
+   "picture": "https://lh3.googleusercontent.com/KeGmnOGZHU8ZX5YjDyv5EQ3Rma_Hkg4v1rWMZzRlS1fatzn2TlnXMRST9enq3NstuyW3FI3YSW_M8lsOrYv6-w",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "fc5fe46ce92c414fb66a8c54ed046336.12",
+      "latitude": 3.15805,
+      "longitude": 101.712065,
+      "picture": "https://lh3.googleusercontent.com/4cPniMJXaOajwlaNU1mTrxuYrKdyxEeQn61ymx7965AxML0rIOk-ZWdLzTT7-0xEWYPwfQfEpBR08DVWiUYHvszl3RPoLXUMczqQejaNJxmr8Q",
+      "title": "Petronas Twin Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "dbe5d2cf9ad141cc917ba9e122f8cd3d.16",
+      "latitude": 3.158042,
+      "longitude": 101.712308,
+      "title": "Moo Cow",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "2a26cdfcb2542dfdaf812779b9d3a681.1d",
+      "latitude": 3.15737,
+      "longitude": 101.712188,
+      "picture": "http://lh6.ggpht.com/J1KpcegzPpjujqfF2KTgjUF7qvfIpcTgSF1XlWcGymddQx_lldWOaF1B_TAVVfTJYrT5bIKz0rhytSNXAYy1TTA",
+      "title": "Petronas Towers",
+      "type": "fieldTripWaypoint"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "4fe2f56279854818a9d3831a5c4dca48.11",
+      "latitude": 3.157396,
+      "longitude": 101.712251,
+      "picture": "https://lh3.googleusercontent.com/_3FcPyDmH3aNQEtPXVogKEX5u9HQFN9d1rAKsTA-3jD7_IQYgOMtija6W2s_gX6zqLN8jPnM-n71eXnDV-FFGmkMmpTimS2KT0TVF8MAME7G",
+      "title": "Suria KLCC Centre Court",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "94844716c384464c812eba44a7ff668f.16",
+      "latitude": 3.157065,
+      "longitude": 101.712172,
+      "picture": "https://lh3.googleusercontent.com/R8EdKbCj6ERv1XKLqms0CBOPCrJBg9q-qmOTY40iTZ2cGoY9Zuw7idoKtHLx5EmrNuemRtU04-rF9f7F4gw1ubcK08DdcZrf8KfdN-Ertyc",
+      "title": "Silver Movie Reel Man",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "4c67c73289c7a73ba4a7c744cc1cdb0d.1d",
+      "latitude": 3.157,
+      "longitude": 101.711997,
+      "picture": "http://lh3.ggpht.com/Q4wSg8K25jK4-0URA3HCTCDxYtaUlHUx9raA22lfHRW1zFRSdOCBEyeOTflZWLtN3nNeWuY8Xf8_cBHbmppHqPY",
+      "title": "Suria KLCC",
+      "type": "fieldTripWaypoint"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 04",
+   "type": "anyOrder"
+  },
+  "4": {
+   "averageDurationMilliseconds": 607687,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "7455b3b1ef4a440d9fa49214a01bd54a.1c",
+   "latestUpdateStatus": "2026-09-03T06:59:06.238989Z",
+   "lengthMeters": 214,
+   "picture": "https://lh3.googleusercontent.com/YYwLCxtrVIflIYRJeiMmzfpiigJRYDJIEvsnBNBh9QSaIlAWi2Z75HEkHwy9zXey9VFPkgxqnU7bpGRyLmnVpQ",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "8248cefaee8e46e9ae1ed1920d1b5b5d.16",
+      "latitude": 3.156403,
+      "longitude": 101.711942,
+      "picture": "https://lh3.googleusercontent.com/dih34wRTjZH5GLJkETOFQ6pQU3WPu1C2739XkElPR9FO8z0tLezpG1iT21vHCgBTSz0f8hzaGFIVr-oES1Lb2bFiJzSfMBVNi0v_RTPxyTEv",
+      "title": "Word Art",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "99c0c7315b570e8825b1a0e317a98811.1d",
+      "latitude": 3.156359,
+      "longitude": 101.711997,
+      "picture": "http://lh3.ggpht.com/Jwqbvq_D78FMlQwtNma68u8z6tzdF9as7DDzyaqFikuz9PqiknjFOsNBYIemvbqQNu9gp-fYDVzqFVED9VLzWkLp1EjNGBo0Og",
+      "title": "Marini’s on 57",
+      "type": "fieldTripWaypoint"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b8532b65f2994b4084a0d64c0c098e79.16",
+      "latitude": 3.156151,
+      "longitude": 101.711083,
+      "picture": "https://lh3.googleusercontent.com/zDnDHJr0TFz2635xaZerMJl1VciIjAAUBSnqhvo0nbaVycwElkle7Q2h8JVTNP7X_1c5QEaq3zpAd9ymeDsAVLniXC-7uM0TBhUQ29IOZCRHpg",
+      "title": "Big Horse",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7ae2c0698bfc4bf39ac2fff127a6f799.16",
+      "latitude": 3.15602,
+      "longitude": 101.711429,
+      "picture": "http://lh3.googleusercontent.com/ZDJjUbL_yStqWABErTLBRuQX4nl3gDB_2zcbNj-25e1quyymgoSWlQk_6cX_6ZN06chI9rXQOhx4E24ehLu7AiZQB6yr",
+      "title": "Fountain Mandarin Oriental",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "a8ccac6375614844a3d9d14484207bb7.11",
+      "latitude": 3.155862,
+      "longitude": 101.711486,
+      "picture": "https://lh3.googleusercontent.com/QojkGgLEWRQQEvE7zZZM7QcBxmdeprcb2PraF52tdHkW0L15Jk_HYsJmGF6LqLOvkcN5ZRDLt1Ql1s3_jqQHqOyKGDNC-Fdq05QaROd_XBzr",
+      "title": "Mandarin Oriental Kuala Lumpur - MOKL",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "16d8c88b408f4f35b0dd73cfc199555c.16",
+      "latitude": 3.155595,
+      "longitude": 101.711154,
+      "picture": "https://lh3.googleusercontent.com/4X7fMbJalGpJbYVZ3sL-8RKQ00Z-UDoOgQTHbPX-T_JESG08fZtCZHXie47skrFKN1OmfIn4ziRUPQb2UjpNPpKLqO1efuUBxB2xd189CajARQ",
+      "title": "Metal Rooster",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 05",
+   "type": "anyOrder"
+  },
+  "5": {
+   "averageDurationMilliseconds": 620875,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "02cc3d9195da4e7fb460ee97dc74a357.1c",
+   "latestUpdateStatus": "2026-10-05T10:16:35.837720Z",
+   "lengthMeters": 385,
+   "picture": "https://lh3.googleusercontent.com/uZmCMt0QbXqyOSLT6uQCU6CZpBkFZ01SvOEBygCn76dJQwAHZ18Lmi8U8OTloVUjApqA1-KjEYb6DdhfbgvB",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "16d8c88b408f4f35b0dd73cfc199555c.16",
+      "latitude": 3.155595,
+      "longitude": 101.711154,
+      "picture": "https://lh3.googleusercontent.com/4X7fMbJalGpJbYVZ3sL-8RKQ00Z-UDoOgQTHbPX-T_JESG08fZtCZHXie47skrFKN1OmfIn4ziRUPQb2UjpNPpKLqO1efuUBxB2xd189CajARQ",
+      "title": "Metal Rooster",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "cb3775e7d46748a08c2acdcff2460fa2.16",
+      "latitude": 3.155497,
+      "longitude": 101.710899,
+      "picture": "https://lh3.googleusercontent.com/csVdxCpA29iRMtbm9jH207tk-_V-sWAz7CRLfwcjJ5fbikJho-og2-n7AHVvzc-Tkn7iCFw7DIirt9PQXOmXUIw_HQfXBN0RwdRLwKlqi3tz",
+      "title": "Bowl Fountain at St Regis",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "a8ccac6375614844a3d9d14484207bb7.11",
+      "latitude": 3.155862,
+      "longitude": 101.711486,
+      "picture": "https://lh3.googleusercontent.com/QojkGgLEWRQQEvE7zZZM7QcBxmdeprcb2PraF52tdHkW0L15Jk_HYsJmGF6LqLOvkcN5ZRDLt1Ql1s3_jqQHqOyKGDNC-Fdq05QaROd_XBzr",
+      "title": "Mandarin Oriental Kuala Lumpur - MOKL",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "03137c20077e49c091710ee4527ba797.16",
+      "latitude": 3.155898,
+      "longitude": 101.712253,
+      "picture": "https://lh3.googleusercontent.com/dRogFAjFS72gPvyp9AjhuPvpORCurBMX-VBxLeq_AHd7jQxR7hEON5MNh6z1Y6fj-Xsr0Sx7HUeX9M6RaeixHp8HEcmEdPQTBNuBSNeHa94",
+      "title": "Mosaic Cafe Water Feature",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9c2941e595984b16b1bf481c23d92aad.16",
+      "latitude": 3.155425,
+      "longitude": 101.71252,
+      "picture": "https://lh3.googleusercontent.com/Q8MfKo7bsJwxKDg2xQMKzP5vrRo7PKLPs8HkPE6z5WOqEMJR0eCAY8lQ9fu8_k2i9_C7uFrBya8T7dzZd2VfjocTKQS_8-_HtABAGW8twdI",
+      "title": "Taman KLCC Map",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b1a59073df98499fb2e54185af0fbd9e.16",
+      "latitude": 3.154639,
+      "longitude": 101.713415,
+      "picture": "https://lh3.googleusercontent.com/zY_OlT0vDR-6ZblO7qF1D1wCjTZgabuKze27OU3EGHRYUlqG1jJ4u82OVp0fRfrBPGw-mlOmnDsdEs7jF8ku_-0wwwYDWirqUWomTDhXa4Bo",
+      "title": "KLCC Park",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 06",
+   "type": "anyOrder"
+  },
+  "6": {
+   "averageDurationMilliseconds": 472102,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "d1497260f68a4be6a5bed3495f03dc31.1c",
+   "latestUpdateStatus": "2025-08-03T18:29:18.758883Z",
+   "lengthMeters": 290,
+   "picture": "https://lh3.googleusercontent.com/1XQ8dJiYXNDkYonYZo7-6yobcCPha3A4YqZTP84VTU2YBk8bz2I0mUIws4Iu9pUvTJIXM8o5ImDtec0Cy_E",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "b1a59073df98499fb2e54185af0fbd9e.16",
+      "latitude": 3.154639,
+      "longitude": 101.713415,
+      "picture": "https://lh3.googleusercontent.com/zY_OlT0vDR-6ZblO7qF1D1wCjTZgabuKze27OU3EGHRYUlqG1jJ4u82OVp0fRfrBPGw-mlOmnDsdEs7jF8ku_-0wwwYDWirqUWomTDhXa4Bo",
+      "title": "KLCC Park",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "21677000264d4f8998809a05a6e8f2ef.16",
+      "latitude": 3.154424,
+      "longitude": 101.713625,
+      "picture": "https://lh3.googleusercontent.com/am96mKK41QYjMU0A7VubzxvKeFILygA2rhWXoLkgJl0-dtonCjmKOxxi7ji0NdIsYu_U8WRLhn_mKsWbyp7tGHxG8I5EftAtjpm3zy78NwXK",
+      "title": "The Scary Plants Mural",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "6dded60dfc624322a6c8e5e9e0fbcd50.16",
+      "latitude": 3.154372,
+      "longitude": 101.712929,
+      "picture": "https://lh3.googleusercontent.com/D0-klrbXfTAAe94clbdJRFfWkXgYEPulxZaSJL9AXsFjKKye4-jzKNTcTDddLpS5DxEPUot2Sjxo18Z-d4Q-pnwf8X1m1mhN3a4FwyBG_8s",
+      "title": "The Dino Petrosains Mural",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "1bff390ac69246c9a93a8bbdf834d0de.16",
+      "latitude": 3.154077,
+      "longitude": 101.713361,
+      "picture": "https://lh3.googleusercontent.com/AVska3w6gX__BpYWL0c5YMpiqUACcF-2FjPyzkSGoC-E6Uk2pUAr5bnO_6KOya4sjwOIeSzm2dUXnN3LTg2C0UFuw60SpOMlJe_7ICPs4pg",
+      "title": "KL Convention Center Park Entrance",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "6f06cc5cc40e4e9a97b9280b5cdd1446.16",
+      "latitude": 3.154202,
+      "longitude": 101.713968,
+      "picture": "https://lh3.googleusercontent.com/wPDJllLPbivhvYz8yl93VyEiYvl1aqFF4Ly50oBTuKr8HPTXBODf18VdcAnQ9kwkoCR_sTxWWd0GgoaMfZWycjpSR4d_FU2Pk5N1nTpS6ewG-A",
+      "title": "KLCC Park",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "640515d086004955ad240aa02d4b1ecb.16",
+      "latitude": 3.15461,
+      "longitude": 101.714204,
+      "picture": "https://lh3.googleusercontent.com/1x1IdwZGahQFNsZbXajXMYpS-tEPuNZAyw4ra9wIa4OwqjKU64TaHFSFWFLE-ad6SsVuUwbBcLIRPd0tznfLCkDWtDiiE4MfHyqEpGLf92qv",
+      "title": "KLCC Square Layered Pool",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 07",
+   "type": "anyOrder"
+  },
+  "7": {
+   "averageDurationMilliseconds": 1048699,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "e466f77f68734a3f9153326a69d348e1.1c",
+   "latestUpdateStatus": "2025-08-03T18:30:17.237868Z",
+   "lengthMeters": 243,
+   "picture": "https://lh3.googleusercontent.com/QhLJToQri_5duhI_DJDMQsIow1RzyMjMkeTyAB0TWk5Q8W-sNYZjLNvHw0NYWFgbDg3UdpayE7sNYeSqqb5t",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "640515d086004955ad240aa02d4b1ecb.16",
+      "latitude": 3.15461,
+      "longitude": 101.714204,
+      "picture": "https://lh3.googleusercontent.com/1x1IdwZGahQFNsZbXajXMYpS-tEPuNZAyw4ra9wIa4OwqjKU64TaHFSFWFLE-ad6SsVuUwbBcLIRPd0tznfLCkDWtDiiE4MfHyqEpGLf92qv",
+      "title": "KLCC Square Layered Pool",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "71bba68c97524ca59fdabd9c8f571b2f.16",
+      "latitude": 3.154509,
+      "longitude": 101.714793,
+      "picture": "https://lh3.googleusercontent.com/j4EHm5iw6dqlKeZvpq94KaU6okvj23CbVUPKYO-PmtkppEyAiPblmbrmcIylEPMB0jBoscMI_d46jnepHjGLYyeZ88uZxKc-z-zifQB9jvch",
+      "title": "Fountain of Flexible Shapes",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "be1c2ea645ec48ac9b8616a3d97d4c43.16",
+      "latitude": 3.154277,
+      "longitude": 101.714973,
+      "picture": "https://lh3.googleusercontent.com/Q3-a1Y1W25ukGKLjJH4KYLiiKPw7uJDTY_wU8J_1QVIE0qffT7mEeubQjcUkmZpYEiCB0swl43s0GatK62Uy1QgsqG1J9cn_IaN6uYAWY3c",
+      "title": "Traders Mural",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "d012c7439dde4abb8f7d6a3f4411a017.16",
+      "latitude": 3.154546,
+      "longitude": 101.715355,
+      "picture": "https://lh3.googleusercontent.com/2OJYYTuFm3-OkDf3uHZJqHhpHL39B4VQyjOnxgVlWPU4dmm9ij6_vJf_xUEC3xWt_Wl1Ch8B85ckc701CLbYHwAhaMaTx0FRZ_1BExw37wY",
+      "title": "Photo Spot 6",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "834b602662624252aefddf31dad9fadc.16",
+      "latitude": 3.154926,
+      "longitude": 101.715454,
+      "picture": "https://lh3.googleusercontent.com/TJKLpNJM_SE0EhpsADv54DIuFxkuctiamDyyayuoAkwB1eicn70wRk7EYohdL_cdcErhzDQw0fRcPwarTOa73gT97XBYcgG66CMiviIlqvs",
+      "title": "Taman KLCC MapBoard",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "4c62a65838b749a89306ac5e2cf2cc48.16",
+      "latitude": 3.155284,
+      "longitude": 101.715194,
+      "picture": "https://lh3.googleusercontent.com/Ndbrgvaw2l4vELBdjNsmWQNHzNaEPvigJ6SwWyuB6xj6NeVYbRU2jqgV0f7tZhJivEMNyGuNp_7olnhUbfRatedypVyDNtZAQEUdF9EoKgamhA",
+      "title": "Taman KLCC",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 08",
+   "type": "anyOrder"
+  },
+  "8": {
+   "averageDurationMilliseconds": 459498,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "7809c810e4fb4182bc89e4b9d3e145f8.1c",
+   "latestUpdateStatus": "2025-08-03T18:29:21.660689Z",
+   "lengthMeters": 339,
+   "picture": "https://lh3.googleusercontent.com/KsKhcASUvVb8CGWUHWbvtykf-LPG1M9_2ITCWIYJIVvjFl2LYOvhEWwlEzPSnpRn0CUMuazf02YLTZXAkCc1",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "4c62a65838b749a89306ac5e2cf2cc48.16",
+      "latitude": 3.155284,
+      "longitude": 101.715194,
+      "picture": "https://lh3.googleusercontent.com/Ndbrgvaw2l4vELBdjNsmWQNHzNaEPvigJ6SwWyuB6xj6NeVYbRU2jqgV0f7tZhJivEMNyGuNp_7olnhUbfRatedypVyDNtZAQEUdF9EoKgamhA",
+      "title": "Taman KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9e44276ae7d54ffe8fd29b62ef6c0653.16",
+      "latitude": 3.155061,
+      "longitude": 101.714952,
+      "picture": "http://lh3.googleusercontent.com/EGtq8KB5dC1zMb8uk1hyaxWSUZWFvtTBsnsh8zct-5VDWD49GoMb3hdZNCG-6M9YvpfUbSQv90mja91A5XAhAv8PBA",
+      "title": "Resting Hut",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "dbae8acca3e745dca14434270f8fd0aa.16",
+      "latitude": 3.155234,
+      "longitude": 101.714626,
+      "picture": "https://lh3.googleusercontent.com/l0CJscl7N8dZchU56-wVqmxTXYwqh22lCJcATXnUbs-DgcpL7loRExn09LnsSYAhwk8foaPRi4Qlo9Kjer9uxG7lEwrNU-GQHnXT1XfzEVay",
+      "title": "Waterfall in the Park",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "0dcabe126bb74076bf7c79202b437f7b.16",
+      "latitude": 3.154866,
+      "longitude": 101.714286,
+      "picture": "https://lh3.googleusercontent.com/jzP_w67Ekomw9SKsCklaboot2UpXbRolDYh-rGYTIjH6r1Tl0mNv3I6wHdzMt4h6pH5FvIR16tW9Tdxci-wVuRK2GHqLnPBRhVOXKSxwMccE",
+      "title": "Drinking Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "95fe18808f364cf6bfa4d429fc830eee.16",
+      "latitude": 3.155038,
+      "longitude": 101.713588,
+      "picture": "https://lh3.googleusercontent.com/flJjH99t3wrnqjZVgQeYjZ9eJ19PwWSOBlp9DBkSk_LfHztJ23vOUNFLqAPiRZdPEZByHuOBI9yA8DmM0yZi89WECdLEnedPzYec1TKTadRSYw",
+      "title": "A Genius Mural",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9c2941e595984b16b1bf481c23d92aad.16",
+      "latitude": 3.155425,
+      "longitude": 101.71252,
+      "picture": "https://lh3.googleusercontent.com/Q8MfKo7bsJwxKDg2xQMKzP5vrRo7PKLPs8HkPE6z5WOqEMJR0eCAY8lQ9fu8_k2i9_C7uFrBya8T7dzZd2VfjocTKQS_8-_HtABAGW8twdI",
+      "title": "Taman KLCC Map",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 09",
+   "type": "anyOrder"
+  },
+  "9": {
+   "averageDurationMilliseconds": 529299,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "857185e35aba4d728c5730bc3b01245e.1c",
+   "latestUpdateStatus": "2025-08-03T18:29:49.347573Z",
+   "lengthMeters": 317,
+   "picture": "https://lh3.googleusercontent.com/gAPTkcpHGWzjkCaJfAu1yhTxi8JGezUynl_ajGSQZ_MKv9LMpX4ll4-DHeqOAbb-7fKYIy4xqNGmQx6tJIJb",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "9c2941e595984b16b1bf481c23d92aad.16",
+      "latitude": 3.155425,
+      "longitude": 101.71252,
+      "picture": "https://lh3.googleusercontent.com/Q8MfKo7bsJwxKDg2xQMKzP5vrRo7PKLPs8HkPE6z5WOqEMJR0eCAY8lQ9fu8_k2i9_C7uFrBya8T7dzZd2VfjocTKQS_8-_HtABAGW8twdI",
+      "title": "Taman KLCC Map",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "a6dc9e4f01ed45baa0ecdc7407758aac.11",
+      "latitude": 3.155909,
+      "longitude": 101.71322,
+      "picture": "https://lh3.googleusercontent.com/TO1ZKnwZIPLiEEy3IzV6Y6ZMMP-FNsU41BvdkMCXJn42fLMeutfwWkrrLEfAJ2Q2i4OVRsTngvLX6-JP0WoDpq2BYzo98LUr5eVuCE7xCbVw0w",
+      "title": "XM Fountain I",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "10eb9bc078d346e9808d5c8c836fdbd8.11",
+      "latitude": 3.156141,
+      "longitude": 101.713716,
+      "picture": "https://lh3.googleusercontent.com/-apjf0BdtrR38qEGVKlUGWT8kQCavVur1wrELBSza6YHj6XB_x9vAWEx2D99SDqAo3c3SqPygRyGs-QvQUECwDsK9PMdzVBSz56S-eduAZBxWA",
+      "title": "KLCC Park Observation Bridge 2",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9b01d6c5056e4c2789e02caefd462dbc.16",
+      "latitude": 3.156545,
+      "longitude": 101.714244,
+      "picture": "https://lh3.googleusercontent.com/vyLe7Q2Oo9twAbWCN7KLakxLU7CWTCeir7uq9ogxYTQoaro4rECiqoFlYfTDIVGYSJGLguqpVxnvQh8N5tyh-BHy_uiXzicfLKdC8SWyZZQ",
+      "title": "Sayangi Taman Anda",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e6b44bc97ad04c78bbb366cee9b0b45d.16",
+      "latitude": 3.156612,
+      "longitude": 101.714674,
+      "picture": "https://lh3.googleusercontent.com/jnxQ0EAGpFcWGmnpFwjeYPi5eL8HXP7fHghrrsuwQ8udKAnzcAF-gM_fOmyQM3dgWOdQS31zseoozD3hyKwPEhq1uwP963qbqlKhRSSsSMKd",
+      "title": "Klcc Jogging Track Routing",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "41d16171e7e649f1862686f5e56096af.16",
+      "latitude": 3.15659,
+      "longitude": 101.715034,
+      "picture": "https://lh3.googleusercontent.com/f_eGlN6lh39VbR8_D5vUki81TOnX3lb8ioC8o2hnVi3HZ072a0XSI_QU1pkDp__5IhQTYI6_2Ls36HfGSs2saCRzHdJNE4_rGy1qLz-hm4vp",
+      "title": "Water Dispenser Klcc",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 10",
+   "type": "anyOrder"
+  },
+  "10": {
+   "averageDurationMilliseconds": 393550,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "fee14bd558194d1586e02f6a2c7d206d.1c",
+   "latestUpdateStatus": "2026-01-02T09:43:25.672630Z",
+   "lengthMeters": 214,
+   "picture": "https://lh3.googleusercontent.com/J5Qa-y2EFVZqFpsVOyYg8vpGfuL5Y1nfeFAwXOp_5VD5Oq7adYByDGjMj5HaI2RzkEj-aCngDATixTA4f5Rq",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "41d16171e7e649f1862686f5e56096af.16",
+      "latitude": 3.15659,
+      "longitude": 101.715034,
+      "picture": "https://lh3.googleusercontent.com/f_eGlN6lh39VbR8_D5vUki81TOnX3lb8ioC8o2hnVi3HZ072a0XSI_QU1pkDp__5IhQTYI6_2Ls36HfGSs2saCRzHdJNE4_rGy1qLz-hm4vp",
+      "title": "Water Dispenser Klcc",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "b5455aa5aac43a51c9e594f924e0896e.1d",
+      "latitude": 3.156789,
+      "longitude": 101.71466,
+      "picture": "http://lh6.ggpht.com/Y2RDtd-lo8KO52x8DcFB-cDZORguSv5bxZfpwI41CRcOTgx3zGfc8KuscxHF67hzx2GaMRrqStNzckvle300YRuoN8CpGZuW",
+      "title": "Petronas Twin Tower and KLCC",
+      "type": "fieldTripWaypoint"
+     }
+    },
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "e6b44bc97ad04c78bbb366cee9b0b45d.16",
+      "latitude": 3.156612,
+      "longitude": 101.714674,
+      "picture": "https://lh3.googleusercontent.com/jnxQ0EAGpFcWGmnpFwjeYPi5eL8HXP7fHghrrsuwQ8udKAnzcAF-gM_fOmyQM3dgWOdQS31zseoozD3hyKwPEhq1uwP963qbqlKhRSSsSMKd",
+      "title": "Klcc Jogging Track Routing",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9b01d6c5056e4c2789e02caefd462dbc.16",
+      "latitude": 3.156545,
+      "longitude": 101.714244,
+      "picture": "https://lh3.googleusercontent.com/vyLe7Q2Oo9twAbWCN7KLakxLU7CWTCeir7uq9ogxYTQoaro4rECiqoFlYfTDIVGYSJGLguqpVxnvQh8N5tyh-BHy_uiXzicfLKdC8SWyZZQ",
+      "title": "Sayangi Taman Anda",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b0ecbf3873c24e02ac2668e59a624881.16",
+      "latitude": 3.156809,
+      "longitude": 101.71365,
+      "picture": "https://lh3.googleusercontent.com/e0F0IE3gvER5KvPdcYL4kuXwZDrCIJy3N0GeCOrqGj3fzXgXujSZM2cFfyGTODHaF1jVQkj0IydmsPdktBCg-L99jf-gMZIBjsRGzWQ3HdoCAg",
+      "title": "Flower Motif",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "f2feb5cd268f4af28cdeb8a5f8ff6bc7.16",
+      "latitude": 3.156873,
+      "longitude": 101.713416,
+      "picture": "https://lh3.googleusercontent.com/G_ZNszO4v4AwqT0wczeH2Ddn2FeDnbVCBYIbCQ-0nyXHpqYes87_DnNRBkq3w1Qf6IB2Zp_9IQjdkwRn_-dRVOIkJbQPRgLyeDom5xxnt44",
+      "title": "Taman KLCC Directory",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 11",
+   "type": "anyOrder"
+  },
+  "11": {
+   "averageDurationMilliseconds": 423953,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "fbc382d35319433785df24cdf2b99bb0.1c",
+   "latestUpdateStatus": "2026-01-25T11:16:40.876185Z",
+   "lengthMeters": 155,
+   "picture": "https://lh3.googleusercontent.com/-j8LXhfxU29zLtdDiUe1n_vwTzvooGLkABSh2iI7y5U-O1DnVeB3BW1xkPwBpilCbx5cLlTI00pdhUeo8Zxz",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "f2feb5cd268f4af28cdeb8a5f8ff6bc7.16",
+      "latitude": 3.156873,
+      "longitude": 101.713416,
+      "picture": "https://lh3.googleusercontent.com/G_ZNszO4v4AwqT0wczeH2Ddn2FeDnbVCBYIbCQ-0nyXHpqYes87_DnNRBkq3w1Qf6IB2Zp_9IQjdkwRn_-dRVOIkJbQPRgLyeDom5xxnt44",
+      "title": "Taman KLCC Directory",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e281ec57849447d1aefdf71f2c850314.16",
+      "latitude": 3.156953,
+      "longitude": 101.713311,
+      "picture": "https://lh3.googleusercontent.com/T1K4r1QA5lzJrkQqbXmOnJUdZ9-hVo5zfGHGap0EF1llMc8ZvMbnANimakQgpIKpZ4CZrxFsJpCL6wNQSIdvpJGu7z2CFH5Lzos_kVC9oDA",
+      "title": "Lonely Waterfall",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7e3f6188c52a4824b60940011657e0b1.16",
+      "latitude": 3.156782,
+      "longitude": 101.713188,
+      "picture": "https://lh3.googleusercontent.com/E5Zq0XapCePMK3_yd15GChM6aN4P6I2k2JcVWQbDRXDVpflbUl-JZss3i7GxpEatauc1A0Eto8YEB6l49itYE5-R0nkfvHqeL9e6y-FwKr0",
+      "title": "Lake Symphony Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "cf6f70f33e114c4ba361ebe597e65439.16",
+      "latitude": 3.157177,
+      "longitude": 101.713304,
+      "picture": "https://lh3.googleusercontent.com/Bs5KGEMDTseveUx-jdtS28OiP1XoANV4thl3IYu_8CMy5gHSLwDzFUH5hUCirXLLJF9WskOsxXjYI2wnSKBngg5H1Yh5PIO0aGUArslLeVg",
+      "title": "Ukiran Kayu",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "03fe81c1681f4ec394d8401f4942b41e.16",
+      "latitude": 3.157009,
+      "longitude": 101.712735,
+      "picture": "http://lh3.googleusercontent.com/DszTIK5MVc9B_KKi4bZEal347cxfZX0xM2FuAPwnhlNZbb9stWUj-DjrEKz5lAMiraTwePLySFwOMnC_3UyjmO4kTnc",
+      "title": "Big Chilis",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "d9cfd3d2a6b346a09dc883b68f81636b.11",
+      "latitude": 3.156936,
+      "longitude": 101.712706,
+      "picture": "https://lh3.googleusercontent.com/dix1B_slA1rQDG2kKsx4FV2WIlXw4xrBeoY7EFt2KZFrzMdrxdou8nFN9htNWlino-QHw746w7icCQSivISQ2uXmLY5CpXFXrDl43nrFytlq",
+      "title": "Lake Symphony of KLCC",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 12",
+   "type": "anyOrder"
+  },
+  "12": {
+   "averageDurationMilliseconds": 751602,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "418a14c472f84371a549d3b029e94bad.1c",
+   "latestUpdateStatus": "2025-08-03T18:29:51.578607Z",
+   "lengthMeters": 171,
+   "picture": "https://lh3.googleusercontent.com/fO9Oq1kptOPjLCnioc1xIe7aysmS45o6iMSJQ0BU8-Oab0RAM4P9G06NUQEmQlf7R4I-EWrhBLP5IISQB337",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "d9cfd3d2a6b346a09dc883b68f81636b.11",
+      "latitude": 3.156936,
+      "longitude": 101.712706,
+      "picture": "https://lh3.googleusercontent.com/dix1B_slA1rQDG2kKsx4FV2WIlXw4xrBeoY7EFt2KZFrzMdrxdou8nFN9htNWlino-QHw746w7icCQSivISQ2uXmLY5CpXFXrDl43nrFytlq",
+      "title": "Lake Symphony of KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "8e9cda03868c441fb5c7eb3b8538478e.16",
+      "latitude": 3.156772,
+      "longitude": 101.712465,
+      "picture": "https://lh3.googleusercontent.com/RFIc9k8qXuOlOrchTvK-_8YXH6r-W3nqim0mWozLZ4WonK0mkuUwW3xxCNzKP2qr2BBBCankuZz5pRqJ70jdKSKAUqtf6EhSuzI10LEfE-T3",
+      "title": "May the Horses be with You",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "03fe81c1681f4ec394d8401f4942b41e.16",
+      "latitude": 3.157009,
+      "longitude": 101.712735,
+      "picture": "http://lh3.googleusercontent.com/DszTIK5MVc9B_KKi4bZEal347cxfZX0xM2FuAPwnhlNZbb9stWUj-DjrEKz5lAMiraTwePLySFwOMnC_3UyjmO4kTnc",
+      "title": "Big Chilis",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "536f6faa6b7547899d0b6075be818484.16",
+      "latitude": 3.157485,
+      "longitude": 101.712876,
+      "title": "Giant Foot",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "cf6f70f33e114c4ba361ebe597e65439.16",
+      "latitude": 3.157177,
+      "longitude": 101.713304,
+      "picture": "https://lh3.googleusercontent.com/Bs5KGEMDTseveUx-jdtS28OiP1XoANV4thl3IYu_8CMy5gHSLwDzFUH5hUCirXLLJF9WskOsxXjYI2wnSKBngg5H1Yh5PIO0aGUArslLeVg",
+      "title": "Ukiran Kayu",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "628c102bce9a4054a5ba9172a4cc2c40.16",
+      "latitude": 3.157473,
+      "longitude": 101.71342,
+      "picture": "https://lh3.googleusercontent.com/VUFtStr38t7C7BmSn-J5dHvsnU27EVkSE1eB-d_3sEVLLl_PoDB6u2hbfpscwCoRbXQBGSwaUEYJ_ngaELfkOyl7UJ9vzersqoHwE6Jh64k",
+      "title": "Mandarin Oriental Waterfall Fountain",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 13",
+   "type": "anyOrder"
+  },
+  "13": {
+   "averageDurationMilliseconds": 687535,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "ba790fc74c8b41129cbcb72e61797ca0.1c",
+   "latestUpdateStatus": "2025-08-03T18:31:04.131104Z",
+   "lengthMeters": 272,
+   "picture": "https://lh3.googleusercontent.com/f8c7eBQK4qVwpnGjVKzQOTwkDnTx9ic3ouroRsue_JRqe8UE74yjMKIgPj9nmx4RwNTHKfhtbyHSJkcqyCHN",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "628c102bce9a4054a5ba9172a4cc2c40.16",
+      "latitude": 3.157473,
+      "longitude": 101.71342,
+      "picture": "https://lh3.googleusercontent.com/VUFtStr38t7C7BmSn-J5dHvsnU27EVkSE1eB-d_3sEVLLl_PoDB6u2hbfpscwCoRbXQBGSwaUEYJ_ngaELfkOyl7UJ9vzersqoHwE6Jh64k",
+      "title": "Mandarin Oriental Waterfall Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7529e7e3f62c496fafd34b248922a280.16",
+      "latitude": 3.157802,
+      "longitude": 101.713346,
+      "picture": "https://lh3.googleusercontent.com/vgBxnWe5xl3_-3EXYMhbnsdlNXIxC1PPNOr4qoecOKBAFeCTdHCe3CV1OcifEGhq7azObHxVA-YkhU5H7_zq5kIN3L5tsNpw0lf7xnP83Zka",
+      "title": "Melur & Thyme",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b1d1681e96b04b359f95683c3ff06557.11",
+      "latitude": 3.158813,
+      "longitude": 101.71268,
+      "picture": "https://lh3.googleusercontent.com/nETH-JpWzN9zwSIK-GdqIzb7tFu0NfpQkwBY8NPtvb88vFJTBYd7OA79yWCidYdZs6bBueqlhsyvHVrge7FDlIYY-hiRg67-idcCJ0Ri4F6-4g",
+      "title": "KLCC Train Station",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e1a22ae7b4d14ef3b1b865e35ef87ab1.16",
+      "latitude": 3.158572,
+      "longitude": 101.712574,
+      "picture": "http://lh3.googleusercontent.com/UILEarZXwFZhh9tsXF71jJMktoib_COhpA1HgxGKxTN6n8ySzn1QARG-JBgpZJuSETrWHCJ3UUa9DHXGTzqpDpVuxlE",
+      "title": "Stone Foot",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "2013ac2413d84781a8ea4eda29ec069f.16",
+      "latitude": 3.158891,
+      "longitude": 101.712114,
+      "picture": "https://lh3.googleusercontent.com/Vjqy9E7ZxjBfBK_celQhqiUnqFH6UocvZQszEMw43TsEFWgkdwSCkymv5bX0bnPd8Of8KBnjgq-9RcS3_SneskO3-nonhkB0bHlb4S53-tE",
+      "title": "Petrosains Bus Station",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "ca21b0be17ec4e1c867351c3a6dfc9d2.16",
+      "latitude": 3.158858,
+      "longitude": 101.711784,
+      "picture": "https://lh3.googleusercontent.com/Y_dKwZWTyY3TM4CHHbpFL0-1O6Dyy73wj6XIyX0gAxXTu6dqnNbGN7WNUMOw8Z2pr-q8V4PX6--RIj0jrWtMBbQYdAGeJl4wrd8PXKi_loU",
+      "title": "The Octane",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 14",
+   "type": "anyOrder"
+  },
+  "14": {
+   "averageDurationMilliseconds": 462173,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "25252e0153db42b6a66acb7086ee5730.1c",
+   "latestUpdateStatus": "2026-04-12T17:49:38.961041Z",
+   "lengthMeters": 163,
+   "picture": "https://lh3.googleusercontent.com/lzI_Oc10A6yzEmWCeAzr2jBBMDRKmYXL-PD7xWEXa4u8C7PvaGvysdfsNkP7IeDVP0MkXPxNxotZLICJydmE",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "ca21b0be17ec4e1c867351c3a6dfc9d2.16",
+      "latitude": 3.158858,
+      "longitude": 101.711784,
+      "picture": "https://lh3.googleusercontent.com/Y_dKwZWTyY3TM4CHHbpFL0-1O6Dyy73wj6XIyX0gAxXTu6dqnNbGN7WNUMOw8Z2pr-q8V4PX6--RIj0jrWtMBbQYdAGeJl4wrd8PXKi_loU",
+      "title": "The Octane",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "eca3803f88b44aa99d3af2b331834766.11",
+      "latitude": 3.158461,
+      "longitude": 101.711736,
+      "picture": "https://lh3.googleusercontent.com/aiXlmqs0O8-6jc67aGGo06xL7FtMqRL-xV8ovGgpoQv8YLJuUqeYPezXOoEjOZ4GAU64_Ieu9xJkIkAGlnPuBEGy723aMqa2H2xY5yN-_bie",
+      "title": "Kinetik II Tower 2 Lobby",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "32ea8004f2f547289b157795d88d5c2b.16",
+      "latitude": 3.158315,
+      "longitude": 101.711594,
+      "picture": "https://lh3.googleusercontent.com/5AyKH37T5BySMt0OFP97TEL9cg5A59CxK-o6Iwo8ufSQj4sGe0QbLu356q9NfUcS8vJO8az-XIwIDg6QWJOb6j6Ztv9QwqDSBLmWOAiB55J0EQ",
+      "title": "Musician Fame",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "fc5fe46ce92c414fb66a8c54ed046336.12",
+      "latitude": 3.15805,
+      "longitude": 101.712065,
+      "picture": "https://lh3.googleusercontent.com/4cPniMJXaOajwlaNU1mTrxuYrKdyxEeQn61ymx7965AxML0rIOk-ZWdLzTT7-0xEWYPwfQfEpBR08DVWiUYHvszl3RPoLXUMczqQejaNJxmr8Q",
+      "title": "Petronas Twin Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "dbe5d2cf9ad141cc917ba9e122f8cd3d.16",
+      "latitude": 3.158042,
+      "longitude": 101.712308,
+      "title": "Moo Cow",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "2739f44986a042f8b838dcf5416936dd.16",
+      "latitude": 3.157956,
+      "longitude": 101.71175,
+      "picture": "https://lh3.googleusercontent.com/wC1dcq_ZJ_c4GJynMuALvDmsXE0zYBKje3ViXDkwgw6X0ErHcDM6MVyXayt8nXwamEuhxKXto3bwFtgLeRdWhohgt__d-xdeYVEmwnLlHs1L",
+      "title": "Gong Tembaga",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 15",
+   "type": "anyOrder"
+  },
+  "15": {
+   "averageDurationMilliseconds": 339086,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "dd5c77f2c08347a3912fa13264b12b6e.1c",
+   "latestUpdateStatus": "2025-08-03T18:30:45.573125Z",
+   "lengthMeters": 291,
+   "picture": "https://lh3.googleusercontent.com/H2OXz5vKw8eSbM8ttdydee01UiJ1tT3E09LE4-Mnov4Eukx70TYE1Y6jAsHTiPpyrc6Md-ToDKdRlgY5-9ruHQ",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "2739f44986a042f8b838dcf5416936dd.16",
+      "latitude": 3.157956,
+      "longitude": 101.71175,
+      "picture": "https://lh3.googleusercontent.com/wC1dcq_ZJ_c4GJynMuALvDmsXE0zYBKje3ViXDkwgw6X0ErHcDM6MVyXayt8nXwamEuhxKXto3bwFtgLeRdWhohgt__d-xdeYVEmwnLlHs1L",
+      "title": "Gong Tembaga",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "0ecb515b7f864ed68395228c51873910.16",
+      "latitude": 3.158067,
+      "longitude": 101.711368,
+      "picture": "https://lh3.googleusercontent.com/du0Qhcj89Gs61PlfQ3vZ4ZuxB4U1355SPGILPTKFL5o_bfeWcKwQYUHANLSTNmvxdQt05sRgxVzG9SeAtKi7ertqVNPW0AC_ti07jW203VPt",
+      "title": "Tamadun Sculpture",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e4f175f7950d486f98954a329f5e0a90.11",
+      "latitude": 3.15795,
+      "longitude": 101.711149,
+      "picture": "https://lh3.googleusercontent.com/R-g8kOXiscdQgfHvjQHZdR4GZokGGXHPeuv8uSMRqdZxdwjw2CGbFyKpkPkyUJkKkiyulgkEM5XHzew2VxI-7TH9eB0XwvhLx14svpifRLUf",
+      "title": "Kinetik I, Tower 1 Lobby, PETR",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "97e589f5b05745fda616acd20a071e74.16",
+      "latitude": 3.158144,
+      "longitude": 101.711852,
+      "picture": "https://lh3.googleusercontent.com/s9k-4KCUHzwAhYGWS1Ga31faegRl3WntMqbXtXqGgMmYfknRDiXrZhpWRVkSBoO1MAgi1aVov9zTObNhhmM5D-JvVHca7BGdFcM7Ka03UPY",
+      "title": "Mercedes AMG Petronas F1 Car Display",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "15b7a819a0654919acc7a74697807029.12",
+      "latitude": 3.15865,
+      "longitude": 101.71117,
+      "picture": "https://lh3.googleusercontent.com/OTkK367bnS8jIh0HR1eH-WDtCgFBs6TZeKxN5j5CM4qMmtXeW4-4RQoI0LZwfeTPh_cYM-KIOo8gr45yrnsGddmK6gNCicycARNrGnAgY8bDOw",
+      "title": "Pond facing Petronas Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "e4d6b5926f4749a3af34cb84a15ba9ad.16",
+      "latitude": 3.159019,
+      "longitude": 101.71103,
+      "picture": "https://lh3.googleusercontent.com/RZa5Ao2tPdM4YAay_Si7H658uERRUbn66xj1azaMWOeFR0i_jjZVU2hJW5XddB_L2uzDUW1ijMr4PId3pn36DXBmkxXEc2s_CXGOXcYdFwexYA",
+      "title": "Air Pancut Taman KLCC",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 16",
+   "type": "anyOrder"
+  },
+  "16": {
+   "averageDurationMilliseconds": 421392,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "d77a50d59efd4130a9ed017c57ee7ad7.1c",
+   "latestUpdateStatus": "2025-08-03T18:31:06.027416Z",
+   "lengthMeters": 180,
+   "picture": "https://lh3.googleusercontent.com/r_duSAxKDBTi_6c35LUWveD3ryL3-LNz2afdLy95KzuBM2l-m_xMn8v_xanLZsQMah7Gsv06CBJ-Ys-XS6pe",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "e4d6b5926f4749a3af34cb84a15ba9ad.16",
+      "latitude": 3.159019,
+      "longitude": 101.71103,
+      "picture": "https://lh3.googleusercontent.com/RZa5Ao2tPdM4YAay_Si7H658uERRUbn66xj1azaMWOeFR0i_jjZVU2hJW5XddB_L2uzDUW1ijMr4PId3pn36DXBmkxXEc2s_CXGOXcYdFwexYA",
+      "title": "Air Pancut Taman KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "36ea6d9cf20742abae0bad0f0f5375b6.16",
+      "latitude": 3.159019,
+      "longitude": 101.71081,
+      "picture": "https://lh3.googleusercontent.com/dj8tx44YaqvZaekh74y0VJxTjczzHpNYAXeIIZpbeWQl-CppnJJhVDqR25vEXI85injhiwSf36rXaxbk0imBSpM1hRplU6WUsNwyVkvpIQDR",
+      "title": "Twin Fountain KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "f5ba7647fc554152b0f8d4abe910c877.16",
+      "latitude": 3.15913,
+      "longitude": 101.710719,
+      "picture": "https://lh3.googleusercontent.com/Hhn60SQ0HyqI-pmJeU_FIF8lF4lx97nhU14Fl16qDPQel1Z0RNyFC1erwOWyFk8v96KYBTRdJmoX9I8R9igkzZZOz_bdLo7GWlVcF-hwe4CV",
+      "title": "Many of Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "affeaa6184494d0fb81f63eb57782971.16",
+      "latitude": 3.158995,
+      "longitude": 101.710573,
+      "picture": "https://lh3.googleusercontent.com/q7msJKhaAiV3n6gQ1pTUetb4GyNYnnae2ZgCBEh9Vvvhbu3BtYgUgGJf17krArfVnn202pQFP7I-nNyWPFWoTve4KPwY-rJ6NzR1U-TjIhU",
+      "title": "Visit KL KLCC Shopping Heaven",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9921c6e04c34475ca2893345c04cf970.16",
+      "latitude": 3.158938,
+      "longitude": 101.709662,
+      "picture": "https://lh3.googleusercontent.com/EvfeeXZUS0SGJJOQYyyqWCbFxtOOXCEsKrv1lhQPkBqosotWbLFKp6GWVHJuPYuJSAnJkA669hwaAd6EPSTHl7JnNgOy",
+      "title": "Green Diamond Mural",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "794ccba7c68d49978070e1b18c74c00b.16",
+      "latitude": 3.159228,
+      "longitude": 101.709538,
+      "picture": "https://lh3.googleusercontent.com/5UI1DVzLaCWl3KjY8do43CDsUFxM_m_Fy23HJCxcwx9KFYQQ56_O80xDuSbFOazNH1UjUt6KRRa_U3p4Fk28RqRt6kU",
+      "title": "The Waves Sculpture",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 17",
+   "type": "anyOrder"
+  },
+  "17": {
+   "averageDurationMilliseconds": 779812,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "a6a55869b90947a09ccd55b904ab1e24.1c",
+   "latestUpdateStatus": "2025-08-03T18:31:15.403749Z",
+   "lengthMeters": 468,
+   "picture": "https://lh3.googleusercontent.com/2TqERq3IITZdced3rVX5ZeRVBaqRK1pZ1g-aqq7pLEf3HOGrlMSFWYR506IlZZjAJkifSan3-oeOJ_qtD4mm",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "794ccba7c68d49978070e1b18c74c00b.16",
+      "latitude": 3.159228,
+      "longitude": 101.709538,
+      "picture": "https://lh3.googleusercontent.com/5UI1DVzLaCWl3KjY8do43CDsUFxM_m_Fy23HJCxcwx9KFYQQ56_O80xDuSbFOazNH1UjUt6KRRa_U3p4Fk28RqRt6kU",
+      "title": "The Waves Sculpture",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "9921c6e04c34475ca2893345c04cf970.16",
+      "latitude": 3.158938,
+      "longitude": 101.709662,
+      "picture": "https://lh3.googleusercontent.com/EvfeeXZUS0SGJJOQYyyqWCbFxtOOXCEsKrv1lhQPkBqosotWbLFKp6GWVHJuPYuJSAnJkA669hwaAd6EPSTHl7JnNgOy",
+      "title": "Green Diamond Mural",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b262045cdf4644848696c2908424341d.16",
+      "latitude": 3.158439,
+      "longitude": 101.71074,
+      "picture": "https://lh3.googleusercontent.com/5gLYTGLrNl2a-eJ0iWO98FWSxJrDWCtS3p5ApfFT-7537GMUkDYru6XfWfpVDYuBwXYjp5rY0mJTn1Z5DMVm_28IdxGa5LX5GkQgkMDVcmRG",
+      "title": "Single Fountain 2 at KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "97e589f5b05745fda616acd20a071e74.16",
+      "latitude": 3.158144,
+      "longitude": 101.711852,
+      "picture": "https://lh3.googleusercontent.com/s9k-4KCUHzwAhYGWS1Ga31faegRl3WntMqbXtXqGgMmYfknRDiXrZhpWRVkSBoO1MAgi1aVov9zTObNhhmM5D-JvVHca7BGdFcM7Ka03UPY",
+      "title": "Mercedes AMG Petronas F1 Car Display",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e4f175f7950d486f98954a329f5e0a90.11",
+      "latitude": 3.15795,
+      "longitude": 101.711149,
+      "picture": "https://lh3.googleusercontent.com/R-g8kOXiscdQgfHvjQHZdR4GZokGGXHPeuv8uSMRqdZxdwjw2CGbFyKpkPkyUJkKkiyulgkEM5XHzew2VxI-7TH9eB0XwvhLx14svpifRLUf",
+      "title": "Kinetik I, Tower 1 Lobby, PETR",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "919044fc015744578f05f9d62b604d84.16",
+      "latitude": 3.157073,
+      "longitude": 101.710945,
+      "picture": "https://lh3.googleusercontent.com/bHph37F6K_8yw6Jl4T4ddNf3MWr33kKGWoD89h16-P9018nW4ytot6c9OycrJ3IGc4tOcZ3v048XmNGZcjzJGKgPkrnO-jCG_AFCag2Rbl0",
+      "title": "Modest David",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 18",
+   "type": "anyOrder"
+  },
+  "18": {
+   "averageDurationMilliseconds": 291962,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "cffcbad6cdbe4a3cac8d80066eaa1706.1c",
+   "latestUpdateStatus": "2026-07-14T19:55:53.323945Z",
+   "lengthMeters": 184,
+   "picture": "https://lh3.googleusercontent.com/rNiLAvsGAIZUsLTdFUuuhNK9bl1NZc5j4gE-8vFz0Ms1vvQQw1P6rzjlt10hdwLKPvytbx5g6pHCn_tZIMM",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "919044fc015744578f05f9d62b604d84.16",
+      "latitude": 3.157073,
+      "longitude": 101.710945,
+      "picture": "https://lh3.googleusercontent.com/bHph37F6K_8yw6Jl4T4ddNf3MWr33kKGWoD89h16-P9018nW4ytot6c9OycrJ3IGc4tOcZ3v048XmNGZcjzJGKgPkrnO-jCG_AFCag2Rbl0",
+      "title": "Modest David",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9719936d4a6044eda5641327faa2e99f.16",
+      "latitude": 3.157026,
+      "longitude": 101.711168,
+      "picture": "https://lh3.googleusercontent.com/bwU9p_TVG_Bogx2o-CqeL3iep8WSMvwm40mysDrtubK_OoYPbDueB0c6VP_1WD2aYwDYmyqGs0lOeu1VxXT1YgLINM3cvV_5qV1y1wpbBe-I",
+      "title": "Black Horse Lamp Head",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "79c909bab0054617887826c0c08a81c0.16",
+      "latitude": 3.156665,
+      "longitude": 101.710811,
+      "picture": "https://lh3.googleusercontent.com/JXBS4I_KKDBHv7QL3HVmXary9b-lyjLiQDIiknIPkHFYNl7Ng_S-B9SzpiKgJfuomtULXaIEq1MONarzwE6CDFC9ASXPUUdrpqeBxn_-MS0",
+      "title": "Art Stone Chair",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b3f90e15830d479ea250eb3375d78ac6.16",
+      "latitude": 3.156644,
+      "longitude": 101.710604,
+      "picture": "https://lh3.googleusercontent.com/eVKq1sFpc6BB78Bqkime-xezirANGArYSGjKXA1Ee7w_Ktgo2yaBD_YBfvm3Ci5BCDRx5MRe7c5yxWckMGNaGDQ7gFWBTyV0ab3lTho7jsPKsA",
+      "title": "Build You Up",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "05b697828617c8367a1ced4574ede1b5.1d",
+      "latitude": 3.156579,
+      "longitude": 101.710968,
+      "picture": "http://lh5.ggpht.com/iuNwjghyXCMpBOoEV8pAlpId5Lu2H_dQEuHelc9uQqVogpj0ChRkiwoQLxTPS1QBIK_QtbIgPOeWNY1a49brrgw",
+      "title": "Petronas Towers",
+      "type": "fieldTripWaypoint"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "caec83a64b7a47bea30458fa34ec9b64.16",
+      "latitude": 3.156352,
+      "longitude": 101.710709,
+      "picture": "https://lh3.googleusercontent.com/nklahSVVqEezjXeWAmUSqDsOTX9uaxqkK1dJUdhiMrC_7Vx9druDno9BcUaSBm2TnJmKv0uyM_NiRH9Lt3p86PKTZH-1k6kN7b3MbS3Fi7U",
+      "title": "Mandarin Oriental Elephants",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 19",
+   "type": "anyOrder"
+  },
+  "19": {
+   "averageDurationMilliseconds": 329537,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "9ebd4ce7a99f4b39a17a4dcf2562740c.1c",
+   "latestUpdateStatus": "2025-08-03T18:30:47.236770Z",
+   "lengthMeters": 182,
+   "picture": "https://lh3.googleusercontent.com/ARFdGQaOHMR-S35onmHxbPYJYKPlI9wQuy4eiCGmAMj2Dp3ow05hdgFSJXB83Nsa4qY_6bBc0DAedRNtkZOn",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "caec83a64b7a47bea30458fa34ec9b64.16",
+      "latitude": 3.156352,
+      "longitude": 101.710709,
+      "picture": "https://lh3.googleusercontent.com/nklahSVVqEezjXeWAmUSqDsOTX9uaxqkK1dJUdhiMrC_7Vx9druDno9BcUaSBm2TnJmKv0uyM_NiRH9Lt3p86PKTZH-1k6kN7b3MbS3Fi7U",
+      "title": "Mandarin Oriental Elephants",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "64d127f8ed284a1fb40703f3bbb83a2a.16",
+      "latitude": 3.156403,
+      "longitude": 101.710369,
+      "picture": "https://lh3.googleusercontent.com/ekBRfiVIhXIjYjHdEOa3Tko_sichpXje_Zbiv1l0iwbyTjTHh1E6SwdoyT0NSX8B_T6XxS4zXfcjtfNNdIblygYZEDhhayorLN9tVM9P4kY",
+      "title": "Poem",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "8c2545914cd14f57afc41353f4856b5a.16",
+      "latitude": 3.156171,
+      "longitude": 101.710127,
+      "picture": "https://lh3.googleusercontent.com/j7IJOTn5cFOWtUzERv2ryloFDIMIsSG5wcFphDsIAL-4yy9u3UOUdXvHUF7eAgFjw-sRs3VwV86WrUMGRXpmZuFWuQME0kROJjJ_LITKjJtU",
+      "title": "Guy in Chair Graffiti",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "050ea9e68e21435794370f0d8259b6e7.16",
+      "latitude": 3.156164,
+      "longitude": 101.710318,
+      "picture": "https://lh3.googleusercontent.com/0a0KV-GzsCvdhEsgqWuKgmLQbBdX4ezCaFBLZSEnC38J0-gw_SCdHQ2jNhk73BynCYVPIFe3Axh4BQinUKiON_5TFgo",
+      "title": "Leopard Spots Chair",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "19b72bf3d8f74dc7ab3bf5135c0b5970.16",
+      "latitude": 3.156122,
+      "longitude": 101.710521,
+      "picture": "https://lh3.googleusercontent.com/W6ASqua08mdOtbrAvfieP7q0zRnj955IldvDSwj-gajbmGpeRsiJwfN4vkXzHNtir8ag6ctfdnfTVX2hJgwovYhQvj9I",
+      "title": "Asian Sculpture",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b8532b65f2994b4084a0d64c0c098e79.16",
+      "latitude": 3.156151,
+      "longitude": 101.711083,
+      "picture": "https://lh3.googleusercontent.com/zDnDHJr0TFz2635xaZerMJl1VciIjAAUBSnqhvo0nbaVycwElkle7Q2h8JVTNP7X_1c5QEaq3zpAd9ymeDsAVLniXC-7uM0TBhUQ29IOZCRHpg",
+      "title": "Big Horse",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 20",
+   "type": "anyOrder"
+  },
+  "20": {
+   "averageDurationMilliseconds": 758064,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "fc9821b506cd4b5d8e14aae9415f7e68.1c",
+   "latestUpdateStatus": "2025-08-20T10:46:09.632322Z",
+   "lengthMeters": 255,
+   "picture": "https://lh3.googleusercontent.com/rUnYvKfNn4-iHD93ORoz5ugVEW5Cy8PHwtIjfpUPQXZpqHYe4Cn43I9_1H3ne-4V4MgyIgcGQ2yA6f31bU8v",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "b8532b65f2994b4084a0d64c0c098e79.16",
+      "latitude": 3.156151,
+      "longitude": 101.711083,
+      "picture": "https://lh3.googleusercontent.com/zDnDHJr0TFz2635xaZerMJl1VciIjAAUBSnqhvo0nbaVycwElkle7Q2h8JVTNP7X_1c5QEaq3zpAd9ymeDsAVLniXC-7uM0TBhUQ29IOZCRHpg",
+      "title": "Big Horse",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7ae2c0698bfc4bf39ac2fff127a6f799.16",
+      "latitude": 3.15602,
+      "longitude": 101.711429,
+      "picture": "http://lh3.googleusercontent.com/ZDJjUbL_yStqWABErTLBRuQX4nl3gDB_2zcbNj-25e1quyymgoSWlQk_6cX_6ZN06chI9rXQOhx4E24ehLu7AiZQB6yr",
+      "title": "Fountain Mandarin Oriental",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "16d8c88b408f4f35b0dd73cfc199555c.16",
+      "latitude": 3.155595,
+      "longitude": 101.711154,
+      "picture": "https://lh3.googleusercontent.com/4X7fMbJalGpJbYVZ3sL-8RKQ00Z-UDoOgQTHbPX-T_JESG08fZtCZHXie47skrFKN1OmfIn4ziRUPQb2UjpNPpKLqO1efuUBxB2xd189CajARQ",
+      "title": "Metal Rooster",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "a8ccac6375614844a3d9d14484207bb7.11",
+      "latitude": 3.155862,
+      "longitude": 101.711486,
+      "picture": "https://lh3.googleusercontent.com/QojkGgLEWRQQEvE7zZZM7QcBxmdeprcb2PraF52tdHkW0L15Jk_HYsJmGF6LqLOvkcN5ZRDLt1Ql1s3_jqQHqOyKGDNC-Fdq05QaROd_XBzr",
+      "title": "Mandarin Oriental Kuala Lumpur - MOKL",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "03137c20077e49c091710ee4527ba797.16",
+      "latitude": 3.155898,
+      "longitude": 101.712253,
+      "picture": "https://lh3.googleusercontent.com/dRogFAjFS72gPvyp9AjhuPvpORCurBMX-VBxLeq_AHd7jQxR7hEON5MNh6z1Y6fj-Xsr0Sx7HUeX9M6RaeixHp8HEcmEdPQTBNuBSNeHa94",
+      "title": "Mosaic Cafe Water Feature",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "9c2941e595984b16b1bf481c23d92aad.16",
+      "latitude": 3.155425,
+      "longitude": 101.71252,
+      "picture": "https://lh3.googleusercontent.com/Q8MfKo7bsJwxKDg2xQMKzP5vrRo7PKLPs8HkPE6z5WOqEMJR0eCAY8lQ9fu8_k2i9_C7uFrBya8T7dzZd2VfjocTKQS_8-_HtABAGW8twdI",
+      "title": "Taman KLCC Map",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 21",
+   "type": "anyOrder"
+  },
+  "21": {
+   "averageDurationMilliseconds": 406770,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "38731f6389934882959a8a7c27a8e24b.1c",
+   "latestUpdateStatus": "2025-08-03T18:29:53.718485Z",
+   "lengthMeters": 289,
+   "picture": "https://lh3.googleusercontent.com/bViPO-8ZPohN5Bqqrzx6bZWXWuKwE9V7Kh07ieQzn_XzD2r2oJ35FI3B-gGJ95ZlOy9UhrxKgMe6mrMqTZu4",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "9c2941e595984b16b1bf481c23d92aad.16",
+      "latitude": 3.155425,
+      "longitude": 101.71252,
+      "picture": "https://lh3.googleusercontent.com/Q8MfKo7bsJwxKDg2xQMKzP5vrRo7PKLPs8HkPE6z5WOqEMJR0eCAY8lQ9fu8_k2i9_C7uFrBya8T7dzZd2VfjocTKQS_8-_HtABAGW8twdI",
+      "title": "Taman KLCC Map",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "8e9cda03868c441fb5c7eb3b8538478e.16",
+      "latitude": 3.156772,
+      "longitude": 101.712465,
+      "picture": "https://lh3.googleusercontent.com/RFIc9k8qXuOlOrchTvK-_8YXH6r-W3nqim0mWozLZ4WonK0mkuUwW3xxCNzKP2qr2BBBCankuZz5pRqJ70jdKSKAUqtf6EhSuzI10LEfE-T3",
+      "title": "May the Horses be with You",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "viewWaypoint",
+     "poi": {
+      "id": "4c67c73289c7a73ba4a7c744cc1cdb0d.1d",
+      "latitude": 3.157,
+      "longitude": 101.711997,
+      "picture": "http://lh3.ggpht.com/Q4wSg8K25jK4-0URA3HCTCDxYtaUlHUx9raA22lfHRW1zFRSdOCBEyeOTflZWLtN3nNeWuY8Xf8_cBHbmppHqPY",
+      "title": "Suria KLCC",
+      "type": "fieldTripWaypoint"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "94844716c384464c812eba44a7ff668f.16",
+      "latitude": 3.157065,
+      "longitude": 101.712172,
+      "picture": "https://lh3.googleusercontent.com/R8EdKbCj6ERv1XKLqms0CBOPCrJBg9q-qmOTY40iTZ2cGoY9Zuw7idoKtHLx5EmrNuemRtU04-rF9f7F4gw1ubcK08DdcZrf8KfdN-Ertyc",
+      "title": "Silver Movie Reel Man",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "d9cfd3d2a6b346a09dc883b68f81636b.11",
+      "latitude": 3.156936,
+      "longitude": 101.712706,
+      "picture": "https://lh3.googleusercontent.com/dix1B_slA1rQDG2kKsx4FV2WIlXw4xrBeoY7EFt2KZFrzMdrxdou8nFN9htNWlino-QHw746w7icCQSivISQ2uXmLY5CpXFXrDl43nrFytlq",
+      "title": "Lake Symphony of KLCC",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "03fe81c1681f4ec394d8401f4942b41e.16",
+      "latitude": 3.157009,
+      "longitude": 101.712735,
+      "picture": "http://lh3.googleusercontent.com/DszTIK5MVc9B_KKi4bZEal347cxfZX0xM2FuAPwnhlNZbb9stWUj-DjrEKz5lAMiraTwePLySFwOMnC_3UyjmO4kTnc",
+      "title": "Big Chilis",
+      "type": "unavailable"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 22",
+   "type": "anyOrder"
+  },
+  "22": {
+   "averageDurationMilliseconds": 573755,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "806df69c95c348ea99460cb30621ef55.1c",
+   "latestUpdateStatus": "2025-08-03T18:30:09.711353Z",
+   "lengthMeters": 121,
+   "picture": "https://lh3.googleusercontent.com/rP6OvaCo-ptfh1hq6f4MmkRKKZocvuWAE4ILdpa_vkAPC94UTvuBQmcKliy9RSw7zpOOB79X4Vpb4tnfH--m",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "03fe81c1681f4ec394d8401f4942b41e.16",
+      "latitude": 3.157009,
+      "longitude": 101.712735,
+      "picture": "http://lh3.googleusercontent.com/DszTIK5MVc9B_KKi4bZEal347cxfZX0xM2FuAPwnhlNZbb9stWUj-DjrEKz5lAMiraTwePLySFwOMnC_3UyjmO4kTnc",
+      "title": "Big Chilis",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7e3f6188c52a4824b60940011657e0b1.16",
+      "latitude": 3.156782,
+      "longitude": 101.713188,
+      "picture": "https://lh3.googleusercontent.com/E5Zq0XapCePMK3_yd15GChM6aN4P6I2k2JcVWQbDRXDVpflbUl-JZss3i7GxpEatauc1A0Eto8YEB6l49itYE5-R0nkfvHqeL9e6y-FwKr0",
+      "title": "Lake Symphony Fountain",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e281ec57849447d1aefdf71f2c850314.16",
+      "latitude": 3.156953,
+      "longitude": 101.713311,
+      "picture": "https://lh3.googleusercontent.com/T1K4r1QA5lzJrkQqbXmOnJUdZ9-hVo5zfGHGap0EF1llMc8ZvMbnANimakQgpIKpZ4CZrxFsJpCL6wNQSIdvpJGu7z2CFH5Lzos_kVC9oDA",
+      "title": "Lonely Waterfall",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "f2feb5cd268f4af28cdeb8a5f8ff6bc7.16",
+      "latitude": 3.156873,
+      "longitude": 101.713416,
+      "picture": "https://lh3.googleusercontent.com/G_ZNszO4v4AwqT0wczeH2Ddn2FeDnbVCBYIbCQ-0nyXHpqYes87_DnNRBkq3w1Qf6IB2Zp_9IQjdkwRn_-dRVOIkJbQPRgLyeDom5xxnt44",
+      "title": "Taman KLCC Directory",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "b0ecbf3873c24e02ac2668e59a624881.16",
+      "latitude": 3.156809,
+      "longitude": 101.71365,
+      "picture": "https://lh3.googleusercontent.com/e0F0IE3gvER5KvPdcYL4kuXwZDrCIJy3N0GeCOrqGj3fzXgXujSZM2cFfyGTODHaF1jVQkj0IydmsPdktBCg-L99jf-gMZIBjsRGzWQ3HdoCAg",
+      "title": "Flower Motif",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "cf6f70f33e114c4ba361ebe597e65439.16",
+      "latitude": 3.157177,
+      "longitude": 101.713304,
+      "picture": "https://lh3.googleusercontent.com/Bs5KGEMDTseveUx-jdtS28OiP1XoANV4thl3IYu_8CMy5gHSLwDzFUH5hUCirXLLJF9WskOsxXjYI2wnSKBngg5H1Yh5PIO0aGUArslLeVg",
+      "title": "Ukiran Kayu",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 23",
+   "type": "anyOrder"
+  },
+  "23": {
+   "averageDurationMilliseconds": 1065328,
+   "description": "Located at Golden Triangle Kuala Lumpur, KLCC is known for shopping and entertainment district in the heart of Kuala Lumpur (KL).",
+   "id": "f3b6542c675443c28c464c2ac8ad4bf1.1c",
+   "latestUpdateStatus": "2025-08-03T18:31:07.794904Z",
+   "lengthMeters": 406,
+   "picture": "https://lh3.googleusercontent.com/p9FDfkj4DU55DeHq5fiE-DtEDWc1wnpuxy9MRw5Xs_jOxuC5CaLuHu2NFlwNTtr0ClhWW4r-D-L5WFYGP4AN",
+   "status": "published",
+   "steps": [
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "7529e7e3f62c496fafd34b248922a280.16",
+      "latitude": 3.157802,
+      "longitude": 101.713346,
+      "picture": "https://lh3.googleusercontent.com/vgBxnWe5xl3_-3EXYMhbnsdlNXIxC1PPNOr4qoecOKBAFeCTdHCe3CV1OcifEGhq7azObHxVA-YkhU5H7_zq5kIN3L5tsNpw0lf7xnP83Zka",
+      "title": "Melur & Thyme",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "e1a22ae7b4d14ef3b1b865e35ef87ab1.16",
+      "latitude": 3.158572,
+      "longitude": 101.712574,
+      "picture": "http://lh3.googleusercontent.com/UILEarZXwFZhh9tsXF71jJMktoib_COhpA1HgxGKxTN6n8ySzn1QARG-JBgpZJuSETrWHCJ3UUa9DHXGTzqpDpVuxlE",
+      "title": "Stone Foot",
+      "type": "unavailable"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "ca21b0be17ec4e1c867351c3a6dfc9d2.16",
+      "latitude": 3.158858,
+      "longitude": 101.711784,
+      "picture": "https://lh3.googleusercontent.com/Y_dKwZWTyY3TM4CHHbpFL0-1O6Dyy73wj6XIyX0gAxXTu6dqnNbGN7WNUMOw8Z2pr-q8V4PX6--RIj0jrWtMBbQYdAGeJl4wrd8PXKi_loU",
+      "title": "The Octane",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "15b7a819a0654919acc7a74697807029.12",
+      "latitude": 3.15865,
+      "longitude": 101.71117,
+      "picture": "https://lh3.googleusercontent.com/OTkK367bnS8jIh0HR1eH-WDtCgFBs6TZeKxN5j5CM4qMmtXeW4-4RQoI0LZwfeTPh_cYM-KIOo8gr45yrnsGddmK6gNCicycARNrGnAgY8bDOw",
+      "title": "Pond facing Petronas Towers",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "hack",
+     "poi": {
+      "id": "eca3803f88b44aa99d3af2b331834766.11",
+      "latitude": 3.158461,
+      "longitude": 101.711736,
+      "picture": "https://lh3.googleusercontent.com/aiXlmqs0O8-6jc67aGGo06xL7FtMqRL-xV8ovGgpoQv8YLJuUqeYPezXOoEjOZ4GAU64_Ieu9xJkIkAGlnPuBEGy723aMqa2H2xY5yN-_bie",
+      "title": "Kinetik II Tower 2 Lobby",
+      "type": "portal"
+     }
+    },
+    {
+     "objective": "enterPassphrase",
+     "poi": {
+      "id": "fc5fe46ce92c414fb66a8c54ed046336.12",
+      "latitude": 3.15805,
+      "longitude": 101.712065,
+      "picture": "https://lh3.googleusercontent.com/4cPniMJXaOajwlaNU1mTrxuYrKdyxEeQn61ymx7965AxML0rIOk-ZWdLzTT7-0xEWYPwfQfEpBR08DVWiUYHvszl3RPoLXUMczqQejaNJxmr8Q",
+      "title": "Petronas Twin Towers",
+      "type": "portal"
+     }
+    }
+   ],
+   "title": "Malaysia Mission Hunt - KLCC - 24 (Finale)",
+   "type": "anyOrder"
+  }
+ },
+ "numberOfDisabledMissions": 0,
+ "numberOfMissions": 24,
+ "numberOfSubmittedMissions": 0,
+ "owner": false,
+ "picture": "/bnrs/pictures/b028a86b71b0b1303a0ce1848253a37e",
+ "startLatitude": 3.158995,
+ "startLongitude": 101.710573,
+ "startPlaceId": "kuala-lumpur-6827",
+ "title": "Malaysia Mission Hunt - KLCC",
+ "type": "sequential",
+ "width": 6
+}

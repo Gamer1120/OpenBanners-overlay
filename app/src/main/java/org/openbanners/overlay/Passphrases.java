@@ -3,6 +3,7 @@ package org.openbanners.overlay;
 import org.openbanners.overlay.api.Mission;
 import org.openbanners.overlay.api.MissionStep;
 import org.openbanners.overlay.api.Objective;
+import org.openbanners.overlay.api.POIType;
 import org.openbanners.overlay.api.PassphraseApi;
 
 import java.util.ArrayList;
@@ -116,7 +117,8 @@ final class Passphrases {
 
         /**
          * Copied automatically when you switch to this mission, if {@code enabled} (Settings → Passphrases): what tapping
-         * copies for the mission's first passphrase step (the one listed first). With several passphrases that is the
+         * copies for the mission's first passphrase step (the one listed first; steps on deleted portals are not listed,
+         * so it is the first one on a live portal). With several passphrases that is the
          * first one, also when only a later one is known: an unknown first passphrase counts as unknown, so it gets the
          * mission number with the fallback and nothing without it.
          */
@@ -142,12 +144,24 @@ final class Passphrases {
         return step != null && step.objective == Objective.enterPassphrase;
     }
 
-    /** Indexes of the mission's passphrase steps (same rule as the website's passphraseStepsOf). */
+    /**
+     * A passphrase step you can actually answer: not on a deleted portal (POI type unavailable). Ingress skips steps on
+     * deleted portals, so nobody gets asked that passphrase (same as the website's bannerFacts/walkMode, and as
+     * NextWaypoint and DistanceCalculation skipping unavailable POIs).
+     */
+    static boolean isRequiredPassphraseStep(MissionStep step) {
+        return isPassphraseStep(step) && (step.poi == null || step.poi.type != POIType.unavailable);
+    }
+
+    /**
+     * Indexes of the mission's passphrase steps that count (same rule as the website's passphraseStepsOf): steps on
+     * deleted portals are left out, so a mission whose only passphrases are on deleted portals has none.
+     */
     static List<Integer> passphraseSteps(Mission mission) {
         List<Integer> indexes = new ArrayList<>();
         if (mission == null || mission.steps == null) return indexes;
         for (int i = 0; i < mission.steps.size(); i++) {
-            if (isPassphraseStep(mission.steps.get(i))) indexes.add(i);
+            if (isRequiredPassphraseStep(mission.steps.get(i))) indexes.add(i);
         }
         return indexes;
     }

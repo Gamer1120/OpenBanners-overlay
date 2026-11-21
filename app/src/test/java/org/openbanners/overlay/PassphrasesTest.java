@@ -7,12 +7,17 @@ import static org.junit.Assert.assertSame;
 import static org.junit.Assert.assertTrue;
 
 import org.junit.Test;
+import org.openbanners.overlay.api.Banner;
+import org.openbanners.overlay.api.BannerApi;
 import org.openbanners.overlay.api.Mission;
 import org.openbanners.overlay.api.MissionStep;
 import org.openbanners.overlay.api.Objective;
 import org.openbanners.overlay.api.POI;
+import org.openbanners.overlay.api.POIType;
 import org.openbanners.overlay.api.PassphraseApi;
 
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
 
@@ -284,5 +289,126 @@ public class PassphrasesTest {
         assertEquals(1, parsed.answers.size());
         assertEquals("Hagyma", openBanners(singlePassphraseMission(), false, parsed).steps.get(0).best());
         assertEquals("author", PassphraseApi.parse("{\"blocked\":\"author\",\"answers\":[]}").blocked);
+    }
+
+    // --- Passphrase steps on deleted portals (POI type unavailable): Ingress skips them, so they don't count ---------
+
+    private static MissionStep onType(MissionStep step, POIType type) {
+        step.poi.type = type;
+        return step;
+    }
+
+    private static MissionStep deleted(MissionStep step) {
+        return onType(step, POIType.unavailable);
+    }
+
+    @Test
+    public void onlyPassphraseOnADeletedPortalMeansNoPassphrase() {
+        Mission mission = mission(step(Objective.hack, "p0", "Fountain"), deleted(step(Objective.enterPassphrase, "p1", "Statue")));
+        PassphraseApi.BannerAnswers known = answers(answer("m5", 4, 1, "p1", "Alma", 3));
+        for (boolean fallback : new boolean[] {true, false}) {
+            Passphrases.ForMission result = openBanners(mission, fallback, known);
+            assertSame(Passphrases.NONE, result); // no 🔑
+            assertNull(result.autoCopy(true)); // nothing copied, also no mission number
+        }
+        Passphrases.ForMission number = Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, mission, 4, null);
+        assertFalse(number.show()); // no mission-number guess
+        assertNull(number.autoCopy(true));
+        assertTrue(Passphrases.passphraseSteps(mission).isEmpty());
+    }
+
+    @Test
+    public void firstPassphraseDeletedLaterLive() {
+        Mission mission = twoPassphraseMission();
+        deleted(mission.steps.get(1));
+        assertEquals(Arrays.asList(3), Passphrases.passphraseSteps(mission));
+        PassphraseApi.BannerAnswers both = answers(answer("m5", 4, 1, "p1", "Alma", 9), answer("m5", 4, 3, "p3", "Dió", 1));
+        Passphrases.ForMission result = openBanners(mission, false, both);
+        assertTrue(result.single());
+        assertEquals("5d", result.steps.get(0).label);
+        assertEquals("Dió", result.autoCopy(true).text); // first passphrase on a live portal
+        // Only the deleted one known: the live one is unknown.
+        PassphraseApi.BannerAnswers deletedOnly = answers(answer("m5", 4, 1, "p1", "Alma", 9));
+        assertTrue(openBanners(mission, false, deletedOnly).unknown());
+        assertNull(autoCopied(mission, true, false, deletedOnly));
+        Passphrases.Copy copy = openBanners(mission, true, deletedOnly).autoCopy(true);
+        assertEquals("5", copy.text);
+        assertTrue(copy.missionNumber);
+        Passphrases.ForMission number = Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, mission, 4, null);
+        assertTrue(number.single());
+        assertEquals("5", number.autoCopy(true).text);
+    }
+
+    @Test
+    public void firstPassphraseLiveLaterDeleted() {
+        Mission mission = twoPassphraseMission();
+        deleted(mission.steps.get(3));
+        assertEquals(Arrays.asList(1), Passphrases.passphraseSteps(mission));
+        PassphraseApi.BannerAnswers both = answers(answer("m5", 4, 3, "p3", "Dió", 9), answer("m5", 4, 1, "p1", "Alma", 1));
+        Passphrases.ForMission result = openBanners(mission, false, both);
+        assertTrue(result.single());
+        assertEquals("5b", result.steps.get(0).label);
+        assertEquals("Alma", result.autoCopy(true).text);
+        PassphraseApi.BannerAnswers deletedOnly = answers(answer("m5", 4, 3, "p3", "Dió", 9));
+        assertTrue(openBanners(mission, false, deletedOnly).unknown());
+        assertNull(autoCopied(mission, true, false, deletedOnly));
+        assertEquals("5", autoCopied(mission, true, true, deletedOnly));
+    }
+
+    @Test
+    public void noPassphraseDeletedKeepsEveryStep() {
+        Mission mission = twoPassphraseMission();
+        onType(mission.steps.get(1), POIType.portal);
+        onType(mission.steps.get(3), POIType.fieldTripWaypoint);
+        assertEquals(Arrays.asList(1, 3), Passphrases.passphraseSteps(mission));
+        PassphraseApi.BannerAnswers both = answers(answer("m5", 4, 3, "p3", "Dió", 5), answer("m5", 4, 1, "p1", "Alma", 1));
+        Passphrases.ForMission result = openBanners(mission, false, both);
+        assertEquals(2, result.steps.size());
+        assertEquals("Alma", result.autoCopy(true).text);
+        // No type at all (older data) counts as live too.
+        assertEquals(Arrays.asList(1, 3), Passphrases.passphraseSteps(twoPassphraseMission()));
+    }
+
+    /** Real Bannergress data (GET /bnrs/malaysia-mission-hunt-klcc-c868, 2026-11-21). */
+    @Test
+    public void malaysiaMissionHuntKlcc() throws Exception {
+        Banner banner;
+        try (InputStream in = getClass().getResourceAsStream("/banners/malaysia-mission-hunt-klcc-c868.json")) {
+            banner = BannerApi.parseBanner(new String(readAll(in), StandardCharsets.UTF_8));
+        }
+        // Mission 23: its only passphrase (step 1) is on a deleted portal.
+        Mission m23 = banner.missions.get(22);
+        assertSame(POIType.unavailable, m23.steps.get(0).poi.type);
+        assertTrue(Passphrases.isPassphraseStep(m23.steps.get(0)));
+        for (String source : new String[] {Passphrases.SOURCE_MISSION_NUMBER, Passphrases.SOURCE_OPENBANNERS}) {
+            Passphrases.ForMission result = Passphrases.forMission(source, true, m23, 22, answers());
+            assertFalse(result.show());
+            assertNull(result.autoCopy(true));
+        }
+        // Mission 18: step 1 live, step 2 on a deleted portal: one passphrase, step 1.
+        Mission m18 = banner.missions.get(17);
+        assertSame(POIType.unavailable, m18.steps.get(1).poi.type);
+        Passphrases.ForMission m18Number = Passphrases.forMission(Passphrases.SOURCE_MISSION_NUMBER, false, m18, 17, null);
+        assertTrue(m18Number.single());
+        assertEquals("18a", m18Number.steps.get(0).label);
+        assertEquals("18", m18Number.autoCopy(true).text);
+        Passphrases.ForMission m18Ob = Passphrases.forMission(Passphrases.SOURCE_OPENBANNERS, true, m18, 17, null);
+        assertTrue(m18Ob.single());
+        assertEquals(0, m18Ob.steps.get(0).stepIndex);
+        // Mission 11: two live passphrases, both count.
+        assertEquals(Arrays.asList(0, 2), Passphrases.passphraseSteps(banner.missions.get(10)));
+        // Mission 1 has no passphrase step; every other mission except 23 has one that counts.
+        assertTrue(Passphrases.passphraseSteps(banner.missions.get(0)).isEmpty());
+        int withPassphrase = 0;
+        for (Mission mission : banner.missions.values()) if (!Passphrases.passphraseSteps(mission).isEmpty()) withPassphrase++;
+        assertEquals(24, banner.missions.size());
+        assertEquals(22, withPassphrase);
+    }
+
+    private static byte[] readAll(InputStream in) throws java.io.IOException {
+        java.io.ByteArrayOutputStream out = new java.io.ByteArrayOutputStream();
+        byte[] buffer = new byte[8192];
+        for (int n; (n = in.read(buffer)) > 0; ) out.write(buffer, 0, n);
+        return out.toByteArray();
     }
 }

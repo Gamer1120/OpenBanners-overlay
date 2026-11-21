@@ -51,7 +51,12 @@ public class BannerApi {
         Request request = new Request.Builder().url(bannerUrl(bannerId)).build();
         ResponseBody responseBody = client.newCall(request).execute().body();
         assert responseBody != null;
-        Banner banner = objectMapper.readValue(responseBody.string(), Banner.class);
+        return parseBanner(responseBody.string());
+    }
+
+    /** A banner from the API's JSON (GET /bnrs/{id}), with its missions tagged. */
+    public static Banner parseBanner(String json) throws IOException {
+        Banner banner = objectMapper.readValue(json, Banner.class);
         tagMissions(banner);
         return banner;
     }
