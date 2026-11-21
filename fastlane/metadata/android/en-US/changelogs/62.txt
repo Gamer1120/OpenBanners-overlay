@@ -1,0 +1,1 @@
+Passphrases on deleted portals no longer count: Ingress skips those steps, so a mission whose only passphrase is on a deleted portal gets no 🔑 and nothing is copied, and auto-copy uses the first passphrase on a live portal.
