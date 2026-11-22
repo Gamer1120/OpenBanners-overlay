@@ -48,7 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Hasła udostępnione przez innych graczy. Pobiera hasła tego banera z openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Używaj numeru misji, gdy hasło nie jest znane</string>
     <string name="preferences_passphrase_autocopy">Kopiuj automatycznie, gdy przechodzę do misji (pierwsze hasło, jeśli jest ich kilka)</string>
-    <string name="preferences_passphrase_autocopy_summary">Hasło na dalszym portalu jest kopiowane ponownie, gdy dotrzesz do tego portalu (najwyżej raz na minutę dla każdego portalu)</string>
+    <string name="preferences_passphrase_autocopy_summary">Hasło na dalszym portalu jest kopiowane ponownie, gdy dotrzesz do tego portalu (najwyżej raz na minutę dla każdego portalu). Jeśli dotrzesz do kilku naraz, kopiowane jest tylko pierwsze</string>
     <string name="passphrase_button">🔑 Hasło</string>
     <string name="passphrase_copied">✓ Skopiowano</string>
     <string name="passphrase_copied_mission_number">✓ Skopiowano (numer misji)</string>

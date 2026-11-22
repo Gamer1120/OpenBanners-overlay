@@ -49,7 +49,7 @@
     <string name="passphrase_source_openbanners_summary">由其他玩家分享的口令。从 openbanners.org 下载此横幅的口令。</string>
     <string name="preferences_passphrase_fallback">没有已知口令时使用任务编号</string>
     <string name="preferences_passphrase_autocopy">切换到任务时自动复制（有多个口令时复制第一个）</string>
-    <string name="preferences_passphrase_autocopy_summary">后面门户的口令会在你到达该门户时再次复制（每个门户每分钟最多一次）</string>
+    <string name="preferences_passphrase_autocopy_summary">后面门户的口令会在你到达该门户时再次复制（每个门户每分钟最多一次）。同时到达多个时，只复制第一个</string>
     <string name="passphrase_button">🔑 口令</string>
     <string name="passphrase_copied">✓ 已复制</string>
     <string name="passphrase_copied_mission_number">✓ 已复制（任务编号）</string>

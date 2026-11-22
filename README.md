@@ -36,7 +36,9 @@ matched to steps by portal id; downloaded only with that source, cached for offl
 out), optionally falling back to the mission number. Optional auto-copy when switching to a mission: its passphrase, or
 the first one when it has several (an unknown first one counts as unknown: the mission number with the fallback, else
 nothing). With auto-copy, a passphrase on a later portal (not the mission's first portal) is copied again when you reach
-it, i.e. when the step is ticked off as on the route map; at most once a minute per step (`PassphraseReachCopy`).
+it, i.e. when the step is ticked off as on the route map; at most once a minute per step (`PassphraseReachCopy`). If
+several passphrase portals are reached at the same moment, only the earliest in mission order is copied; the later ones
+are never auto-copied (copy them with 🔑).
 The 🔑 button itself doesn't depend on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
 switch (migrated: on → mission number + auto-copy). Logic and tests: `Passphrases`, `PassphraseSettings`.
 

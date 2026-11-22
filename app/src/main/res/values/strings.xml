@@ -52,7 +52,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrases shared by other players. Downloads this banner\'s passphrases from openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Use the mission number when no passphrase is known</string>
     <string name="preferences_passphrase_autocopy">Copy automatically when I switch to a mission (the first passphrase if it has several)</string>
-    <string name="preferences_passphrase_autocopy_summary">A passphrase on a later portal is copied again when you reach that portal (at most once a minute per portal)</string>
+    <string name="preferences_passphrase_autocopy_summary">A passphrase on a later portal is copied again when you reach that portal (at most once a minute per portal). If you reach several at once, only the first one is copied</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_button_short" translatable="false">🔑</string>
     <string name="passphrase_button_unknown" translatable="false">🔑 ?</string>

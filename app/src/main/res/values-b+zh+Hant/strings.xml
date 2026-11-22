@@ -49,7 +49,7 @@
     <string name="passphrase_source_openbanners_summary">由其他玩家分享的通關密語。從 openbanners.org 下載此拼圖的通關密語。</string>
     <string name="preferences_passphrase_fallback">沒有已知的通關密語時使用任務編號</string>
     <string name="preferences_passphrase_autocopy">切換到任務時自動複製（有多個通關密語時複製第一個）</string>
-    <string name="preferences_passphrase_autocopy_summary">後面能量塔的通關密語會在你抵達該能量塔時再次複製（每個能量塔每分鐘最多一次）</string>
+    <string name="preferences_passphrase_autocopy_summary">後面能量塔的通關密語會在你抵達該能量塔時再次複製（每個能量塔每分鐘最多一次）。同時抵達多個時，只複製第一個</string>
     <string name="passphrase_button">🔑 通關密語</string>
     <string name="passphrase_copied">✓ 已複製</string>
     <string name="passphrase_copied_mission_number">✓ 已複製（任務編號）</string>

@@ -48,7 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Hesla sdílená ostatními hráči. Stahuje hesla tohoto banneru z openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Použít číslo mise, když heslo není známé</string>
     <string name="preferences_passphrase_autocopy">Automaticky kopírovat, když přepnu na misi (první heslo, pokud jich má víc)</string>
-    <string name="preferences_passphrase_autocopy_summary">Heslo na pozdějším portálu se znovu zkopíruje, když k tomu portálu dorazíš (nejvýš jednou za minutu u každého portálu)</string>
+    <string name="preferences_passphrase_autocopy_summary">Heslo na pozdějším portálu se znovu zkopíruje, když k tomu portálu dorazíš (nejvýš jednou za minutu u každého portálu). Když dorazíš k několika najednou, zkopíruje se jen první</string>
     <string name="passphrase_button">🔑 Heslo</string>
     <string name="passphrase_copied">✓ Zkopírováno</string>
     <string name="passphrase_copied_mission_number">✓ Zkopírováno (číslo mise)</string>

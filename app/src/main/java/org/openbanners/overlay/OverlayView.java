@@ -631,13 +631,14 @@ class OverlayView extends FrameLayout {
     /**
      * Auto-copy also when you reach a passphrase portal that isn't the mission's first portal (see
      * {@link PassphraseReachCopy}), with the same "✓ Copied" feedback. Runs after {@link #applyState}, so a mission
-     * switch has copied the first passphrase already and the one you're standing at wins.
+     * switch has copied the first passphrase already and the one you're standing at wins. Several reached at once:
+     * only the earliest; the later ones stay manual (🔑).
      */
     private void copyOnReach(State newState, State oldState) {
         if (!passphraseAutoCopy || !passphrases.show() || newState.banner == null || newState.currentMission < 0) return;
         Mission mission = currentMission(newState);
         if (mission == null) return;
-        Passphrases.Step step = PassphraseReachCopy.toCopy(mission, passphrases, State.getNewStepsInRange(newState, oldState).keySet());
+        Passphrases.Step step = reachCopy.pick(mission, newState.currentMission, passphrases, State.getNewStepsInRange(newState, oldState).keySet());
         if (step == null) return;
         Passphrases.Copy copy = passphrases.copy(step);
         if (copy == null) return;

@@ -48,7 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrases gedeeld door andere spelers. Downloadt de passphrases van deze banner van openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Missienummer gebruiken als er geen passphrase bekend is</string>
     <string name="preferences_passphrase_autocopy">Automatisch kopiëren als ik naar een missie ga (de eerste passphrase als er meerdere zijn)</string>
-    <string name="preferences_passphrase_autocopy_summary">Een passphrase bij een later portal wordt opnieuw gekopieerd als je bij dat portal aankomt (hooguit eens per minuut per portal)</string>
+    <string name="preferences_passphrase_autocopy_summary">Een passphrase bij een later portal wordt opnieuw gekopieerd als je bij dat portal aankomt (hooguit eens per minuut per portal). Kom je bij meerdere tegelijk aan, dan wordt alleen de eerste gekopieerd</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Gekopieerd</string>
     <string name="passphrase_copied_mission_number">✓ Gekopieerd (missienummer)</string>

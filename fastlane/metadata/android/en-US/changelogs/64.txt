@@ -1,0 +1,1 @@
+Passphrase auto-copy: if you reach several passphrase portals at once, only the first one is copied; copy the others with the 🔑 button.

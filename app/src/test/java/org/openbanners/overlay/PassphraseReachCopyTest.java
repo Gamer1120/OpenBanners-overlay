@@ -75,11 +75,56 @@ public class PassphraseReachCopyTest {
     }
 
     @Test
-    public void severalReachedAtOnceCopiesTheLast() {
+    public void severalReachedAtOnceCopiesOnlyTheEarliest() {
+        Mission mission = mission(step(Objective.hack, "p0"), step(Objective.enterPassphrase, "p1"),
+                step(Objective.hack, "p2"), step(Objective.enterPassphrase, "p3"), step(Objective.enterPassphrase, "p4"));
+        assertEquals(Integer.valueOf(1), copied(mission, 1));
+        assertEquals(Integer.valueOf(1), copied(mission, 1, 2, 3));
+        assertEquals(Integer.valueOf(1), copied(mission, 4, 3, 1));
+        assertEquals(Integer.valueOf(3), copied(mission, 3, 4));
+    }
+
+    @Test
+    public void earliestOnTheFirstPortalCopiesNothing() {
+        // The first one is left to the switch copy, and the later ones to the 🔑 button.
+        Mission mission = mission(step(Objective.enterPassphrase, "p0"), step(Objective.enterPassphrase, "p1"));
+        assertNull(copied(mission, 0, 1));
+        PassphraseReachCopy copy = new PassphraseReachCopy();
+        assertNull(copy.pick(mission, 4, passphrases(mission), Arrays.asList(0, 1)));
+        assertNull(copy.pick(mission, 4, passphrases(mission), Collections.singletonList(1)));
+    }
+
+    private static Integer picked(PassphraseReachCopy copy, Mission mission, Integer... reached) {
+        Passphrases.Step step = copy.pick(mission, 4, passphrases(mission), Arrays.asList(reached));
+        return step == null ? null : step.stepIndex;
+    }
+
+    @Test
+    public void laterOnesReachedTogetherAreNotCopiedOnTheNextUpdate() {
+        Mission mission = mission(step(Objective.hack, "p0"), step(Objective.enterPassphrase, "p1"),
+                step(Objective.enterPassphrase, "p2"), step(Objective.enterPassphrase, "p3"), step(Objective.enterPassphrase, "p4"));
+        PassphraseReachCopy copy = new PassphraseReachCopy();
+        assertEquals(Integer.valueOf(1), picked(copy, mission, 1, 2, 3));
+        // Next location update(s) while 2 and 3 are still in range / reported as new again (e.g. card rebuilt).
+        assertNull(picked(copy, mission, 2, 3));
+        assertNull(picked(copy, mission, 3));
+        assertNull(picked(copy, mission, 2));
+        // A later portal reached on its own afterwards is still copied.
+        assertEquals(Integer.valueOf(4), picked(copy, mission, 4));
+        // Handled ones don't hide a later one reached together with them.
+        assertEquals(Integer.valueOf(4), picked(copy, mission, 2, 3, 4));
+        // Per mission position: the same steps in another mission of the banner are unaffected.
+        assertEquals(2, copy.pick(mission, 5, passphrases(mission), Arrays.asList(2, 3)).stepIndex);
+    }
+
+    @Test
+    public void reachedOneAtATimeEachIsCopied() {
         Mission mission = mission(step(Objective.hack, "p0"), step(Objective.enterPassphrase, "p1"),
                 step(Objective.hack, "p2"), step(Objective.enterPassphrase, "p3"));
-        assertEquals(Integer.valueOf(1), copied(mission, 1));
-        assertEquals(Integer.valueOf(3), copied(mission, 1, 2, 3));
+        PassphraseReachCopy copy = new PassphraseReachCopy();
+        assertEquals(Integer.valueOf(1), picked(copy, mission, 1));
+        assertNull(picked(copy, mission, 2));
+        assertEquals(Integer.valueOf(3), picked(copy, mission, 3));
     }
 
     @Test

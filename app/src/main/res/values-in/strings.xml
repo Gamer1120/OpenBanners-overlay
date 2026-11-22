@@ -49,7 +49,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrase yang dibagikan pemain lain. Mengunduh passphrase banner ini dari openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Gunakan nomor misi jika passphrase belum diketahui</string>
     <string name="preferences_passphrase_autocopy">Salin otomatis saat aku pindah ke misi (passphrase pertama jika ada beberapa)</string>
-    <string name="preferences_passphrase_autocopy_summary">Passphrase di portal berikutnya disalin lagi saat kamu mencapai portal itu (paling banyak sekali per menit per portal)</string>
+    <string name="preferences_passphrase_autocopy_summary">Passphrase di portal berikutnya disalin lagi saat kamu mencapai portal itu (paling banyak sekali per menit per portal). Jika kamu mencapai beberapa sekaligus, hanya yang pertama yang disalin</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Disalin</string>
     <string name="passphrase_copied_mission_number">✓ Disalin (nomor misi)</string>
