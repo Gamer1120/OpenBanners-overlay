@@ -28,6 +28,11 @@
         <item>북쪽 위</item>
         <item>나침반 따라 회전</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>파선</item>
+        <item>점선</item>
+        <item>없음</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>북쪽</item>
         <item>내가 바라보는 방향</item>

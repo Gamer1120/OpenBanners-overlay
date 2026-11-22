@@ -49,6 +49,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrase yang dibagikan pemain lain. Mengunduh passphrase banner ini dari openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Gunakan nomor misi jika passphrase belum diketahui</string>
     <string name="preferences_passphrase_autocopy">Salin otomatis saat aku pindah ke misi (passphrase pertama jika ada beberapa)</string>
+    <string name="preferences_passphrase_autocopy_summary">Passphrase di portal berikutnya disalin lagi saat kamu mencapai portal itu (paling banyak sekali per menit per portal)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Disalin</string>
     <string name="passphrase_copied_mission_number">✓ Disalin (nomor misi)</string>
@@ -112,6 +113,7 @@
     <string name="preferences_route_show_whole_banner_summary">Gambar juga misi yang sudah selesai dan yang berikutnya, bukan hanya misi saat ini</string>
     <string name="preferences_route_hack_range">Gambar lingkaran 40 meter di sekitar pengguna</string>
     <string name="preferences_route_hack_range_summary">Menunjukkan portal mana yang berada dalam jangkauan hack</string>
+    <string name="preferences_route_any_order_line">Garis untuk misi urutan bebas</string>
     <string name="preferences_route_color_me">Warna posisimu</string>
     <string name="preferences_route_orientation">Orientasi peta</string>
     <string name="preferences_route_orientation_no_sensor">Ponsel ini tidak punya sensor kompas, jadi peta tetap utara di atas.</string>

@@ -84,6 +84,7 @@ final class SettingsBackup {
             new Setting("route_strip_enable", Kind.BOOLEAN, false),
             new Setting("route_show_whole_banner", Kind.BOOLEAN, true),
             new Setting("route_hack_range", Kind.BOOLEAN, false),
+            new Setting("route_any_order_line", Kind.CHOICE, AnyOrderLine.DEFAULT, AnyOrderLine.DASHED, AnyOrderLine.DOTTED, AnyOrderLine.NONE),
             new Setting("route_orientation", Kind.CHOICE, "compass", "north", "compass"),
             new Setting("route_compass_always", Kind.BOOLEAN, false),
             new Setting("route_compass_needle", Kind.CHOICE, "north", "north", "heading"),

@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Von anderen Spielern geteilte Passphrasen. Lädt die Passphrasen dieses Banners von openbanners.org herunter.</string>
     <string name="preferences_passphrase_fallback">Missionsnummer verwenden, wenn keine Passphrase bekannt ist</string>
     <string name="preferences_passphrase_autocopy">Automatisch kopieren, wenn ich zu einer Mission wechsle (die erste Passphrase, wenn es mehrere gibt)</string>
+    <string name="preferences_passphrase_autocopy_summary">Eine Passphrase an einem späteren Portal wird erneut kopiert, wenn du dieses Portal erreichst (höchstens einmal pro Minute je Portal)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Kopiert</string>
     <string name="passphrase_copied_mission_number">✓ Kopiert (Missionsnummer)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Auch erledigte und kommende Missionen zeichnen, nicht nur die aktuelle Mission</string>
     <string name="preferences_route_hack_range">40-Meter-Kreis um den Nutzer zeichnen</string>
     <string name="preferences_route_hack_range_summary">Zeigt, welche Portale in Hack-Reichweite sind</string>
+    <string name="preferences_route_any_order_line">Linie bei Missionen in beliebiger Reihenfolge</string>
     <string name="preferences_route_color_me">Farbe deiner Position</string>
     <string name="preferences_route_orientation">Kartenausrichtung</string>
     <string name="preferences_route_orientation_no_sensor">Dieses Handy hat keinen Kompasssensor, daher bleibt die Karte genordet.</string>

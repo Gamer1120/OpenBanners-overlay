@@ -107,6 +107,15 @@
             app:title="@string/preferences_route_hack_range" />
 
         <ListPreference
+            app:defaultValue="dashed"
+            app:dependency="@string/route_strip_enable"
+            app:entries="@array/route_any_order_line_names"
+            app:entryValues="@array/route_any_order_line_values"
+            app:key="@string/route_any_order_line"
+            app:title="@string/preferences_route_any_order_line"
+            app:useSimpleSummaryProvider="true" />
+
+        <ListPreference
             app:defaultValue="compass"
             app:dependency="@string/route_strip_enable"
             app:entries="@array/route_orientation_names"
@@ -265,6 +274,7 @@
         <CheckBoxPreference
             app:defaultValue="false"
             app:key="@string/passphrase_autocopy"
+            app:summary="@string/preferences_passphrase_autocopy_summary"
             app:title="@string/preferences_passphrase_autocopy" />
 
     </PreferenceCategory>

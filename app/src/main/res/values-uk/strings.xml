@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Кодові фрази, якими поділилися інші гравці. Завантажує кодові фрази цього банера з openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Використовувати номер місії, коли кодова фраза невідома</string>
     <string name="preferences_passphrase_autocopy">Копіювати автоматично, коли я переходжу до місії (першу кодову фразу, якщо їх кілька)</string>
+    <string name="preferences_passphrase_autocopy_summary">Кодова фраза на одному з наступних порталів копіюється знову, коли ви дійдете до цього порталу (не частіше разу на хвилину для кожного порталу)</string>
     <string name="passphrase_button">🔑 Фраза</string>
     <string name="passphrase_copied">✓ Скопійовано</string>
     <string name="passphrase_copied_mission_number">✓ Скопійовано (номер місії)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Малювати також пройдені й наступні місії, а не лише поточну</string>
     <string name="preferences_route_hack_range">Коло 40 метрів навколо гравця</string>
     <string name="preferences_route_hack_range_summary">Показує, які портали в радіусі хаку</string>
+    <string name="preferences_route_any_order_line">Лінія для місій у довільному порядку</string>
     <string name="preferences_route_color_me">Колір твого розташування</string>
     <string name="preferences_route_orientation">Орієнтація мапи</string>
     <string name="preferences_route_orientation_no_sensor">У цьому телефоні немає компаса, тому мапа залишається орієнтованою на північ.</string>

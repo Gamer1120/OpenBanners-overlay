@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrase condivise da altri giocatori. Scarica le passphrase di questo banner da openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Usa il numero della missione quando non si conosce nessuna passphrase</string>
     <string name="preferences_passphrase_autocopy">Copia automaticamente quando passo a una missione (la prima passphrase se ce ne sono più di una)</string>
+    <string name="preferences_passphrase_autocopy_summary">La passphrase di un portale successivo viene copiata di nuovo quando raggiungi quel portale (al massimo una volta al minuto per portale)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Copiata</string>
     <string name="passphrase_copied_mission_number">✓ Copiato (numero missione)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Disegna anche le missioni completate e quelle successive, non solo la missione attuale</string>
     <string name="preferences_route_hack_range">Disegna un cerchio di 40 metri intorno a te</string>
     <string name="preferences_route_hack_range_summary">Mostra quali portali sono nel raggio di hack</string>
+    <string name="preferences_route_any_order_line">Linea per le missioni in qualsiasi ordine</string>
     <string name="preferences_route_color_me">Colore della tua posizione</string>
     <string name="preferences_route_orientation">Orientamento della mappa</string>
     <string name="preferences_route_orientation_no_sensor">Questo telefono non ha la bussola, quindi la mappa resta con il nord in alto.</string>

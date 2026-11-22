@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Hasła udostępnione przez innych graczy. Pobiera hasła tego banera z openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Używaj numeru misji, gdy hasło nie jest znane</string>
     <string name="preferences_passphrase_autocopy">Kopiuj automatycznie, gdy przechodzę do misji (pierwsze hasło, jeśli jest ich kilka)</string>
+    <string name="preferences_passphrase_autocopy_summary">Hasło na dalszym portalu jest kopiowane ponownie, gdy dotrzesz do tego portalu (najwyżej raz na minutę dla każdego portalu)</string>
     <string name="passphrase_button">🔑 Hasło</string>
     <string name="passphrase_copied">✓ Skopiowano</string>
     <string name="passphrase_copied_mission_number">✓ Skopiowano (numer misji)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Rysuj też ukończone i nadchodzące misje, nie tylko bieżącą</string>
     <string name="preferences_route_hack_range">Rysuj okrąg 40 m wokół gracza</string>
     <string name="preferences_route_hack_range_summary">Pokazuje, które portale są w zasięgu hacka</string>
+    <string name="preferences_route_any_order_line">Linia dla misji w dowolnej kolejności</string>
     <string name="preferences_route_color_me">Kolor twojej pozycji</string>
     <string name="preferences_route_orientation">Orientacja mapy</string>
     <string name="preferences_route_orientation_no_sensor">Ten telefon nie ma czujnika kompasu, więc mapa pozostaje skierowana północą do góry.</string>

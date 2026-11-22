@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Senhas compartilhadas por outros jogadores. Baixa as senhas deste banner do openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Usar o número da missão quando nenhuma senha for conhecida</string>
     <string name="preferences_passphrase_autocopy">Copiar automaticamente quando eu mudar para uma missão (a primeira senha, se houver várias)</string>
+    <string name="preferences_passphrase_autocopy_summary">A senha de um portal mais adiante é copiada de novo quando você chega a esse portal (no máximo uma vez por minuto por portal)</string>
     <string name="passphrase_button">🔑 Senha</string>
     <string name="passphrase_copied">✓ Copiada</string>
     <string name="passphrase_copied_mission_number">✓ Copiado (número da missão)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Desenhar também as missões concluídas e as próximas, não só a missão atual</string>
     <string name="preferences_route_hack_range">Desenhar um círculo de 40 metros ao seu redor</string>
     <string name="preferences_route_hack_range_summary">Mostra quais portais estão ao alcance de hack</string>
+    <string name="preferences_route_any_order_line">Linha para missões em qualquer ordem</string>
     <string name="preferences_route_color_me">Cor da sua posição</string>
     <string name="preferences_route_orientation">Orientação do mapa</string>
     <string name="preferences_route_orientation_no_sensor">Este celular não tem bússola, então o mapa fica com o norte para cima.</string>

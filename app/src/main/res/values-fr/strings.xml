@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrases partagées par d’autres joueurs. Télécharge les passphrases de cette bannière depuis openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Utiliser le numéro de mission si aucune passphrase n’est connue</string>
     <string name="preferences_passphrase_autocopy">Copier automatiquement quand je passe à une mission (la première passphrase s’il y en a plusieurs)</string>
+    <string name="preferences_passphrase_autocopy_summary">La passphrase d’un portail suivant est recopiée quand tu atteins ce portail (au plus une fois par minute et par portail)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Copiée</string>
     <string name="passphrase_copied_mission_number">✓ Copié (numéro de mission)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Dessiner aussi les missions terminées et à venir, pas seulement la mission en cours</string>
     <string name="preferences_route_hack_range">Tracer un cercle de 40 mètres autour de l’utilisateur</string>
     <string name="preferences_route_hack_range_summary">Montre quels portails sont à portée de hack</string>
+    <string name="preferences_route_any_order_line">Ligne pour les missions dans n’importe quel ordre</string>
     <string name="preferences_route_color_me">Couleur de ta position</string>
     <string name="preferences_route_orientation">Orientation de la carte</string>
     <string name="preferences_route_orientation_no_sensor">Ce téléphone n’a pas de boussole, la carte reste donc orientée nord en haut.</string>

@@ -28,6 +28,11 @@
         <item>Sever nahoře</item>
         <item>Podle kompasu</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Čárkovaná</item>
+        <item>Tečkovaná</item>
+        <item>Žádná</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Sever</item>
         <item>Směr, kterým se díváš</item>

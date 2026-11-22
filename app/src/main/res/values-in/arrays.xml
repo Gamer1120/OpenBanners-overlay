@@ -28,6 +28,11 @@
         <item>Utara di atas</item>
         <item>Ikuti kompas</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Putus-putus</item>
+        <item>Titik-titik</item>
+        <item>Tidak ada</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Utara</item>
         <item>Arah yang kamu hadapi</item>

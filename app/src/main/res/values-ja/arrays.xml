@@ -28,6 +28,11 @@
         <item>北が上</item>
         <item>コンパスに合わせる</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>破線</item>
+        <item>点線</item>
+        <item>なし</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>北</item>
         <item>自分が向いている方向</item>

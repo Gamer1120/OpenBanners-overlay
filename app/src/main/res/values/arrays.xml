@@ -95,6 +95,16 @@
         <item>north</item>
         <item>compass</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Dashed</item>
+        <item>Dotted</item>
+        <item>None</item>
+    </string-array>
+    <string-array name="route_any_order_line_values" translatable="false">
+        <item>dashed</item>
+        <item>dotted</item>
+        <item>none</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>North</item>
         <item>The direction you are facing</item>

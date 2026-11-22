@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">ほかのプレイヤーが共有したパスフレーズです。このバナーのパスフレーズを openbanners.org からダウンロードします。</string>
     <string name="preferences_passphrase_fallback">パスフレーズが不明なときはミッション番号を使う</string>
     <string name="preferences_passphrase_autocopy">ミッションに切り替えたら自動でコピーする（複数ある場合は最初のパスフレーズ）</string>
+    <string name="preferences_passphrase_autocopy_summary">後のポータルのパスフレーズは、そのポータルに着いたときにもう一度コピーされます（ポータルごとに1分に1回まで）</string>
     <string name="passphrase_button">🔑 パスフレーズ</string>
     <string name="passphrase_copied">✓ コピーしました</string>
     <string name="passphrase_copied_mission_number">✓ コピーしました（ミッション番号）</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">現在のミッションだけでなく、完了したミッションと次のミッションも描画します</string>
     <string name="preferences_route_hack_range">自分の周りに 40 m の円を表示</string>
     <string name="preferences_route_hack_range_summary">ハック範囲内にあるポータルがわかります</string>
+    <string name="preferences_route_any_order_line">順不同ミッションの線</string>
     <string name="preferences_route_color_me">現在地の色</string>
     <string name="preferences_route_orientation">地図の向き</string>
     <string name="preferences_route_orientation_no_sensor">このスマートフォンにはコンパスセンサーがないため、地図は北が上のままです。</string>

@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Кодовые фразы, которыми поделились другие игроки. Загружает кодовые фразы этого баннера с openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Использовать номер миссии, если кодовая фраза неизвестна</string>
     <string name="preferences_passphrase_autocopy">Копировать автоматически при переходе к миссии (первую кодовую фразу, если их несколько)</string>
+    <string name="preferences_passphrase_autocopy_summary">Кодовая фраза на одном из следующих порталов копируется снова, когда вы дойдёте до этого портала (не чаще раза в минуту для каждого портала)</string>
     <string name="passphrase_button">🔑 Фраза</string>
     <string name="passphrase_copied">✓ Скопировано</string>
     <string name="passphrase_copied_mission_number">✓ Скопировано (номер миссии)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Рисовать также пройденные и следующие миссии, а не только текущую</string>
     <string name="preferences_route_hack_range">Круг 40 метров вокруг игрока</string>
     <string name="preferences_route_hack_range_summary">Показывает, какие порталы в радиусе взлома</string>
+    <string name="preferences_route_any_order_line">Линия для миссий в любом порядке</string>
     <string name="preferences_route_color_me">Цвет твоей позиции</string>
     <string name="preferences_route_orientation">Ориентация карты</string>
     <string name="preferences_route_orientation_no_sensor">В этом телефоне нет датчика компаса, поэтому карта остаётся ориентированной на север.</string>

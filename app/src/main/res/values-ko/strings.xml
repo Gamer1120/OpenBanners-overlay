@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">다른 플레이어가 공유한 패스프레이즈입니다. 이 배너의 패스프레이즈를 openbanners.org에서 다운로드합니다.</string>
     <string name="preferences_passphrase_fallback">알려진 패스프레이즈가 없으면 미션 번호 사용</string>
     <string name="preferences_passphrase_autocopy">미션으로 전환하면 자동으로 복사 (여러 개면 첫 번째 패스프레이즈)</string>
+    <string name="preferences_passphrase_autocopy_summary">뒤쪽 포탈의 패스프레이즈는 그 포탈에 도착하면 다시 복사됩니다 (포탈마다 1분에 한 번까지)</string>
     <string name="passphrase_button">🔑 패스프레이즈</string>
     <string name="passphrase_copied">✓ 복사됨</string>
     <string name="passphrase_copied_mission_number">✓ 복사됨 (미션 번호)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">현재 미션뿐 아니라 완료한 미션과 다음 미션도 그립니다</string>
     <string name="preferences_route_hack_range">내 주변에 40m 원 그리기</string>
     <string name="preferences_route_hack_range_summary">해킹 범위 안에 있는 포탈을 보여 줍니다</string>
+    <string name="preferences_route_any_order_line">순서 무관 미션의 선</string>
     <string name="preferences_route_color_me">내 위치 색상</string>
     <string name="preferences_route_orientation">지도 방향</string>
     <string name="preferences_route_orientation_no_sensor">이 휴대전화에는 나침반 센서가 없어 지도가 북쪽 위로 고정됩니다.</string>

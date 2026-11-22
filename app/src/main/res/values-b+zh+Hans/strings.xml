@@ -49,6 +49,7 @@
     <string name="passphrase_source_openbanners_summary">由其他玩家分享的口令。从 openbanners.org 下载此横幅的口令。</string>
     <string name="preferences_passphrase_fallback">没有已知口令时使用任务编号</string>
     <string name="preferences_passphrase_autocopy">切换到任务时自动复制（有多个口令时复制第一个）</string>
+    <string name="preferences_passphrase_autocopy_summary">后面门户的口令会在你到达该门户时再次复制（每个门户每分钟最多一次）</string>
     <string name="passphrase_button">🔑 口令</string>
     <string name="passphrase_copied">✓ 已复制</string>
     <string name="passphrase_copied_mission_number">✓ 已复制（任务编号）</string>
@@ -112,6 +113,7 @@
     <string name="preferences_route_show_whole_banner_summary">同时绘制已完成和后续的任务，而不只是当前任务</string>
     <string name="preferences_route_hack_range">在用户周围绘制 40 米圆圈</string>
     <string name="preferences_route_hack_range_summary">显示哪些门户在入侵范围内</string>
+    <string name="preferences_route_any_order_line">任意顺序任务的连线</string>
     <string name="preferences_route_color_me">你的位置的颜色</string>
     <string name="preferences_route_orientation">地图方向</string>
     <string name="preferences_route_orientation_no_sensor">此手机没有指南针传感器，因此地图保持北向朝上。</string>

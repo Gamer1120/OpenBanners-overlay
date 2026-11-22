@@ -28,6 +28,11 @@
         <item>Север вверху</item>
         <item>По компасу</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Пунктир</item>
+        <item>Точки</item>
+        <item>Нет</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Север</item>
         <item>Направление, куда ты смотришь</item>

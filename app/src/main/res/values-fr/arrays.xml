@@ -28,6 +28,11 @@
         <item>Nord en haut</item>
         <item>Suivre la boussole</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Tirets</item>
+        <item>Pointillés</item>
+        <item>Aucune</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Le nord</item>
         <item>La direction vers laquelle tu regardes</item>

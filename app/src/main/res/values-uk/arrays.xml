@@ -28,6 +28,11 @@
         <item>Північ угорі</item>
         <item>За компасом</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Пунктир</item>
+        <item>Крапки</item>
+        <item>Немає</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Північ</item>
         <item>Напрямок, куди ти дивишся</item>

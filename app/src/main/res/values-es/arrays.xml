@@ -28,6 +28,11 @@
         <item>Norte arriba</item>
         <item>Seguir la brújula</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Discontinua</item>
+        <item>Punteada</item>
+        <item>Ninguna</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Norte</item>
         <item>La dirección hacia la que miras</item>

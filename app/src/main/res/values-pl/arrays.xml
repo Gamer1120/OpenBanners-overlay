@@ -28,6 +28,11 @@
         <item>Północ u góry</item>
         <item>Zgodnie z kompasem</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Przerywana</item>
+        <item>Kropkowana</item>
+        <item>Brak</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Północ</item>
         <item>Kierunek, w którym patrzysz</item>

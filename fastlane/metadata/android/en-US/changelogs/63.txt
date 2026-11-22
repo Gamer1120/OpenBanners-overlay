@@ -1,0 +1,1 @@
+Route map: missions you can do in any order now get a dashed line between their portals (Settings → Route map → Line for any-order missions: dashed, dotted or none). Passphrase auto-copy: a passphrase on a later portal is copied again when you reach that portal (at most once a minute per portal).

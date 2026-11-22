@@ -28,6 +28,11 @@
         <item>Norden oben</item>
         <item>Kompass folgen</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Gestrichelt</item>
+        <item>Gepunktet</item>
+        <item>Keine</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Norden</item>
         <item>Deine Blickrichtung</item>

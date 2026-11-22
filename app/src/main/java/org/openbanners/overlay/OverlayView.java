@@ -11,6 +11,7 @@ import android.graphics.PixelFormat;
 import android.net.Uri;
 import android.os.Handler;
 import android.os.Looper;
+import android.os.SystemClock;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -81,6 +82,11 @@ class OverlayView extends FrameLayout {
     private int shownMission = Integer.MIN_VALUE;
     /** Waiting for the passphrases of this mission to arrive before copying automatically. */
     private boolean autoCopyPending;
+    /**
+     * Auto-copy on reaching a later passphrase portal, at most once a minute per step. Static: the minute also holds
+     * when the card is rebuilt (a new view gets the current state as "new" and would copy again).
+     */
+    private static final PassphraseReachCopy reachCopy = new PassphraseReachCopy();
     /** What the panel shows: nothing, the list, one step's text, or a message. */
     private static final int PANEL_NONE = 0, PANEL_LIST = 1, PANEL_TEXT = 2, PANEL_MESSAGE = 3;
     private int panelMode = PANEL_NONE;
@@ -333,7 +339,10 @@ class OverlayView extends FrameLayout {
     }
 
     private void setupListeners() {
-        stateListener = StateManager.addListener((newState, oldState) -> applyState(newState));
+        stateListener = StateManager.addListener((newState, oldState) -> {
+            applyState(newState);
+            copyOnReach(newState, oldState);
+        });
         buttonMinus.setOnClickListener(v -> StateManager.updateState(State::previousMission));
         buttonPlus.setOnClickListener(v -> StateManager.updateState(state -> state.nextMission(false)));
         buttonNext.setOnClickListener(v -> {
@@ -615,6 +624,24 @@ class OverlayView extends FrameLayout {
         }
         Passphrases.Copy copy = passphrases.autoCopy(passphraseAutoCopy);
         if (copy == null) return;
+        copyToClipboard(copy.text);
+        flashCopied();
+    }
+
+    /**
+     * Auto-copy also when you reach a passphrase portal that isn't the mission's first portal (see
+     * {@link PassphraseReachCopy}), with the same "✓ Copied" feedback. Runs after {@link #applyState}, so a mission
+     * switch has copied the first passphrase already and the one you're standing at wins.
+     */
+    private void copyOnReach(State newState, State oldState) {
+        if (!passphraseAutoCopy || !passphrases.show() || newState.banner == null || newState.currentMission < 0) return;
+        Mission mission = currentMission(newState);
+        if (mission == null) return;
+        Passphrases.Step step = PassphraseReachCopy.toCopy(mission, passphrases, State.getNewStepsInRange(newState, oldState).keySet());
+        if (step == null) return;
+        Passphrases.Copy copy = passphrases.copy(step);
+        if (copy == null) return;
+        if (!reachCopy.allow(PassphraseReachCopy.key(mission, newState.currentMission, step.stepIndex), SystemClock.elapsedRealtime())) return;
         copyToClipboard(copy.text);
         flashCopied();
     }

@@ -28,6 +28,11 @@
         <item>Noorden boven</item>
         <item>Kompas volgen</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>Gestreept</item>
+        <item>Gestippeld</item>
+        <item>Geen</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>Noorden</item>
         <item>De richting waarin je kijkt</item>

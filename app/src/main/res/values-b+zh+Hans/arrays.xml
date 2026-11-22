@@ -28,6 +28,11 @@
         <item>北向朝上</item>
         <item>跟随指南针</item>
     </string-array>
+    <string-array name="route_any_order_line_names">
+        <item>虚线</item>
+        <item>点线</item>
+        <item>无</item>
+    </string-array>
     <string-array name="route_compass_needle_names">
         <item>北方</item>
         <item>你面朝的方向</item>

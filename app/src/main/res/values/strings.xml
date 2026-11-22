@@ -52,6 +52,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrases shared by other players. Downloads this banner\'s passphrases from openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Use the mission number when no passphrase is known</string>
     <string name="preferences_passphrase_autocopy">Copy automatically when I switch to a mission (the first passphrase if it has several)</string>
+    <string name="preferences_passphrase_autocopy_summary">A passphrase on a later portal is copied again when you reach that portal (at most once a minute per portal)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_button_short" translatable="false">🔑</string>
     <string name="passphrase_button_unknown" translatable="false">🔑 ?</string>
@@ -122,6 +123,7 @@
     <string name="preferences_route_show_whole_banner_summary">Also draw completed and upcoming missions, not just the current mission</string>
     <string name="preferences_route_hack_range">Draw 40 meter circle around user</string>
     <string name="preferences_route_hack_range_summary">Shows which portals are within hack range</string>
+    <string name="preferences_route_any_order_line">Line for any-order missions</string>
     <string name="preferences_route_color_me">Colour of your position</string>
     <string name="preferences_route_orientation">Map orientation</string>
     <string name="preferences_route_orientation_no_sensor">This phone has no compass sensor, so the map stays north up.</string>

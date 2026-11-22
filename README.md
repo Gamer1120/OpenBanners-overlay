@@ -19,7 +19,8 @@ You can drag and drop the app to any place on your screen.
 OpenBanners Overlay is a fork of [bannergress/banner-overlay](https://github.com/bannergress/banner-overlay)
 (MIT, Copyright (c) 2022 The Bannergress Team; changes Copyright (c) 2026 Gamer1120; see LICENSE) with a route map added: a touch-through
 map at the top of the screen, from the control card's right edge to the right edge of the screen,
-showing the current mission's steps as labelled dots (`5c` = mission 5, step 3), legs in step order,
+showing the current mission's steps as labelled dots (`5c` = mission 5, step 3), legs in step order
+(any-order missions: dashed by default, or dotted / none under Settings → Route map; `AnyOrderLine`),
 done steps in grey, your position in cyan, and the next mission's first step. It keeps the nearest
 3 open steps in view. Toggle under Settings → Route map. Besides bannergress.com and Ingress mission links,
 it also accepts shared openbanners.org banner links (same banner ids). Location is requested at high accuracy.
@@ -34,7 +35,9 @@ crowd-sourced answers from openbanners.org (`GET /_openbanners/passphrases/v1/ba
 matched to steps by portal id; downloaded only with that source, cached for offline use; hidden when the author opted
 out), optionally falling back to the mission number. Optional auto-copy when switching to a mission: its passphrase, or
 the first one when it has several (an unknown first one counts as unknown: the mission number with the fallback, else
-nothing). Nothing depends on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
+nothing). With auto-copy, a passphrase on a later portal (not the mission's first portal) is copied again when you reach
+it, i.e. when the step is ticked off as on the route map; at most once a minute per step (`PassphraseReachCopy`).
+The 🔑 button itself doesn't depend on position or ticked-off steps. Replaces the old "Copy mission number as passphrase"
 switch (migrated: on → mission number + auto-copy). Logic and tests: `Passphrases`, `PassphraseSettings`.
 
 Navigate to next waypoint (Settings → Navigation, off by default): a Navigate button on the mission card while the

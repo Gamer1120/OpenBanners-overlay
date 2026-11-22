@@ -48,6 +48,7 @@
     <string name="passphrase_source_openbanners_summary">Passphrases gedeeld door andere spelers. Downloadt de passphrases van deze banner van openbanners.org.</string>
     <string name="preferences_passphrase_fallback">Missienummer gebruiken als er geen passphrase bekend is</string>
     <string name="preferences_passphrase_autocopy">Automatisch kopiëren als ik naar een missie ga (de eerste passphrase als er meerdere zijn)</string>
+    <string name="preferences_passphrase_autocopy_summary">Een passphrase bij een later portal wordt opnieuw gekopieerd als je bij dat portal aankomt (hooguit eens per minuut per portal)</string>
     <string name="passphrase_button">🔑 Passphrase</string>
     <string name="passphrase_copied">✓ Gekopieerd</string>
     <string name="passphrase_copied_mission_number">✓ Gekopieerd (missienummer)</string>
@@ -111,6 +112,7 @@
     <string name="preferences_route_show_whole_banner_summary">Ook voltooide en komende missies tekenen, niet alleen de huidige missie</string>
     <string name="preferences_route_hack_range">Cirkel van 40 meter rond de gebruiker tekenen</string>
     <string name="preferences_route_hack_range_summary">Toont welke portals binnen hackbereik liggen</string>
+    <string name="preferences_route_any_order_line">Lijn bij missies in willekeurige volgorde</string>
     <string name="preferences_route_color_me">Kleur van je positie</string>
     <string name="preferences_route_orientation">Kaartoriëntatie</string>
     <string name="preferences_route_orientation_no_sensor">Deze telefoon heeft geen kompassensor, dus de kaart blijft met het noorden boven.</string>

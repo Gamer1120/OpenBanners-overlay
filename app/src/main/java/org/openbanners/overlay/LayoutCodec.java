@@ -51,6 +51,7 @@ final class LayoutCodec {
             new Setting(R.string.route_strip_enable, true, 0),
             new Setting(R.string.route_show_whole_banner, true, 0),
             new Setting(R.string.route_hack_range, true, 0),
+            new Setting(R.string.route_any_order_line, false, R.array.route_any_order_line_values),
             new Setting(R.string.route_orientation, false, R.array.route_orientation_values),
             new Setting(R.string.route_compass_interval, false, R.array.route_compass_interval_values),
             new Setting(R.string.route_compass_always, true, 0),

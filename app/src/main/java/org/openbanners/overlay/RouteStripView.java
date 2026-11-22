@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.DashPathEffect;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PixelFormat;
@@ -131,8 +132,12 @@ class RouteStripView extends View {
 
     /** Steps in drawing order: the route is drawn through them in this order. */
     private List<Point> points = Collections.emptyList();
-    /** Whether consecutive points are joined by legs (not for any-order missions). */
-    private List<Boolean> legBefore = Collections.emptyList();
+    /** The leg leading to each point ({@link AnyOrderLine}: none, solid, or within an any-order mission). */
+    private List<Integer> legBefore = Collections.emptyList();
+    /** Settings → Route map → Line for any-order missions. */
+    private String anyOrderLine = AnyOrderLine.DEFAULT;
+    /** Dash or dot pattern for legs within any-order missions; null when they aren't drawn. */
+    private DashPathEffect anyOrderEffect;
     private Location location;
     private Banner banner;
 
@@ -242,6 +247,9 @@ class RouteStripView extends View {
                 && COMPASS_NEEDLE_HEADING.equals(preferences.getString(context.getString(R.string.route_compass_needle), "north"));
         setCompassListening(followCompass || needleShowsHeading);
         showHackRange = preferences.getBoolean(context.getString(R.string.route_hack_range), false);
+        anyOrderLine = AnyOrderLine.of(preferences.getString(context.getString(R.string.route_any_order_line), AnyOrderLine.DEFAULT));
+        float[] intervals = AnyOrderLine.intervals(AnyOrderLine.LEG_ANY_ORDER, anyOrderLine, dp);
+        anyOrderEffect = intervals == null ? null : new DashPathEffect(intervals, 0);
         boolean newShowWholeBanner = preferences.getBoolean(context.getString(R.string.route_show_whole_banner), true);
         if (newShowWholeBanner != showWholeBanner) {
             showWholeBanner = newShowWholeBanner;
@@ -377,33 +385,34 @@ class RouteStripView extends View {
         return poi != null && poi.type != POIType.unavailable && poi.latitude != null && poi.longitude != null;
     }
 
-    /** Whether the first step of mission {@code m} is joined by a leg to the last point drawn so far. */
-    private static boolean joinsPrevious(List<Point> points, List<Mission> missions, int m) {
+    /** The leg from the last point drawn so far to the first step of mission {@code m}. */
+    private static int joinsPrevious(List<Point> points, List<Mission> missions, int m) {
         return !points.isEmpty() && m > 0
-                && missions.get(m).type != MissionType.anyOrder && missions.get(m - 1).type != MissionType.anyOrder;
+                && missions.get(m).type != MissionType.anyOrder && missions.get(m - 1).type != MissionType.anyOrder
+                ? AnyOrderLine.LEG_SOLID : AnyOrderLine.LEG_NONE;
     }
 
     /** Adds all positioned steps of mission {@code m}, as done or as upcoming. */
-    private static void addMission(List<Point> points, List<Boolean> legs, List<Mission> missions, int m, boolean done, boolean other) {
+    private static void addMission(List<Point> points, List<Integer> legs, List<Mission> missions, int m, boolean done, boolean other) {
         Mission mission = missions.get(m);
         if (mission.steps == null) return;
         boolean first = true;
         for (int i = 0; i < mission.steps.size(); i++) {
             MissionStep step = mission.steps.get(i);
             if (!hasPosition(step)) continue;
-            legs.add(first ? joinsPrevious(points, missions, m) : mission.type != MissionType.anyOrder);
+            legs.add(first ? joinsPrevious(points, missions, m) : AnyOrderLine.legWithin(mission.type));
             points.add(new Point(step.poi.latitude, step.poi.longitude, label(m, i), done, other));
             first = false;
         }
     }
 
     /** Adds the upcoming steps of {@code mission} from step {@code from} on, continuing from the last point. */
-    private static void addSteps(List<Point> points, List<Boolean> legs, Mission mission, int m, int from, boolean other) {
-        boolean joined = mission.type != MissionType.anyOrder;
+    private static void addSteps(List<Point> points, List<Integer> legs, Mission mission, int m, int from, boolean other) {
+        int within = AnyOrderLine.legWithin(mission.type);
         for (int i = from; i < mission.steps.size(); i++) {
             MissionStep step = mission.steps.get(i);
             if (!hasPosition(step)) continue;
-            legs.add(joined && !points.isEmpty());
+            legs.add(points.isEmpty() ? AnyOrderLine.LEG_NONE : within);
             points.add(new Point(step.poi.latitude, step.poi.longitude, label(m, i), false, other));
         }
     }
@@ -418,7 +427,7 @@ class RouteStripView extends View {
         location = state.currentLocation;
         catchUp = state.justNavigated;
         List<Point> newPoints = new ArrayList<>();
-        List<Boolean> newLegs = new ArrayList<>();
+        List<Integer> newLegs = new ArrayList<>();
         if (state.banner != null) {
             List<Mission> missions = new ArrayList<>(state.banner.missions.values());
             // Before "Start", the first mission is the one you're heading for.
@@ -431,14 +440,14 @@ class RouteStripView extends View {
             }
             if (active < missions.size()) {
                 Mission mission = missions.get(active);
-                boolean joined = mission.type != MissionType.anyOrder;
+                int within = AnyOrderLine.legWithin(mission.type);
                 List<MissionStep> steps = mission.steps == null ? Collections.emptyList() : mission.steps;
                 boolean first = true;
                 for (int i = 0; i < steps.size(); i++) {
                     MissionStep step = steps.get(i);
                     if (!hasPosition(step)) continue;
                     boolean done = state.currentMission == active && state.currentMissionVisitedStepIndexes.contains(i);
-                    newLegs.add(first ? joinsPrevious(newPoints, missions, active) : joined);
+                    newLegs.add(first ? joinsPrevious(newPoints, missions, active) : within);
                     newPoints.add(new Point(step.poi.latitude, step.poi.longitude, label(active, i), done));
                     first = false;
                 }
@@ -457,7 +466,7 @@ class RouteStripView extends View {
                                 // Missions often start where the previous one ends: label that portal "1f/2a" instead of hiding 1f.
                                 newPoints.set(newPoints.size() - 1, new Point(last.lat, last.lng, last.label + "/" + nextLabel, last.done));
                             } else {
-                                newLegs.add(!newPoints.isEmpty());
+                                newLegs.add(newPoints.isEmpty() ? AnyOrderLine.LEG_NONE : AnyOrderLine.LEG_SOLID);
                                 newPoints.add(new Point(step.poi.latitude, step.poi.longitude, nextLabel, false));
                             }
                             break;
@@ -642,7 +651,8 @@ class RouteStripView extends View {
         // you just walked matters more), open ones on top. A leg takes the state of the step it leads to.
         for (int pass = 0; pass < 3; pass++) {
             for (int i = 1; i < points.size(); i++) {
-                if (!legBefore.get(i)) continue;
+                int leg = legBefore.get(i);
+                if (!AnyOrderLine.drawn(leg, anyOrderLine)) continue;
                 Point to = points.get(i);
                 int kind = to.other ? 0 : to.done ? 1 : 2;
                 if (kind != pass) continue;
@@ -651,8 +661,17 @@ class RouteStripView extends View {
                 Path path = new Path();
                 path.moveTo(a[0], a[1]);
                 path.lineTo(b[0], b[1]);
-                if (kind == 2) canvas.drawPath(path, haloLegPaint);
-                canvas.drawPath(path, kind == 0 ? otherLegPaint : kind == 1 ? doneLegPaint : openLegPaint);
+                Paint paint = kind == 0 ? otherLegPaint : kind == 1 ? doneLegPaint : openLegPaint;
+                // Any-order missions: dashed or dotted (Settings → Route map), the halo with the same pattern.
+                DashPathEffect dash = leg == AnyOrderLine.LEG_ANY_ORDER ? anyOrderEffect : null;
+                if (kind == 2) {
+                    haloLegPaint.setPathEffect(dash);
+                    canvas.drawPath(path, haloLegPaint);
+                    haloLegPaint.setPathEffect(null);
+                }
+                paint.setPathEffect(dash);
+                canvas.drawPath(path, paint);
+                paint.setPathEffect(null);
             }
         }
 
